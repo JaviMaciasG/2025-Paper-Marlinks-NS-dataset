@@ -1,0 +1,104 @@
+\documentclass[11pt]{article}
+
+% Packages
+\usepackage{graphicx}
+\usepackage{authblk}
+\usepackage{amsmath}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{hyperref}
+\usepackage{caption}
+\usepackage{float}
+\usepackage[numbers]{natbib}
+
+% Title and authors
+\title{A Comprehensive Dataset for Vessel Detection and Localization Using Distributed Acoustic Sensing in Submarine Cables}
+
+\author[1]{Erick Eduardo Ramirez-Torres}
+\author[1]{Javier Macias-Guarasa}
+\author[1]{Daniel Pizarro-Perez}
+\author[2]{Javier Tejedor}
+\author[1]{Sira Elena Palazuelos-Cagigas}
+\author[1]{Pedro J. Vidal-Moreno}
+\author[1]{Sonia Martin-Lopez}
+\author[1]{Miguel Gonzalez-Herraez}
+\author[3]{Roel Vanthillo}
+
+\affil[1]{Departamento de Electr\'onica, Universidad de Alcal\'a, Alcal\'a de Henares, Spain}
+\affil[2]{Universidad San Pablo-CEU, Boadilla del Monte, Spain}
+\affil[3]{Marlinks, Leuven, Belgium}
+
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\begin{abstract}
+We present a curated dataset designed for the development and evaluation of machine learning models for vessel detection and localization using Distributed Acoustic Sensing (DAS) in submarine optical fiber cables. The dataset comprises preprocessed DAS signal features, synchronized with anonymized vessel proximity indicators derived from AIS data, acquired over a ten-day continuous period. While the original AIS data and precise fiber location are restricted due to confidentiality agreements, the released dataset includes features and labels supporting reproducible experiments under realistic marine conditions.
+\end{abstract}
+
+\section*{Background \& Summary}
+Submarine cables are vital for global communication and power transmission but remain vulnerable to accidental damage and sabotage. Recent technological advances have enabled the use of Distributed Acoustic Sensing (DAS) systems to repurpose these cables into dense acoustic sensor arrays. DAS provides continuous monitoring capabilities independent of cooperative systems like AIS, and offers robust performance in challenging environmental conditions.
+
+Despite growing interest, publicly available datasets supporting machine learning development in this context are lacking. This work addresses this gap by releasing a large-scale, preprocessed dataset based on DAS recordings over a buried submarine cable. Although proprietary constraints prevent us from sharing raw AIS data or the exact cable route, the dataset includes carefully anonymized and aggregated features that retain the essential characteristics needed for vessel detection and proximity estimation tasks.
+
+\section*{Methods}
+The DAS signals were acquired using an Alcatel OptoDAS interrogator connected to a 26 km submarine cable. The interrogator recorded strain data at 3125 Hz sampling frequency, with a spatial resolution of 10.21 meters, resulting in 2600 simultaneous channels. The signals were processed to extract robust spectral features across logarithmically spaced frequency bands.
+
+For labeling, synchronized AIS data was used to estimate the distance to the nearest vessel at each timestamp and sensor segment. Due to confidentiality agreements with the data provider, raw AIS data, exact vessel trajectories, and precise fiber coordinates are not included. Instead, we provide:
+\begin{itemize}
+  \item Binary detection labels: whether a vessel is within a given threshold distance.
+  \item Continuous regression labels: estimated proximity of the closest vessel.
+  \item Aggregated bathymetric region information.
+\end{itemize}
+All labels were derived from temporally aligned AIS metadata following rigorous preprocessing, interpolation, and validation.
+
+\section*{Data Records}
+The dataset is available as NumPy arrays representing:
+\begin{itemize}
+  \item Feature vectors: aggregated spectral energy values from DAS signals, computed over 10-second windows.
+  \item Labels: binary detection (vessel within 1000 m) and continuous proximity estimation.
+  \item Metadata: time indices and anonymized spatial segment identifiers.
+\end{itemize}
+The dataset is publicly hosted at \url{https://github.com/UAH-PSI/das-vessel-detection}. Users should consult the provided README for details on file formats, data splits, and usage instructions.
+
+\section*{Technical Validation}
+The dataset was validated by training and evaluating machine learning models under realistic conditions. Using 10-fold cross-validation by day, a gradient-boosted decision tree classifier achieved an F1-score above 90\% for the detection task. For regression, the best-performing model estimated vessel proximity with a mean absolute error of approximately 141 m for the 1000 m detection threshold.
+
+All evaluations ensured temporal disjointness between training and test splits. Additionally, spectral content analysis confirmed the presence of relevant acoustic patterns corresponding to vessel movement.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.85\textwidth]{placeholder_features.png}
+  \caption{Illustrative feature map: spectral energy over time across multiple fiber channels.}
+\end{figure}
+
+\section*{Usage Notes}
+The dataset supports binary classification and regression tasks. Recommended usage includes:
+\begin{itemize}
+  \item Evaluation of signal processing and ML models for DAS-based vessel detection.
+  \item Analysis of spatial and temporal resolution tradeoffs in DAS sensing.
+  \item Testing domain adaptation techniques across maritime environments.
+\end{itemize}
+Please note that the dataset does not include raw DAS or AIS data, nor geospatial coordinates. All experiments must be based on the released feature-label pairs.
+
+\section*{Code Availability}
+All code for feature extraction, preprocessing, model training, and evaluation is available at \url{https://github.com/UAH-PSI/das-vessel-detection}.
+
+\section*{References}
+\begin{thebibliography}{9}
+\bibitem{landro2022} Landr\o, M. et al. Sensing whales, storms, ships and earthquakes using an Arctic fibre optic cable. \textit{Sci. Rep.} \textbf{12}, 1–12 (2022).
+\bibitem{rivet2021} Rivet, D. et al. Preliminary assessment of ship detection using DAS. \textit{JASA} \textbf{149}, 2615–2627 (2021).
+\bibitem{tejedor2019} Tejedor, J. et al. A contextual GMM-HMM smart fiber optic surveillance system. \textit{JLT} \textbf{37}, 4514–4522 (2019).
+\end{thebibliography}
+
+\section*{Author Contributions}
+E.E.R.-T., J.M.-G., and D.P.-P. designed the study. J.T. and R.V. coordinated data access and metadata generation. P.J.V.-M. and S.E.P.-C. implemented the processing and modeling framework. S.M.-L. and M.G.-H. supervised optical sensing aspects. All authors contributed to writing and reviewing the manuscript.
+
+\section*{Competing Interests}
+The authors declare no competing financial or non-financial interests.
+
+\section*{Acknowledgements}
+This work was supported by the Spanish Ministry of Science and Innovation and the European Union through grants PSI (PLEC2021-007875), REMO (CPP2021-008869), and SUBMERSE (101095055), among others. We acknowledge the cable operator for providing access to DAS and AIS data under confidentiality agreements, and Artemisa for computational resources.
+
+\end{document}
