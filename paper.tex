@@ -43,34 +43,67 @@ Submarine cables are vital for global communication and power transmission but r
 Despite growing interest, publicly available datasets supporting machine learning development in this context are lacking. This work addresses this gap by releasing a large-scale, preprocessed dataset based on DAS recordings over a buried submarine cable. Although proprietary constraints prevent us from sharing raw AIS data or the exact cable route, the dataset includes carefully anonymized and aggregated features that retain the essential characteristics needed for vessel detection and proximity estimation tasks.
 
 \section*{Methods}
-The DAS signals were acquired using an Alcatel OptoDAS interrogator connected to a 26 km submarine cable. The interrogator recorded strain data at 3125 Hz sampling frequency, with a spatial resolution of 10.21 meters, resulting in 2600 simultaneous channels. The signals were processed to extract robust spectral features across logarithmically spaced frequency bands.
+The dataset was built from ten consecutive days (June 16–25, 2023) of continuous DAS signal acquisition over a 26 km buried submarine cable. A commercial Alcatel OptoDAS interrogator sampled strain data at 3125 Hz, using optical pulse compression reflectometry and a 10 m gauge length. The spatial resolution was 10.21 m, producing 2600 channels across the cable.
 
-For labeling, synchronized AIS data was used to estimate the distance to the nearest vessel at each timestamp and sensor segment. Due to confidentiality agreements with the data provider, raw AIS data, exact vessel trajectories, and precise fiber coordinates are not included. Instead, we provide:
+To curate the dataset:
 \begin{itemize}
-  \item Binary detection labels: whether a vessel is within a given threshold distance.
-  \item Continuous regression labels: estimated proximity of the closest vessel.
-  \item Aggregated bathymetric region information.
+  \item Raw differential-phase data was processed using phase unwrapping, spike correction, integration, and normalization to produce strain estimates.
+  \item Features were computed as energy in 100 logarithmically spaced frequency bands between 4 Hz and 98 Hz, excluding the 49–51 Hz interval to suppress 50/100 Hz system noise.
+  \item AIS data, reporting vessel position, heading, and type at 1–3 minute intervals, was interpolated to 1 Hz and aligned temporally with DAS data.
+  \item Labels were derived from the interpolated distance to the closest vessel, producing:
+    \begin{itemize}
+      \item Binary labels: vessel within 1000 m (Class 0) vs. beyond (Class 1).
+      \item Continuous distance labels: closest vessel distance at each timestamp.
+    \end{itemize}
 \end{itemize}
-All labels were derived from temporally aligned AIS metadata following rigorous preprocessing, interpolation, and validation.
+
+The processing pipeline ensures synchronized, anonymized, and reproducible training data without disclosing raw DAS signals or geolocation.
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.9\textwidth]{pipeline_diagram_placeholder.png}
+  \caption{Dataset generation pipeline: from DAS raw signals and AIS metadata to labeled, preprocessed spectral features.}
+\end{figure}
 
 \section*{Data Records}
-The dataset is available as NumPy arrays representing:
+The dataset is stored in a structured HDF5 format, organized as follows:
 \begin{itemize}
-  \item Feature vectors: aggregated spectral energy values from DAS signals, computed over 10-second windows.
-  \item Labels: binary detection (vessel within 1000 m) and continuous proximity estimation.
-  \item Metadata: time indices and anonymized spatial segment identifiers.
+  \item \texttt{/features}: Float32 arrays of shape (N, 100), spectral features per frame.
+  \item \texttt{/labels/distance}: Float32 array (N,), estimated distance to the nearest vessel.
+  \item \texttt{/labels/class}: Int array (N,), binary detection label.
+  \item \texttt{/meta/timestamps}: Datetime64 array (N,), timestamps aligned to UTC.
+  \item \texttt{/meta/sensor_ids}: Int array (N,), identifies central channel for each spatial window.
 \end{itemize}
-The dataset is publicly hosted at \url{https://github.com/UAH-PSI/das-vessel-detection}. Users should consult the provided README for details on file formats, data splits, and usage instructions.
+
+\begin{table}[H]
+  \centering
+  \caption{Summary of released dataset contents}
+  \begin{tabular}{@{}lll@{}} \toprule
+  Data Component & Description & Dimensions \\ \midrule
+  Spectral Features & Log-spaced band energy (4–98 Hz) & 74771 $\times$ 100 \\
+  Binary Labels & Vessel $\lt$ 1000 m (1/0) & 74771 \\
+  Distance Labels & Closest vessel distance [m] & 74771 \\
+  Temporal Info & UTC-aligned timestamps & 74771 \\
+  Sensor Info & Spatially averaged from 250 sensors & 74771 \\
+  \bottomrule
+  \end{tabular}
+\end{table}
 
 \section*{Technical Validation}
-The dataset was validated by training and evaluating machine learning models under realistic conditions. Using 10-fold cross-validation by day, a gradient-boosted decision tree classifier achieved an F1-score above 90\% for the detection task. For regression, the best-performing model estimated vessel proximity with a mean absolute error of approximately 141 m for the 1000 m detection threshold.
+We validated the dataset by training two ML models:
+\begin{itemize}
+  \item XGBoost classifier: F1-score $>$ 90\% on vessel detection at 1000 m.
+  \item XGBoost regressor: Mean Absolute Error = 141 m (rMAE = 14.1\%).
+\end{itemize}
 
-All evaluations ensured temporal disjointness between training and test splits. Additionally, spectral content analysis confirmed the presence of relevant acoustic patterns corresponding to vessel movement.
+Models were evaluated using 10-fold cross-validation, assigning each day to a different fold. This avoids temporal leakage and maximizes vessel diversity across training and testing.
+
+We also analyzed spectral features to verify discriminative structure (2–100 Hz range) and inspected time-aligned energy maps vs. AIS-derived distance profiles, confirming strong signal correlation with vessel proximity.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=0.85\textwidth]{placeholder_features.png}
-  \caption{Illustrative feature map: spectral energy over time across multiple fiber channels.}
+  \caption{Feature map: energy evolution across fiber channels compared to vessel proximity (bottom).}
 \end{figure}
 
 \section*{Usage Notes}
@@ -85,7 +118,7 @@ Please note that the dataset does not include raw DAS or AIS data, nor geospatia
 \section*{Code Availability}
 All code for feature extraction, preprocessing, model training, and evaluation is available at \url{https://github.com/UAH-PSI/das-vessel-detection}.
 
-\section*{References}
+%\section*{References}
 \begin{thebibliography}{9}
 \bibitem{landro2022} Landr\o, M. et al. Sensing whales, storms, ships and earthquakes using an Arctic fibre optic cable. \textit{Sci. Rep.} \textbf{12}, 1–12 (2022).
 \bibitem{rivet2021} Rivet, D. et al. Preliminary assessment of ship detection using DAS. \textit{JASA} \textbf{149}, 2615–2627 (2021).
