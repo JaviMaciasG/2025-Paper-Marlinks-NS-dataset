@@ -48,38 +48,29 @@ Distributed Acoustic Sensing (DAS) technology allows repurposing of standard opt
 Publicly available datasets enabling the development of data-driven algorithms for DAS-based vessel detection are extremely scarce. Existing works are often limited in scale or rely on short cable sections under controlled conditions. This dataset bridges that gap by releasing the preprocessed, labeled data underpinning one of the largest and most rigorous studies of DAS-based vessel detection and localization conducted to date. It includes 74,771 processed data frames derived from more than 10 days of continuous monitoring, aligned with anonymized AIS-derived proximity information.
 
 
-Publicly available DAS datasets remain scarce, particularly in specialized environments like submarine cables. Initiatives such as PubDAS~\cite{pubDAS2023} (the first large-scale open-source repository for DAS data) have demonstrably accelerated research by providing multiple experiment datasets for benchmarking and algorithm development. Similarly, data in the submarine DAS domain have been released accompanying scientific papers. For example, Tomasov et al.~\cite{tomasov2025comprehensive} presented a fully labeled DAS dataset (including band-limited feature vectors) specifically designed to foster machine learning research in urban environments. Similarly Huang et al.~\cite{Huang2025DAShip} generated DAShip, one of the first large-scale, annotated datasets collected via distributed acoustic sensing (DAS) for the specific purpose of marine vessel detection. It comprises 55,875 ship-related event segments, captured on a submarine fiber-optic cable, $8.5\,km$ long, with a maximum depth of $13\,m$ along the cable deployment (according to GEBCO bathymetry information~\cite{gebco2024}). The dataset has annotated information on the vessel passages above the fiber optic cable
+Publicly available DAS datasets remain scarce, particularly in specialized environments like submarine cables. Initiatives such as PubDAS~\cite{pubDAS2023} (the first large-scale open-source repository for DAS data) have demonstrably accelerated research by providing multiple experiment datasets for benchmarking and algorithm development.
 
+However, the number of publicly available resources in submarine environments are even more limited. Some relevant examples in this scenario are:
 
-the (the exact fiber geometry is described in the paper) and manually annotated with timestamps, spatial channel extents, and vessel types or movement classes.
-ResearchGate
-+2
-discovery.researcher.life
-+2
- The recordings are provided in a standard DAS time‑series format (channel × time), with metadata capturing interrogator settings (sampling rate, gauge length, channel spacing), fiber geometry, and synchronised AIS/ship‑log references for ground truth. The authors report baseline machine‑learning results using convolutional or temporal‑feature networks, achieving high detection accuracy (exact numbers given in the paper) which demonstrate the viability of DAS for real‑world vessel monitoring.
-discovery.researcher.life
-+1
-The dataset is intended to support further work on vessel localization, classification (ship‑type), and distance/trajectory estimation, particularly in submarine‑cable environments, and thus fills a gap in publicly available maritime DAS datasets.
+\begin{itemize}
+  \item The Valencia-IslaLink DAS dataset, which is distributed within PubDAS~\cite{pubDAS2023}.%, recorded in a telecommunication fiber-optic cable operated by IslaLink Holding Iberia S.L. and connecting Valencia to Palma de Mallorca. Data corresponds to the first $50\,km$ of the cable (the first $~10\,km$ are on land and the remaining corresponds to a buried cable about $1\,m$ below the Mediterranean seabed). 7 days of continuous data are available (from September $1^{st}$ to $7^{st}$ 2023).
+  \item DAShip, described by Huang et al. in~\cite{Huang2025DAShip} (available at \url{https://www.alipan.com/s/sTdL3zSRiPo})
 
+  \item The mBARI_DAS dataset by Cheng et al. described in~\cite{cheng2021utilizing} (available at~\cite{cheng2020mbari_das_data} with a \href{https://github.com/njlindsey/Photonic-seismology-in-Monterey-Bay-Dark-fiber1DAS-illuminates-offshore-faults-and-coastal-ocean}{source code repository at Github})
 
+  \item The Géoazur DAS dataset by Sladen et al.~\cite{sladen2019distributed} (available at~\cite{sladen2019meust_km3net_das})
 
-By analogy, sharing preprocessed feature vectors derived from submarine‐cable DAS will fill a critical gap, enabling reproducibility and comparability of ML methods in this niche yet impactful domain.
+  \item The Underwater DAS Detection dataset by Lior et al.~\cite{sladen2019distributed} (available at~\cite{sladen2019meust_km3net_das})
+  \item The DAS4Microseism dataset, by Taweesintananon et al. described in~\cite{Taweesintananon} (available at~\cite{VPRD2H_2022})
+  \item The OOI Regional Cabled Array Dataset, by Lipowsky et al. described in~\cite{shi2025multiplexed} (available at \url{lipovsky2024rapid_das_ooi} with a \href{https://github.com/uwfiberlab/OOI_DAS_2024}{source code repository at GitHub}
+  \item The Nearshore Ocean Currents Dataset, by Song et al., described in~\cite{song2024near} and available at~\cite{song_2024_dataset}.
+\end{itemize}
 
-Several prior efforts underscore the value of distributing DAS data for ML tasks. PubDAS itself aggregates diverse DAS collections from seismic, structural‐health, and pipeline surveillance experiments, illustrating how open datasets catalyze cross‐study comparisons and novel algorithmic advances
-eartharxiv.org
-pubs.geoscienceworld.org
-. Another example is the “Distributed Acoustic Sensing Experiment Data from Garner Valley” repository, which made raw DAS recordings publicly accessible for researchers investigating seismic events and infrastructure monitoring
-catalog.data.gov
-. In the context of machine learning, Huot et al. (2022) curated a labeled DAS dataset of microseismic events—with nearly 7,000 events and matched noise samples—demonstrating that a well‐structured DAS dataset can achieve high detection accuracy (98.6%) and spur further methodological improvements
-arxiv.org
-. These initiatives highlight that sharing processed or raw DAS data is now regarded as a fundamental enabler for algorithmic progress and community engagement.
+Except for DAShip, all these datasets are oriented to applications in the seismic and ocean monitoring domain. DAShip is the only large-scale, annotated dataset collected for the specific purpose of marine vessel detection. It comprises 55,875 ship-related event segments, captured on a submarine fiber-optic cable, $8.5\,km$ long, with a maximum depth of $13\,m$ along the cable deployment (according to GEBCO bathymetry information~\cite{gebco2024}). It is oriented to the detection of vessel passages right  above the fiber optic cable, using image classification algorithms to identify the ships' wakes, to that it cannot be used for preventive submarine cable protection, as the detection happens when the vessel is already above the cable. Another limitation is that the data has been downsampled to $10\,Hz$, which has two main issues: first, this reduced bandwidth does not allow to exploit vessel acoustic signatures, which exhibits relevant frequency components in higher frequencies~\cite{Rivet_2021,Thiem_2023}; and second, it will be more affected by low frequency noise from sea waves and temperature drift.
 
-In light of these precedents, providing preprocessed feature vectors—complete with distance annotations and vessel‐type metadata—should indeed be included as a core contribution. The recent benchmarking study “Benchmarking Machine Learning Methods for Distributed Acoustic Sensing” emphasizes that comparative evaluations hinge on standardized datasets, and publicly available ML‐ready DAS datasets are becoming the de facto foundation for rigorous algorithm assessment
-arxiv.org
-nature.com
-. Moreover, specific work on vessel detection and localization using dark‐fiber DAS data (e.g., leveraging migration‐based source location methods) has underscored both the promise of ML for maritime monitoring and the current lack of openly distributed vessel‐focused DAS datasets
-sciencedirect.com
-. By releasing 75,000 feature‐vector samples across 250 positions with detailed labels (distance, vessel type, length, beam), your dataset will not only parallel these successful initiatives but also uniquely address submarine‐cable scenarios—enabling future researchers to benchmark vessel detection and distance‐estimation models under comparable conditions.
+We can mention other datasets which address event classification tasks, but in terrestrial domains, such as that by Tomasov et al.~\cite{tomasov2025comprehensive} that presented a fully labeled DAS dataset (including band-limited feature vectors). The fiber was  specifically designed to foster machine learning research in urban environments. XXX DESCRIBIR LONGITUD, PROFUNDIDAD Y CLASES
+
+% By releasing 75,000 feature‐vector samples across 250 positions with detailed labels (distance, vessel type, length, beam), your dataset will not only parallel these successful initiatives but also uniquely address submarine‐cable scenarios—enabling future researchers to benchmark vessel detection and distance‐estimation models under comparable conditions.
 
 
 \section{Methods}
@@ -175,8 +166,10 @@ All associated preprocessing, labeling, and baseline model code is available at:
 \section{Known Limitations}
 
 
+MICIU/AEI/10.13039/501100011033 and for FEDER, UE under projects NeurEYE (PID2024-156576OB-C31/C32/C33)
+
 \section*{Acknowledgements}
-This work was supported by the Spanish Ministry of Science and Innovation (PSI PLEC2021-007875, REMO CPP2021-008869, EYEFUL-UAH PID2020-113118RB-C31) and the European Union (PRECISION PID2021-128000OBC21, SAFE 101098992, SUBMERSE 101095055). We thank the cable operator for data access under confidentiality and Artemisa/IFIC for computing support.
+This work has been partially supported by the Spanish Ministry of Science and Innovation MCIN/AEI/10.13039/501100011033, FEDER UE, and by the European Union NextGenerationEU/PRTR program under grants PSI (PLEC2021-007875), REMO (CPP2021-008869) NeurEYE-UAH (PID2024-156576OB-C31) and EYEFUL-UAH (PID2020-113118RB-C31); by FEDER Una manera de hacer Europa under grant PRECISION (PID2021-128000OBC21); by the European Innovation Council under grant SAFE (101098992)  and Horizon Europe under grants SUBMERSE (101095055) and ECSTATIC (101189595). We gratefully acknowledge the computer resources at Artemisa, funded by the European Union ERDF and Comunitat Valenciana as well as the technical support provided by the Instituto de Fisica Corpuscular, IFIC (CSIC-UV). We also thank the cable operator and the data owners for allowing data access under confidenciality.
 
 \section*{Author Contributions}
 E.E.R.-T., J.M.-G., and D.P.-P. designed the study and experiments. J.T. and R.V. coordinated access to infrastructure and metadata. P.J.V.-M. and S.E.P.-C. performed data processing and model implementation. S.M.-L. and M.G.-H. supervised optical sensing and signal interpretation. All authors reviewed and approved the manuscript.
