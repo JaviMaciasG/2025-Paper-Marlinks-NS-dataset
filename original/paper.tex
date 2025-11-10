@@ -122,15 +122,6 @@ The \texttt{Marlinks-NS DAS} dataset we present in this paper addresses the lack
 % By releasing 75,000 feature‐vector samples across 250 positions with detailed labels (distance, vessel type, length, beam), your dataset will not only parallel these successful initiatives but also uniquely address submarine‐cable scenarios—enabling future researchers to benchmark vessel detection and distance‐estimation models under comparable conditions.
 
 
-\section{Methods}
-
-\subsection{Acquisition Method and Setup}
-\label{sec:acquisition-method}
-
-The submarine fiber was interrogated using a phase-sensitive Optical Time Domain Reflectometry ($\phi$-OTDR) system. This approach uses a narrow-linewidth, highly coherent laser that emits short optical pulses into the fiber core, where microscopic refractive index variations act as Rayleigh scatterers. The backscattered signal from each pulse carries amplitude and phase information that varies with longitudinal deformation in the fiber, that can be related to vibrations and acoustic disturbances in the cable vicinity. By measuring phase differences between consecutive backscatter traces, dynamic strain variations can be reconstructed continuously along the entire length of the fiber.
-
-The DAS data were recorded using an Alcatel OptoDAS interrogator~\cite{OptoDAS} connected to a $28\,km$ ocean-bottom fiber-optic cable originally deployed for power cable monitoring. The cable lies buried between $1.4-7.2\,m$ below the seafloor, offshore Zeebrugge (Belgium), as shown in Fig.~\ref{fig:geographical-location}. The interrogator employs optical pulse-compression reflectometry, that enables distributed vibration sensing over tens of kilometers with meter-scale spatial sampling while mitigating fading effects due to low-intensity points in the Rayleigh pattern \cite{gabai2016sensitivity, Zou_2015, Waagaard_2021}.  with a gauge length of $L=10.21\,m$, generating $2774$ sensing channels. The raw differential-phase signals were sampled at $f_s=3125\,Hz$.
-
 \begin{figure*}
   \centering
   \mysubfigure{0.292\textwidth}{Regional map.}{area-location-map-google-earth-trimmed.png}
@@ -147,6 +138,36 @@ The DAS data were recorded using an Alcatel OptoDAS interrogator~\cite{OptoDAS} 
   \label{fig:geographical-location}
 \end{figure*}
 
+\section{Methods}
+
+AQUÍ REFERENCIAR A LA ARQUITECTURA DE DATA CURATION QUE HEMOS HECHO, Y REFLEJAR LOS MISMOS NOMBRES QUE EN LA FIGURA.
+
+\subsection{Acquisition Method and Setup}
+\label{sec:acquisition-method}
+
+The submarine fiber was interrogated using a phase-sensitive Optical Time Domain Reflectometry ($\phi$-OTDR) system. This approach uses a narrow-linewidth, highly coherent laser that emits short optical pulses into the fiber core, where microscopic refractive index variations act as Rayleigh scatterers. The backscattered signal from each pulse carries amplitude and phase information that varies with longitudinal deformation in the fiber, that can be related to vibrations and acoustic disturbances in the cable vicinity. By measuring phase differences between consecutive backscatter traces, dynamic strain variations can be reconstructed continuously along the entire length of the fiber.
+
+The DAS data were recorded using an Alcatel OptoDAS interrogator~\cite{OptoDAS} connected to a $28\,km$ ocean-bottom fiber-optic cable originally deployed for power cable monitoring. The cable lies buried between $1.4-7.2\,m$ below the seafloor, offshore Zeebrugge (Belgium), as shown in Fig.~\ref{fig:geographical-location}. The interrogator employs optical pulse-compression reflectometry, that enables distributed vibration sensing over tens of kilometers with meter-scale spatial sampling while mitigating fading effects due to low-intensity points in the Rayleigh pattern \cite{gabai2016sensitivity, Zou_2015, Waagaard_2021}.  with a gauge length of $L=10.21\,m$, generating $2774$ raw spatial channels. The raw differential-phase signals were sampled at $f_s=3125\,Hz$.
+
+\subsection{Geospatial Tagging}
+\label{sec:geospatial-tagging}
+
+AQUÍ HABLAR DE INTERPOLACIÓN DE AIS Y DE COMBINACIÓN CON BATIMETRÍA DE EMODNET.
+
+
+\subsection{ML Tasks and Data Balance Considerations}
+\label{sec:ml-tasks}
+
+The \texttt{Marlinks-NS DAS} dataset has been designed to support two complementary machine learning (ML) tasks related to vessel monitoring using submarine fiber optic cables. The first task, \emph{vessel detection}, is formulated as a binary classification problem that is oriented to discriminate whether there is a vessel closer than a given distance threshold to the cable. The second task, \emph{distance estimation}, is defined as a regression problem in which the model aims to predict the distance between the cable and the nearest vessel. In both cases the required labeling information is derived from the synchronized Automatic Identification System (AIS) data.
+
+To ensure both tasks are representative and statistically balanced, a detailed analysis of the vessel geographical distribution  along the monitored cable was performed. Initial inspection of the ten-day continuous recording revealed strong spatial nonuniformity in vessel passages—mainly concentrated in the section of the cable intersecting the main navigation corridor. Regions near the cable ends presented very low vessel activity, leading to class imbalance and data sparsity that would bias ML model training and evaluation. To mitigate this, a contiguous portion of $2553\,\mathrm{m}$ was selected, to corresponding to a subset of $N_{channels}=250$ equally spaced spatial channels located between $14707\,m$ and $17260\,m$ from the interrogator. This segment exhibits a balanced distribution of vessel distances, offering sufficient representation of both “vessel-present” and “no-vessel” cases, as well as a broad dynamic range of distances suitable for regression.
+
+For the classification task, the dataset can be further partitioned according to distance thresholds (e.g., 0–500 m, 500–1000 m, 1000–1500 m, etc.), enabling flexible problem formulations with controllable class ratios. For regression, the continuous distance label allows quantitative modeling of vessel proximity with high temporal resolution.
+
+\vspace{0.3cm}
+\noindent\textbf{Recommended figure:} Figure~4 from the accompanying experimental paper (showing the spatial distribution of vessel passages and the selection of the active segment) should be included here. It clearly illustrates the cable portion used in the dataset and visually supports the data-balance rationale behind the 2553 m selection.
+
+
 
 \subsection{Signal Preprocessing}
 \label{sec:signal preprocessing}
@@ -161,10 +182,14 @@ The raw differential-phase time series were converted to strain by the cable ope
 \end{itemize}
 This process ensures consistent, and physically interpretable strain signals across all channels.
 
+
 \subsection{Feature Extraction}
 \label{sec:feature extraction}
 
 Spectral analysis revealed that discriminative content concentrates between 4~Hz and 100~Hz. Accordingly, each 10~s window is represented by 100 logarithmically spaced band-energy features within this range, excluding 49--51~Hz to suppress 50~Hz interference. Features may be spatially averaged across 10--250 adjacent channels (100--2500~m) to improve robustness. The preprocessing scripts allow flexible generation of these features from the raw strain signals.
+
+The spectral range was split into $N_{bands}=100$
+The \href{https://github.com/UAH-PSI/das-vessel-detection/blob/main/data/fbands.csv}{the GitHub repository}
 
 \subsection{AIS Data and Label Generation}
 \label{sec:ais data and label generation}
@@ -261,10 +286,22 @@ The dataset is suitable for classification and regression tasks under temporal c
   \item Note that raw AIS and geospatial data are not available due to confidentiality.
 \end{itemize}
 
+
+\section{Data availability}
+\label{sec:data-availability}
+
+The data is avaliable in a open Zenodo repository~\cite{ramirez2024dasvesseldataset} (\url{https://doi.org/10.5281/zenodo.15611778}) and it has been released under a Creative Commons Attribution–NonCommercial–ShareAlike 4.0 International license for research and educational purposes, aimed to enable reproducible development and benchmarking of machine-learning models for vessel detection and vessel distance estimation in submarine cable protection applications.
+
+The Zenodo repository contains the data stored in hdf5 format, and supporting documentation.
+
+
 \section{Code Availability}
 \label{sec:code availability}
 
 All associated preprocessing, labeling, and baseline model code is available at: \url{https://github.com/UAH-PSI/das-vessel-detection}.
+
+\textit{For all publications, a statement must be included under the subheading "Code Availability" indicating whether and how and custom code can be accessed, including any restrictions to access. This section can also include information on the versions of any software used, if relevant, and any specific variables or parameters used to generate, test, or process the current dataset if these are not included in the Methods. Please see our policy on code availability for more information. The code availability statement should be placed at the end of the manuscript, immediately before the references. }
+
 
 \section{Known Limitations}
 \label{sec:known limitations}
@@ -277,6 +314,7 @@ This work has been partially supported by the Spanish Ministry of Science and In
 
 \section*{Author Contributions}
 \label{sec:author contributions}
+
 E.E.R.-T., J.M.-G., D.P.-P. and S.E.P.-C. designed the study and experiments and performed data processing and model implementation. J.T. and R.V. coordinated access to infrastructure and metadata. S.M.-L. and M.G.-H. supervised optical sensing and signal interpretation. All authors reviewed and approved the manuscript.
 
 \section*{Competing Interests}
