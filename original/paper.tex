@@ -137,14 +137,15 @@ The DAS data were recorded using an Alcatel OptoDAS interrogator~\cite{OptoDAS} 
 \subsection{Signal Preprocessing}
 \label{sec:signal preprocessing}
 
-The raw differential-phase time series were converted to strain through:
+The raw differential-phase time series were converted to strain by the cable operator through the following operations:
+
 \begin{itemize}
   \item Gain normalization and amplitude scaling, to ensure consistent amplitude levels.
-  \item Spike detection and removal using an adaptive thresholding method.
+  \item Spike detection and removal.
   \item Phase unwrapping to remove $2\pi$ discontinuities.
   \item Temporal integration to recover cumulative strain.
 \end{itemize}
-This process ensures consistent, physically interpretable strain signals across all channels.
+This process ensures consistent, and physically interpretable strain signals across all channels.
 
 \subsection{Feature Extraction}
 \label{sec:feature extraction}
@@ -163,8 +164,8 @@ All AIS information and cable coordinates were geospatially synchronized; howeve
 
 \begin{figure}[H]
   \centering
-  \includegraphics[width=0.9\textwidth]{system-architecture-v6.png}
-  \caption{Dataset curation and preprocessing pipeline. Steps include DAS acquisition, signal conditioning, spectral feature extraction, AIS interpolation and synchronization, and generation of detection and distance labels. (Placeholder diagram.)}
+  \includegraphics[width=\textwidth]{system-architecture-v7.png}
+  \caption{Dataset curation and processing pipeline. Steps include DAS acquisition and raw signal preprocessing; spectral feature extraction; metadata (AIS, geographical location and bathymetry) processing, sinchronization and label generation; and cross validation partitioning.}
 \end{figure}
 
 \section{Data Records}
