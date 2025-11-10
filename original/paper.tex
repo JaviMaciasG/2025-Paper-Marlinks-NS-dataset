@@ -53,13 +53,13 @@ hyperfootnotes=false
 }                        %%% will be multiplied with 0.009 by ps2pdf
 
 % Title and authors
-\title{Dataset for Vessel Detection and Localization Using Distributed Acoustic Sensing in Submarine Optical Fiber Cable Protection Tasks}
+\title{A distributed acoustic sensing dataset for vessel detection and localization in submarine cable protection tasks}
 
 \author[1]{Erick Eduardo Ramirez-Torres}
+\author[1]{Sira Elena Palazuelos-Cagigas}
 \author[1]{Javier Macias-Guarasa}
 \author[1]{Daniel Pizarro}
 \author[2]{Javier Tejedor}
-\author[1]{Sira Elena Palazuelos-Cagigas}
 \author[1]{Sonia Martin-Lopez}
 \author[1]{Miguel Gonzalez-Herraez}
 \author[3]{Roel Vanthillo}
@@ -76,12 +76,21 @@ hyperfootnotes=false
 
 
 \begin{abstract}
-Recent incidents of accidental damage and suspected sabotage to submarine telecommunication and power cables in regions such as the Baltic Sea have underscored the vulnerability of these infrastructures and the urgent need for continuous monitoring solutions. Distributed Acoustic Sensing (DAS) applied to submarine optical fiber cables enables continuous, wide-area monitoring of underwater acoustic activity, providing a powerful tool for maritime surveillance and ocean observation.
+% Recent incidents of accidental damage and suspected sabotage to submarine telecommunication and power cables in regions such as the Baltic Sea have underscored the vulnerability of these infrastructures and the urgent need for continuous monitoring solutions. Distributed Acoustic Sensing (DAS) applied to submarine optical fiber cables enables continuous, wide-area monitoring of underwater acoustic activity, providing a powerful tool for maritime surveillance and ocean observation.
 
-We present here the rigorously curated \texttt{Marlinks-NS} Distributed Acoustic Sensing (DAS) dataset that provides the first large-scale, open collection of DAS measurements acquired from a submarine telecommunication cable specifically aimed at submarine cable protection tasks. The release data defines two machine learning tasks (ML), for both vessel detection and vessel distance estimation tasks, enabling reproducible ML studies under realistic marine conditions.
+% We present here the rigorously curated \texttt{Marlinks-NS} Distributed Acoustic Sensing (DAS) dataset that provides the first large-scale, open collection of DAS measurements acquired from a submarine telecommunication cable specifically aimed at submarine cable protection tasks. The release data defines two machine learning tasks (ML), for both vessel detection and vessel distance estimation tasks, enabling reproducible ML studies under realistic marine conditions.
 
-The dataset consists of over $74,000$ preprocessed and labeled data frames derived from more than ten days of continuous recording on a $28\,km$ buried submarine optical fiber cable in the southern North Sea. Each frame data contains energy values computed in $100$ logarithmically spaced frequency bands, accompanied by anonymized synchronized vessel metadata (distance to the cable, type, beam, and length) extracted from Automatic Identification System (AIS) information. The release includes a complete description of the data structure, processing workflow, and example code for loading and manipulating the data. By providing a machine-learning-ready representation of DAS signals, the \texttt{Marlinks-NS DAS} dataset aims to serve as a reference resource for developing and benchmarking algorithms for vessel detection, classification, and localization using submarine fiber infrastructures applied to submarine cable protection tasks.
+% The dataset consists of over $74,000$ preprocessed and labeled data frames derived from more than ten days of continuous recording on a $28\,km$ buried submarine optical fiber cable in the southern North Sea. Each frame data contains energy values computed in $100$ logarithmically spaced frequency bands, accompanied by anonymized synchronized vessel metadata (distance to the cable, type, beam, and length) extracted from Automatic Identification System (AIS) information. The release includes a complete description of the data structure, processing workflow, and example code for loading and manipulating the data. By providing a machine-learning-ready representation of DAS signals, the \texttt{Marlinks-NS DAS} dataset aims to serve as a reference resource for developing and benchmarking algorithms for vessel detection, classification, and localization using submarine fiber infrastructures applied to submarine cable protection tasks.
+
+Recent incidents of accidental damage and suspected sabotage to submarine telecommunication and power cables, particularly in the Baltic Sea, have underscored their vulnerability and the need for continuous monitoring solutions. Distributed Acoustic Sensing (DAS) applied to submarine optical fiber cables enables wide-area, real-time monitoring of underwater acoustic activity, providing a promising tool for maritime surveillance and cable protection.
+
+We present the \texttt{Marlinks-NS} DAS dataset, a large-scale, openly available collection of submarine DAS measurements specifically curated for cable protection research. The dataset defines two machine learning tasks (vessel detection and vessel distance estimation) allowing reproducible studies under realistic marine conditions.
+
+The dataset contains over $74,000$ preprocessed and labeled data frames from more than ten days of continuous recording along a $28\,km$ buried fiber segment in the southern North Sea. Each frame includes 100-band spectral energy features and anonymized vessel metadata from AIS. The dataset, processing workflow, and example code together provide a benchmark for developing and validating DAS-based methods for vessel monitoring and submarine cable protection.
 \end{abstract}
+
+
+
 
 \section{Background \& Summary}
 
