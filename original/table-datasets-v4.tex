@@ -1,0 +1,80 @@
+\begin{table*}[t]
+\centering
+\footnotesize
+\setlength{\tabcolsep}{3pt}     % compacto
+\renewcommand{\arraystretch}{1.15}
+\caption{Summary of publicly released DAS datasets cited in this work, including application domain, fiber length, dataset size, sampling frequency, and recording period. Fields marked as \textit{TBD} should be completed using the information in the corresponding bibliographic sources.}
+\label{tab:das_datasets}
+\begin{tabularx}{\linewidth}{
+  >{\RaggedRight\arraybackslash}p{2.8cm}|  % Dataset
+  >{\RaggedRight\arraybackslash}p{3.3cm}|  % Domain
+  >{\RaggedRight\arraybackslash}p{2.0cm}|  % Fiber length
+  >{\RaggedRight\arraybackslash}p{2.0cm}|  % Dataset size
+  >{\RaggedRight\arraybackslash}p{1.8cm}|  % Sampling frequency
+  Y                                        % Notes
+}
+\hline
+\textbf{Dataset} &
+\textbf{Application domain} &
+\textbf{Fiber length} &
+\textbf{Dataset size} & \textbf{Sampling frequency and gauge length} &
+\textbf{Annotation}\\
+\hline
+DAShip~\cite{Huang2025DAShip} &
+Wake ship detection and vessel speed/angle classification &
+8.5\,km &
+55875 ship passing events above the cable &
+10\,Hz GL=4\,m&
+Annotated using AIS guidance (for the three binary classification tasks)\\
+\hline
+MARS DAS experiment~\cite{cheng2021utilizing,cheng2020mbari_das_data} &
+Ocean dynamics \& subsurface characterization &
+51\,km &
+4 days, 3.2TB &
+250\,Hz GL=10\,m&
+No labeling provided \\
+\hline
+MEUST~\cite{sladen2019distributed,sladen2019meust_km3net_das} &
+Seismic monitoring &
+41.5\,km &
+6 days &
+1\,kHz GL=19.2\,m &
+No labeling provided \\
+\hline
+HCMR+ NESTOR+ MEUST~\cite{lior2021detection,lior2021detection_dataset} &
+Seismic monitoring &
+13.2\,km, 26.2\,km and 44.8\,km &
+1 day (68 GB), 7 days (740 GB), 20 days (16 TB) &
+Between 100\,Hz and 500\,Hz. GL=19.2\,m/10\,m &
+No labeling provided \\
+\hline
+DAS4Microseism~\cite{Taweesintananon2023,VPRD2H_2022} &
+Ocean dynamics \& subsurface characterization &
+120\,km &
+44 days &
+50\,Hz GL=8-16\,m&
+No labeling provided \\ %; fiber buried 0--2\,m below the seafloor \\
+\hline
+OOI RCA~\cite{shi2025multiplexed,lipovsky2024rapid_das_ooi} &
+Seismic monitoring &
+~95\,km &
+4 days, 2.4TB &
+200\,Hz GL=40.852\,m &
+No labeling is provided\\
+\hline
+Valencia~\cite{pubDAS2023} &
+Submarine monitoring vibrations (telecommunication cable) &
+$\sim$50\,km (first $\sim$10\,km on land) &
+7 days, 3TB &
+250\,Hz GL=30.4\,m&
+No labeling provided \\ %; fiber buried $\sim$1\,m below the seabed in the submarine section\\
+\hline
+Yellow River Delta~\cite{song2024near,song_2024_dataset} &
+Nearshore ocean current monitoring &
+10\,km &
+25 days &
+50\,Hz  GL=5\,m&
+Provide labels for wind speed and tidal data \\
+\hline\bottomrule
+\end{tabularx}
+\end{table*}

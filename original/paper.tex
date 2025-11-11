@@ -13,6 +13,12 @@
 \usepackage{booktabs}
 \usepackage[numbers]{natbib}
 
+\usepackage{array,tabularx,booktabs,siunitx,ragged2e}
+\newcolumntype{Y}{>{\RaggedRight\arraybackslash}X} % X con alineación raggedright
+%\usepackage{booktabs}
+%\usepackage{tabularx}
+%\usepackage{siunitx}
+
 \usepackage{wrapfig}%,graphicx,hyperref}
 
 \graphicspath{{./figures/}{./results/}}
@@ -24,6 +30,18 @@
 }
 \captionsetup[subfloat]{font=footnotesize} % Or small/tiny
 \captionsetup[subfloat]{font=scriptsize} % Or small/tiny
+
+% todonotes definitions
+\usepackage{todonotes}
+
+\newcommand{\todojmg}[1]{\todo[author=JMG,inline,color=blue!30]{#1}}
+\newcommand{\tododpp}[1]{\todo[author=DPP,inline,color=orange!30]{#1}}
+\newcommand{\todojtn}[1]{\todo[author=JTN,inline,color=yellow!30]{#1}}
+\newcommand{\todosepc}[1]{\todo[author=SEPC,inline,color=purple!30]{#1}}
+\newcommand{\todosml}[1]{\todo[author=SML,inline,color=cyan!30]{#1}}
+\newcommand{\todomgh}[1]{\todo[author=MGH,inline,color=red!30]{#1}}
+\newcommand{\rojo}[1]{\textcolor{red}{#1}}
+\newcommand{\azul}[1]{\textcolor{blue}{#1}}
 
 % and their extensions so you won't have to specify these with
 % every instance of \includegraphics
@@ -86,10 +104,8 @@ Recent incidents of accidental damage and suspected sabotage to submarine teleco
 
 We present the \texttt{Marlinks-NS} DAS dataset, a large-scale, openly available collection of submarine DAS measurements specifically curated for cable protection research. The dataset defines two machine learning tasks (vessel detection and vessel distance estimation) allowing reproducible studies under realistic marine conditions.
 
-The dataset contains over $74,000$ preprocessed and labeled data frames from more than ten days of continuous recording along a $28\,km$ buried fiber segment in the southern North Sea. Each frame includes 100-band spectral energy features and anonymized vessel metadata from the Automatic Identification System (AIS). The dataset, processing workflow, and example code together provide a benchmark for developing and validating DAS-based methods for vessel monitoring and submarine cable protection.
+The dataset contains over $74,000$ preprocessed and labeled data instances from more than ten days of continuous recording along a $28\,km$ buried fiber segment in the southern North Sea. Each instance includes 100-band spectral energy features and anonymized vessel metadata from the Automatic Identification System (AIS). The dataset, processing workflow, and example code together provide a benchmark for developing and validating DAS-based methods for vessel monitoring and submarine cable protection.
 \end{abstract}
-
-
 
 
 \section{Background \& Summary}
@@ -101,20 +117,21 @@ Distributed Acoustic Sensing (DAS) technology allows repurposing of standard opt
 Publicly available datasets enabling the development of data-driven algorithms for DAS-based vessel detection are scarce. Existing works are often limited in scale, or lack of properly labeled metadata that allow research in Artificial Intelligence Machine Learning strategies (AI/ML). This scarcity is particularly severe in specialized environments like submarine cables. Initiatives such as PubDAS~\cite{pubDAS2023} (the first large-scale open-source repository for DAS data) have demonstrably accelerated research by providing multiple experiment datasets for benchmarking and algorithm development. So, the number of publicly available resources in submarine environments are very limited. Some relevant examples in this scenario are:
 
 \begin{itemize}
-  \item The Valencia-IslaLink DAS dataset, which is distributed within PubDAS~\cite{pubDAS2023}.%, recorded in a telecommunication fiber-optic cable operated by IslaLink Holding Iberia S.L. and connecting Valencia to Palma de Mallorca. Data corresponds to the first $50\,km$ of the cable (the first $~10\,km$ are on land and the remaining corresponds to a buried cable about $1\,m$ below the Mediterranean seabed). 7 days of continuous data are available (from September $1^{st}$ to $7^{st}$ 2023).
-  \item DAShip, described by Huang et al. in~\cite{Huang2025DAShip} (available at \url{https://www.alipan.com/s/sTdL3zSRiPo}).
-  \item The mBARI\_DAS dataset by Cheng et al. described in~\cite{cheng2021utilizing} (available at~\cite{cheng2020mbari_das_data} with a \href{https://github.com/njlindsey/Photonic-seismology-in-Monterey-Bay-Dark-fiber1DAS-illuminates-offshore-faults-and-coastal-ocean}{source code repository at Github}).
-  \item The Géoazur DAS dataset by Sladen et al.~\cite{sladen2019distributed} (available at~\cite{sladen2019meust_km3net_das}).
-  \item The Underwater DAS Detection dataset by Lior et al.~\cite{sladen2019distributed} (available at~\cite{sladen2019meust_km3net_das}).
+  \item The DAShip dataset, described by Huang et al. in~\cite{Huang2025DAShip} (available at \cite{DAShip2025}).
+  \item The MARS DAS experiment dataset by Cheng et al. described in~\cite{cheng2021utilizing} (available at~\cite{cheng2020mbari_das_data} with a \href{https://github.com/njlindsey/Photonic-seismology-in-Monterey-Bay-Dark-fiber1DAS-illuminates-offshore-faults-and-coastal-ocean}{source code repository at Github}).
+  \item The MEUST DAS dataset by Sladen et al.~\cite{sladen2019distributed} (available at~\cite{sladen2019meust_km3net_das}).
+  \item The HCMR+NESTOR+MEUST DAS datasets by Lior et al.~\cite{lior2021detection} (available at~\cite{lior2021detection_dataset}).
   \item The DAS4Microseism dataset, by Taweesintananon et al. described in~\cite{Taweesintananon2023} (available at~\cite{VPRD2H_2022}).
   \item The OOI Regional Cabled Array Dataset, by Lipowsky et al. described in~\cite{shi2025multiplexed} (available at \cite{lipovsky2024rapid_das_ooi} with a \href{https://github.com/uwfiberlab/OOI_DAS_2024}{source code repository at GitHub}).
-  \item The Nearshore Ocean Currents Dataset, by Song et al., described in~\cite{song2024near} and available at~\cite{song_2024_dataset}.
+  \item The Valencia-IslaLink DAS dataset, which is distributed within PubDAS~\cite{pubDAS2023}.%, recorded in a telecommunication fiber-optic cable operated by IslaLink Holding Iberia S.L. and connecting Valencia to Palma de Mallorca. Data corresponds to the first $50\,km$ of the cable (the first $~10\,km$ are on land and the remaining corresponds to a buried cable about $1\,m$ below the Mediterranean seabed). 7 days of continuous data are available (from September $1^{st}$ to $7^{st}$ 2023).
+  \item The Yellow River Delta Dataset, by Song et al., described in~\cite{song2024near} and available at~\cite{song_2024_dataset}.
 \end{itemize}
 
-Except for DAShip, all these datasets are oriented to applications in the seismic and ocean monitoring domain without explicit labeling information that can support experimental work in vessel detection and localization. DAShip is a large-scale, annotated dataset collected for the specific purpose of marine vessel detection. It comprises 55,875 ship-related event segments, captured on a submarine fiber-optic cable, $8.5\,km$ long, with a maximum depth of $13\,m$ along the cable deployment (according to GEBCO bathymetry information~\cite{gebco2024}). It is oriented to the detection of vessel passages right  above the fiber optic cable, using image classification algorithms to identify the ships' wakes, to that it cannot be used for preventive submarine cable protection, as the detection happens when the vessel is already above the cable. Another limitation is that the data has been downsampled to $10\,Hz$, which has two main issues: first, this reduced bandwidth does not allow to exploit vessel acoustic signatures, which exhibits relevant frequency components in higher frequencies~\cite{Rivet_2021,Thiem_2023}; and second, it will be more affected by low frequency noise from temperature drift, and, more importantly, from the effect of sea waves and marine currents.
+\input{table-datasets-v4.tex}
 
-We can mention other recent datasets which address event classification tasks, but in terrestrial domains, such as that by Tomasov et al.~\cite{tomasov2025comprehensive} that presented a fully labeled DAS dataset (including band-limited feature vectors). The fiber was $1663\,m$ long, and was buried $1\,m$ below the surface around a rectangular area in an university campus. The selected events included walking, running, longboarding, and driving, as well as potential security-related events like fence climbing, fiber manipulation, and opening/closing of manholes.
+Table~\ref{tab:das_datasets} shows the relevant characteristics of each of them. Except for DAShip, all these datasets are oriented to applications in the seismic and ocean monitoring domain without explicit labeling information that can support experimental work in vessel detection and localization. DAShip is a large-scale, annotated dataset collected for the specific purpose of marine vessel detection. It comprises 55,875 ship-related event segments, captured on a submarine fiber-optic cable, $8.5\,km$ long, with a maximum depth of $13\,m$ along the cable deployment (according to GEBCO bathymetry information~\cite{gebco2024}). It is oriented to the detection of vessel passages right  above the fiber optic cable, using image classification algorithms to identify the ships' wakes, to that it cannot be used for preventive submarine cable protection, as the detection happens when the vessel is already above the cable. Another limitation is that the data has been downsampled to $10\,Hz$, which has two main issues: first, this reduced bandwidth does not allow to exploit vessel acoustic signatures, which exhibits relevant frequency components in higher frequencies~\cite{Rivet_2021,Thiem_2023}; and second, it will be more affected by low frequency noise from temperature drift, and, more importantly, from the effect of sea waves and marine currents.
 
+We can mention other properly labeled recent datasets which address event classification tasks, but in terrestrial domains, such as that by Tomasov et al.~\cite{tomasov2025comprehensive} that presented a fully labeled DAS dataset, including band-limited feature vectors. The fiber was $1663\,m$ long, and was buried $1\,m$ below the surface around a rectangular area in an university campus. The selected events included walking, running, longboarding, and driving, as well as potential security-related events like fence climbing, fiber manipulation, and opening/closing of manholes.
 
 The \texttt{Marlinks-NS DAS} dataset we present in this paper addresses the lack of publicly accessible, well-annotated DAS data aimed at submarine cable protection tasks, by defining two AI/ML tasks, one for vessel detection, and another for vessel distance estimation. The dataset provides a large-scale, machine-learning-ready collection of preprocessed spectral features and vessel metadata derived from a ten-day continuous recording campaign on a submarine cable. It comprises $74,771$ feature vectors computed at $250$ sensing positions in a relevant fiber optic range, each containing energy values in $100$ logarithmically spaced frequency bands, together with synchronized vessel distance and vessel presence labels, plus anonymized vessel related information obtained from AIS (beam, and length). By releasing this curated dataset, we aim to foster transparency and reproducibility in AI/ML-based DAS research while enabling the community to benchmark vessel detection and localization algorithms under realistic conditions. Additionally, accompanying code has been made available at \url{https://github.com/UAH-PSI/das-vessel-detection} to ease the scientific community in this research area to quickly .
 
@@ -142,7 +159,7 @@ The processing pipeline we applied for the generation of the dataset is shown in
 The submarine fiber optic cable was interrogated using a phase-sensitive Optical Time Domain Reflectometry ($\phi$-OTDR) system. This approach uses a narrow-linewidth, highly coherent laser that emits short optical pulses into the fiber core, where microscopic refractive index variations act as Rayleigh scatterers. The backscattered signal from each pulse carries amplitude and phase information that varies with longitudinal deformation in the fiber, that can be related to vibrations and acoustic disturbances in the cable vicinity. By measuring phase differences between consecutive backscatter traces, dynamic strain variations can be reconstructed continuously along the entire length of the fiber.
 
 The DAS data were recorded using an Alcatel OptoDAS interrogator~\cite{OptoDAS} connected to a $28\,km$ ocean-bottom fiber-optic cable originally deployed for power cable monitoring. The cable lies buried between $1.4-7.2\,m$ below the seafloor, offshore Zeebrugge (Belgium), as shown in Fig.~\ref{fig:geographical-location}. The interrogator employs optical pulse-compression reflectometry, that enables distributed vibration sensing over tens of kilometers with meter-scale spatial sampling while mitigating fading effects due to low-intensity points in the Rayleigh pattern \cite{gabai2016sensitivity, Zou_2015, Waagaard_2021}.  with a gauge length of $L=10.21\,m$, generating $2774$ raw spatial channels. The raw differential-phase signals were sampled at $f_s=3125\,Hz$.
-\begin{figure*}
+\begin{figure*}[b]
   \centering
   \mysubfigure{0.292\textwidth}{Regional map.}{area-location-map-google-earth-trimmed.png}
   \label{fig:regional-map}
@@ -158,6 +175,8 @@ The DAS data were recorded using an Alcatel OptoDAS interrogator~\cite{OptoDAS} 
   \label{fig:geographical-location}
 \end{figure*}
 
+
+
 \subsection{DAS Preprocessing}
 \label{sec:signal preprocessing}
 
@@ -172,17 +191,19 @@ In this stage, the raw differential-phase time series generated by the DAS inter
 
 This process ensures consistent, and physically interpretable strain signals across all channels.
 
-Figs. XXX and YYY show two examples of the generated strain signals for scenarios with a vessel nearby or in the absence of nearby vessels, respectively.
+Figs.~\ref{fig:energy-dt-map}.a+b and~\ref{fig:strain-silence}.a+b show two examples of the generated strain signals for scenarios with a vessel nearby or in the absence of nearby vessels, respectively.
+
 
 
 \subsection{Metadata Processing: AIS Data Processing}
 \label{sec:ais-data-processing}
 
 \todojmg{Erick, revisa please las estadísticas de AIS que pone aquí.}
-The AIS data provided by the cable operator included vessel identifiers (MMSI), timestamps, coordinates, course, and speed for 745 unique vessels with 64,417 position reports. A relevant problem when using AIS data is the unpredictable and typically low position update rates~\cite{emmens2021promisesAIS}. A detailed analysis on our DAS data showed that $88\%$ of vessels reported positions only every 1 to 3 minutes, which may imply a significant positional uncertainty. To overcome this issue, we decide to apply a linear interpolation between consecutive reported positions at $1\,Hz$. %, discarding trajectories with gaps exceeding $60$ minutes.
-We did not have the possibility of a direct quantitative validation of this simple interpolation approach (provided AIS data was the only available source of vessel positioning), but the good results obtained (see Section~\ref{sec:technical validation}) served us a kind of ``indirect validation'', so that we did not require to apply more sophisticated interpolation methods~\cite{guo2021improved}.
 
-After the interpolation process, we had over $1,200,000$ AIS position entries, which we further enriched with additional AIS metadata (namely, vessel type, length and beam)  that could be useful in further studies or AI/ML tasks requiring information related to vessel type and size.
+The AIS data provided by the cable operator included vessel identifiers (MMSI), timestamps, coordinates, course, and speed for 745 unique vessels with 64,417 position reports. A relevant problem when using AIS data is the unpredictable and typically low position update rates~\cite{emmens2021promisesAIS}. A detailed analysis on our DAS data showed that $88\%$ of vessels reported positions only every 1 to 3 minutes, which may imply a significant positional uncertainty. To overcome this issue, we applied a linear interpolation between consecutive reported positions at $1\,Hz$ position update rate. %, discarding trajectories with gaps exceeding $60$ minutes.
+We did not have the possibility of a direct quantitative validation on the precision of this simple interpolation approach (provided AIS data was the only available source of vessel positioning), but the good results obtained (see Section~\ref{sec:technical validation}) served us a kind of ``indirect validation'', so that we did not require to apply more sophisticated interpolation methods~\cite{guo2021improved}.
+
+After the interpolation process, we had over $1,200,000$ AIS position entries, which we further enriched with web-scrapped additional AIS metadata (namely, vessel type, length and beam) that can be useful in further studies or AI/ML tasks requiring information related to vessel type and size.
 
 
 \subsection{Metadata Processing: Geographical+Bathymetry Data Processing}
@@ -200,12 +221,20 @@ In ML applications, maintaining a balanced dataset helps to ensure unbiased mode
 
 The \texttt{Marlinks-NS DAS} dataset has been designed to support two complementary machine learning (ML) tasks related to vessel monitoring for submarine cable protection. The first task, \emph{vessel detection}, is formulated as a binary classification problem that is oriented to discriminate whether there is a vessel closer than a given distance threshold to the cable. The second task, \emph{distance estimation}, is defined as a regression problem in which the model aims to predict the distance between the cable and the nearest vessel. In both cases the required labeling information is derived from the synchronized AIS data.
 
-To asses whether both tasks are representative and evaluate their statistical balance, a detailed analysis of the vessel geographical distribution along the monitored cable was performed. Initial inspection of the ten-day continuous recording revealed strong spatial distribution nonuniformity. Fig.XXX shows, as a function of the distance along the cable length, the number of data frames that corresponds to a situation in which there is a vessel at a distance lower than a given threshold (from $500\,$ to $5000,m$ in $500\,m$ increments. From the figure we can identify a cable section around $16\,km$ that exhibits a relevant increase in the number of available data frames with vessels closer to the cable than, for example, $1000,m$ or $2000,m$, which are reasonable thresholds for the vessel detection task. For example, a Spanish company monitoring submarine cables with AIS, establishes a $1000\,m$ distance threshold to trigger enhanced vessel tracking to assess potential threats to the cable.
+\begin{figure}
+  \centering
+  \includegraphics[width=\columnwidth]{balance-1000-3000.png}
+  \caption{Number of data frames corresponding to vessels located at a distance lower then given threshold distances.}
+  \label{fig:data-balance}
+\end{figure}
+
+To asses whether both tasks are representative and evaluate their statistical balance, a detailed analysis of the vessel geographical distribution along the monitored cable was performed. Initial inspection of the ten-day continuous recording revealed strong spatial distribution nonuniformity. Fig.~\ref{fig:data-balance} shows, as a function of the distance along the cable length, the number of data frames that corresponds to a situation in which there is a vessel at a distance lower than a given threshold (from $500\,$ to $5000,m$ in $500\,m$ increments. From the figure we can identify a cable section around $16\,km$ that exhibits a relevant increase in the number of available data frames with vessels closer to the cable than, for example, $1000,m$ or $2000,m$, which are reasonable thresholds for the vessel detection task. For example, a Spanish company monitoring submarine cables with AIS, establishes a $1000\,m$ distance threshold to trigger enhanced vessel tracking to assess potential threats to the cable.
 
 So, given this spatial data distribution, we selected a contiguous cable range of $2553\,m$,  corresponding to a subset of $N_{channels}=250$ equally spaced spatial channels located between $14707\,m$ and $17260\,m$ from the interrogator. This segment exhibits a reasonably balanced distribution of vessel distances, offering sufficient representation of both ``vessel-nearby'' and ``no-vessel-nearby'' cases, as well as a broad dynamic range of distances suitable for regression. The \texttt{Marlinks-NS DAS} dataset contains full data for this cable segment.
 
-\vspace{0.3cm}
-\noindent\textbf{figure:} METER FIGURA CON NÚMERO DE EJEMPLOS DISPONIBLES PARA BARCOS POR DEBAJO DE DISTANCIAS VARIAS 500 1000 1500 2000 3000, ETC, PARA JUSTIFICAR VISUALMENTE LA SELECCIÓN DE LA ZONA DEL CANAL Y PLANTEAR OTRAS COMO LA MÁS CERCANA AL INTERROGADOR. METER TAMBIÉN FIGURA DE HISTOGRAMA DE MÍNIMAS DISTANCIAS DE BARCOS A CABLE, SI QUEDA BIEN.
+\todojmg{METER FIGURA CON NÚMERO DE EJEMPLOS DISPONIBLES PARA BARCOS POR DEBAJO DE DISTANCIAS VARIAS 500 1000 1500 2000 3000, ETC, PARA JUSTIFICAR VISUALMENTE LA SELECCIÓN DE LA ZONA DEL CANAL Y PLANTEAR OTRAS COMO LA MÁS CERCANA AL INTERROGADOR. METER TAMBIÉN FIGURA DE HISTOGRAMA DE MÍNIMAS DISTANCIAS DE BARCOS A CABLE, SI QUEDA BIEN.}
+
+\todojmg{Meter figura de distribución de tipo de barcos}
 
 
 \subsection{Feature Extraction}
@@ -217,8 +246,21 @@ The strain signal was first segmented into non-overlapping 10-second windows to 
 
 The feature vector is then generated from the FFT values, so that each 10-second window is represented by 100 logarithmically spaced band-energy features within the 4---100~Hz range, excluding the 49--51~Hz and 98--100~Hz. The logarithmic frequency mapping was designed to equalize the required spectral resolution, allocating more spectral FFT coefficients in the lower frequency region (the specific frequency band limits can be found in \href{https://github.com/UAH-PSI/das-vessel-detection/blob/main/data/fbands.csv}{the GitHub repository}).
 
-ERICK, PLEASE METE LAS ECUACIONES DE CÁLCULO EXACTO DE LA ENERGÍA EN BANDAS DEFININIENDO LOS SUMATORIOS QUE TOCAN Y LOS VALORES DE AMPLITUD (MÓDULO) DE LA FFT PARA REFERENCIA DE LOS INTERESADOS
+\todojmg{Erick, please mete las ecuaciones de cálculo exacto de la energía en bandas defininiendo los sumatorios que tocan y los valores de amplitud (módulo) de la fft para referencia de los interesados.}
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{dt-full.png}
+  \caption{(a) Raw strain signal sensed at $15.4\,km$ in the time interval of the red dashed square in Fig.~\ref{fig:energy-dt-map}.d. (b) Filtered strain signal ($4\,Hz$ to $98\,Hz$, excluding the $(49-51)\,Hz$) corresponding to the raw signal in Fig.~\ref{fig:energy-dt-map}.a and time-synchronized with it. (c) Filtered strain data as a function of time and distance along the cable corresponding to the red dashed square in Fig.~\ref{fig:energy-dt-map}.d, time synchronized with Figs.~\ref{fig:energy-dt-map}.a and~\ref{fig:energy-dt-map}.b. (d) Feature vector energy (in dBs) as a function of time and distance along the cable. (e) Distance from cable to nearest vessel (in meters), time-synchronized with Fig.~\ref{fig:energy-dt-map}.d.}
+  \label{fig:energy-dt-map}
+\end{figure}
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=.5\textwidth]{strain-silence.png}
+  \caption{Strain signal when no vessel is nearby the cable (it corresponds to the right dashed square in Fig.~\ref{fig:energy-dt-map}). (a) Filtered strain signal at $15.4\,km$ in the time interval of the right red dashed square in Fig.~\ref{fig:energy-dt-map}. (b) Filtered strain data as a function of time and distance corresponding to the right red dashed square in Fig.~\ref{fig:energy-dt-map}, time synchronized with Fig.~\ref{fig:strain-silence}.}
+  \label{fig:strain-silence}
+\end{figure}
 
 \subsection{Label Generation}
 \label{sec:ais data and label generation}
@@ -283,11 +325,13 @@ A 10-fold cross-validation scheme was applied, assigning each acquisition day to
 
 The XGBoost classifier achieved an overall F1-score exceeding 90\% for vessel detection within 1000~m, with balanced class-wise precision and recall. Regression models estimated vessel distance with a mean absolute error of 141~m, corresponding to a relative error (rMAE) of about 14\% for the 1000~m threshold. Results improved with larger spatial and temporal contexts and plateaued for contexts beyond 50~s and 250 sensors. Neural networks performed consistently worse under identical conditions.
 
-\begin{figure}[H]
-  \centering
-  \includegraphics[width=0.85\textwidth]{dt-sample.png}
-  \caption{Example of spectral feature map (top) and corresponding vessel distance profile (bottom). Energy increases are observed as vessels approach the cable crossing. (Placeholder illustration.)}
-\end{figure}
+
+
+% \begin{figure}[H]
+%   \centering
+%   \includegraphics[width=0.85\textwidth]{dt-sample.png}
+%   \caption{Example of spectral feature map (top) and corresponding vessel distance profile (bottom). Energy increases are observed as vessels approach the cable crossing. (Placeholder illustration.)}
+% \end{figure}
 
 
 \subsection{Spectral Interpretation and Sensitivity}
