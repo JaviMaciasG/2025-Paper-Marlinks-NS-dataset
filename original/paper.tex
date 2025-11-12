@@ -109,7 +109,7 @@ Recent incidents of accidental damage and suspected sabotage to submarine teleco
 
 We present the \texttt{Marlinks-NS} DAS dataset, a large-scale, openly available collection of submarine DAS measurements specifically curated for cable protection research. The dataset defines two machine learning tasks (vessel detection and vessel distance estimation) allowing reproducible studies under realistic marine conditions.
 
-The dataset contains over $74,000$ preprocessed and labeled data instances from more than ten days of continuous recording along a $28\,km$ buried fiber segment in the southern North Sea. Each instance includes 100-band spectral energy features and anonymized vessel metadata from the Automatic Identification System (AIS). The dataset, processing workflow, and example code together provide a benchmark for developing and validating DAS-based methods for vessel monitoring and submarine cable protection.
+The dataset contains over $74,000$ preprocessed and labeled data instances from more than ten days of continuous recording along a relevant segment in a $28\,km$ buried fiber optic cable in the North Sea. Each instance includes 100-band spectral energy features and anonymized vessel metadata from the Automatic Identification System (AIS). The dataset, processing workflow, and example code together provide a benchmark for developing and validating DAS-based methods for vessel monitoring and submarine cable protection.
 \end{abstract}
 
 
@@ -160,7 +160,7 @@ The processing pipeline we applied for the generation of the dataset is shown in
 
 The submarine fiber optic cable was interrogated using a phase-sensitive Optical Time Domain Reflectometry ($\phi$-OTDR) system. This approach uses a narrow-linewidth, highly coherent laser that emits short optical pulses into the fiber core, where microscopic refractive index variations act as Rayleigh scatterers. The backscattered signal from each pulse carries amplitude and phase information that varies with longitudinal deformation in the fiber, that can be related to vibrations and acoustic disturbances in the cable vicinity. By measuring phase differences between consecutive backscatter traces, dynamic strain variations can be reconstructed continuously along the entire length of the fiber.
 
-The DAS data were recorded using an Alcatel OptoDAS interrogator~\cite{OptoDAS} connected to a $28\,km$ ocean-bottom fiber-optic cable originally deployed for power cable monitoring. The cable lies buried between $1.4-7.2\,m$ below the seafloor, offshore Zeebrugge (Belgium), as shown in Fig.~\ref{fig:geographical-location}. The interrogator employs optical pulse-compression reflectometry, that enables distributed vibration sensing over tens of kilometers with meter-scale spatial sampling while mitigating fading effects due to low-intensity points in the Rayleigh pattern \cite{gabai2016sensitivity, Zou_2015, Waagaard_2021}.  with a gauge length of $L=10.21\,m$, generating $2774$ raw spatial channels. The raw differential-phase signals were sampled at $f_s=3125\,Hz$.
+The DAS data were recorded using an Alcatel OptoDAS interrogator~\cite{OptoDAS} connected to a $28\,km$ ocean-bottom fiber-optic cable originally deployed for power cable monitoring. The cable lies buried between $1.4-7.2\,m$ below the seafloor, offshore Zeebrugge (Belgium) in the North Sea, as shown in Fig.~\ref{fig:geographical-location}. The interrogator, located off-shore, employs optical pulse-compression reflectometry, that enables distributed vibration sensing over tens of kilometers with meter-scale spatial sampling while mitigating fading effects due to low-intensity points in the Rayleigh pattern \cite{gabai2016sensitivity, Zou_2015, Waagaard_2021}.  with a gauge length of $L=10.21\,m$, generating $2774$ raw spatial channels. The raw differential-phase signals were sampled at $f_s=3125\,Hz$.
 \begin{figure*}[hbtp]
   \centering
   \mysubfigure{0.292\textwidth}{Regional map.}{area-location-map-google-earth-trimmed.png}
@@ -219,7 +219,7 @@ In our dataset, each DAS sensing position along the selected cable segment was a
 \subsection{ML Tasks and Data Balance Considerations}
 \label{sec:ml-tasks}
 
-In ML applications, maintaining a balanced dataset helps to ensure unbiased model training and fair performance evaluation. For classification tasks, balance in the number of samples per class prevents the model from favoring dominant categories. For regression tasks, an even distribution of target values enables the model to learn the underlying functional relationships for the full data range, rather than overfitting to the most densely sampled regions. However achieving such balance is often difficult in real-world scenarios, where natural or operational processes generate highly uneven data distributions, which is usually the case in AI/ML-based DAS applications..
+In ML applications, maintaining a balanced dataset helps to ensure unbiased model training and fair performance evaluation. For classification tasks, balance in the number of samples per class prevents the model from favoring dominant categories. For regression tasks, an even distribution of target values enables the model to learn the underlying functional relationships for the full data range, rather than overfitting to the most densely sampled regions. However, achieving such balance is often difficult in real-world scenarios, where natural or operational processes generate highly uneven data distributions, which is usually the case in AI/ML-based DAS applications..
 
 The \texttt{Marlinks-NS DAS} dataset has been designed to support two complementary machine learning (ML) tasks related to vessel monitoring for submarine cable protection. The first task, \emph{vessel detection}, is formulated as a binary classification problem that is oriented to discriminate whether there is a vessel closer than a given distance threshold to the cable. The second task, \emph{distance estimation}, is defined as a regression problem in which the model aims to predict the distance between the cable and the nearest vessel. In both cases the required labeling information is derived from the synchronized AIS data.
 
@@ -230,29 +230,26 @@ The \texttt{Marlinks-NS DAS} dataset has been designed to support two complement
   \label{fig:data-balance}
 \end{figure}
 
-To asses whether both tasks are representative and evaluate their statistical balance, a detailed analysis of the vessel distance distribution along the monitored cable was performed. Initial inspection of the ten-day continuous recording revealed strong spatial distribution nonuniformity. Fig.~\ref{fig:data-balance} shows, as a function of the sensor/channel along the cable length, the number of 10-second data frames that corresponds to a situation in which there is a vessel at different distance ranges. From the figure we can identify a cable section around $16\,km$ (channel 1565) that exhibits a relevant increase in the number of available data frames with vessels closer to the cable than, for example, $1000,m$ or $2000,m$, which are reasonable thresholds for the vessel detection task. As an example of the rationale for such statement, a Spanish company monitoring submarine cables with AIS, establishes a $1000\,m$ distance threshold to trigger enhanced vessel tracking to assess potential threats to the cable.
+To assess whether both tasks are representative, and evaluate their statistical balance, a detailed analysis of the vessel distance distribution along the monitored cable was performed. Initial inspection of the ten-day continuous recording revealed strong spatial distribution nonuniformity. Fig.~\ref{fig:data-balance} shows, as a function of the channel position along the cable length, the number of 10-second data frames that corresponds to a situation in which there is a vessel at different distance ranges. From the figure we can identify a cable section around $16\,km$ (channel 1565) that exhibits a relevant increase in the number of available data frames with vessels closer to the cable than, for example, $1000\,m$ or $2000\,m$, which are reasonable thresholds for the vessel detection task. As an example of the rationale for such ``reasonable threshold'' statement, a Spanish company monitoring submarine cables with AIS, establishes a $1000\,m$ distance threshold to trigger enhanced vessel tracking to assess potential threats to the cable.
 
-This region corresponds to the location of the cross between the submarine cable and a dredged channel (approximately $20\,m$ deep) providing harbor access, which is consistent with the higher density of vessels shown in Fig.~\ref{fig:data-balance}. So, given this spatial data distribution, we selected a contiguous cable range of $2553\,m$,  corresponding to a subset of $N_{channels}=250$ equally spaced spatial channels located between $14707\,m$ and $17260\,m$ from the interrogator. This segment exhibits a reasonable availability of data samples, representative of both ``vessel-nearby'' and ``no-vessel-nearby'' cases, as well as a broad dynamic range of distances suitable for regression. The \texttt{Marlinks-NS DAS} dataset contains full data for this cable segment. Fig.~\ref{fig:histogram-distance} shows the distribution of data frames as a function of the \textit{minimum} distance of \textit{any} vessel to the cable, which shows the expected behavior (considering that it is not the distribution of vessel distances).
+This region corresponds to the location of the cross between the submarine cable and a dredged channel (approximately $20\,m$ deep) providing harbor access, which is consistent with the higher density of vessels shown in Fig.~\ref{fig:data-balance}. So, given this spatial data distribution, we selected a contiguous cable range of $2553\,m$,  corresponding to a subset of $N_{channels}=250$ equally spaced spatial channels located between $14707\,m$ and $17260\,m$ from the interrogator. This segment exhibits a clear unbalance between the ``vessel-nearby'' and ``no-vessel-nearby'' classes (e.g. $22347$ vs. $52424$ for the $1000\,m$ distance threshold), but provides a reasonable availability of data samples for both of them. %, as well as a broad dynamic range of distances suitable for regression.
+The \texttt{Marlinks-NS DAS} dataset contains full data for this cable segment, and there is no other better fiber range in what respect to data unbalance and class-wise data availability.% Fig.~\ref{fig:histogram-distance} shows the distribution of data frames as a function of the \textit{minimum} distance of \textit{any} vessel to the cable, which shows the expected behavior (considering that it is not the distribution of vessel distances).
 
-\begin{figure}[hbtp]
-  \centering
-  \includegraphics[width=.75\columnwidth]{balance/histogram_distance.png}
-  \caption{Histogram of data frames available as a function of the \textit{minimum} distance of \textit{any} vessel to the cable.}
-  \label{fig:histogram-distance}
-\end{figure}
+% \begin{figure}[hbtp]
+%   \centering
+%   \includegraphics[width=.75\columnwidth]{balance/histogram_distance.png}
+%   \caption{Histogram of data frames available as a function of the \textit{minimum} distance of \textit{any} vessel to the cable.}
+%   \label{fig:histogram-distance}
+% \end{figure}
 
 Finally, to give an idea on the distribution of vessel types, Fig.~\ref{fig:piano-distance-by-type} shows the distribution boxplots of minimum distances by vessel types, in which the top numbers ($n=\dots$) state the number of examples of each vessel type in the dataset.
 
 \begin{figure*}[hbtp]
   \centering
   \includegraphics[width=\columnwidth]{balance/boxplot_by_type.png}
-  \caption{Histogram of data frames available as a function of the \textit{minimum} distance of \textit{any} vessel to the cable.}
+  \caption{Histogram of data frames available as a function of the \textit{minimum} distance of \textit{any} vessel to the cable, per vessel type.}
   \label{fig:piano-distance-by-type}
 \end{figure*}
-
-\todojmg{METER FIGURA CON NÚMERO DE EJEMPLOS DISPONIBLES PARA BARCOS POR DEBAJO DE DISTANCIAS VARIAS 500 1000 1500 2000 3000, ETC, PARA JUSTIFICAR VISUALMENTE LA SELECCIÓN DE LA ZONA DEL CANAL Y PLANTEAR OTRAS COMO LA MÁS CERCANA AL INTERROGADOR. METER TAMBIÉN FIGURA DE HISTOGRAMA DE MÍNIMAS DISTANCIAS DE BARCOS A CABLE, SI QUEDA BIEN.}
-
-\todojmg{Meter figura de distribución de tipo de barcos}
 
 \begin{figure}[htbp]
   \centering
@@ -272,7 +269,7 @@ The strain signal for each channel was first segmented into non-overlapping wind
 
 The feature vector is then generated from the FFT values, so that each 10-second window is represented by $N_{bands}=100$ logarithmically spaced band-energy features within the 4--100~Hz range, excluding the 49--51~Hz and 98--100~Hz intervals. The logarithmic frequency mapping was designed to equalize the required spectral resolution, allocating more spectral FFT coefficients in the lower frequency region (the specific frequency band limits can be found in \href{https://github.com/UAH-PSI/das-vessel-detection/blob/main/data/fbands.csv}{the GitHub repository}).
 
-The mathematical details for the feature extraction calculation follows. We first assume that $x_c^{(n)}[m]$ denote the discrete version of the $n^{th}$ windowed strain signal corresponding to channel $c$ starting at $n·T_\omega$ seconds, and that $X_c^{(n)}[k]$ is the $N_{\mathrm{FFT}}$-point FFT of $x_c^{(n)}[m]$, with $n\nobreak=0, 1, \dots, N_{windows}\text{-}1$ and $c=0,1,\dots N_{channels}\text{-}1$ being $N_{windows}$ and $N_{channels}$ the number of available windows and available channels, respectively. Each spectral band $b = 0, 1, \dots, N_{bands}\text{-}1$ is defined by its FFT-bin limits $\big[k_b^{-},\, k_b^{+}\big]$, where $0 \le k_b^{-} \le k_b^{+} < N_{\mathrm{FFT}}$.
+The mathematical details for the feature extraction calculation follow. We first assume that $x_c^{(n)}[m]$ denote the discrete version of the $n^{th}$ windowed strain signal corresponding to channel $c$ starting at $n·T_\omega$ seconds, with $n\nobreak=0, 1, \dots, N_{windows}-1$; and that $X_c^{(n)}[k]$ is the $N_{\mathrm{FFT}}$-point FFT of $x_c^{(n)}[m]$, with $c=0,1,\dots N_{channels}-1$ being $N_{windows}$ and $N_{channels}$ the number of available windows and available channels, respectively. Each spectral band $b = 0, 1, \dots, N_{bands}\text{-}1$ is defined by its FFT-bin limits $\big[k_b^{-},\, k_b^{+}\big]$, where $0 \le k_b^{-} \le k_b^{+} < N_{\mathrm{FFT}}$.
 From these definitions, the spectral energy of band $b$ for window $n$ of channel $c$ is computed as:
 \begin{equation}
 E_c^{(n)}[b] = \sum_{k = k_b^{-}}^{k_b^{+}} \big| X_c^{(n)}[k] \big|^2.
@@ -292,7 +289,6 @@ Finally, the feature vector corresponding to $x_c^{(n)}[m]$ will be $\mathcal{E}
 \subsection{Data Synchronization and Labeling}
 \label{sec:ais data and label generation}
 
-
 Time synchronization between the DAS signals and the interpolated AIS information is carried out as a required step before data labeling is carried out. The interpolated AIS positions are then used to continuously compute the shortest distance between each vessel and every DAS sensing point. These distance values are considered within each 10-seconds strain signal window to determine the minimum vessel to cable distance used as the primary label for the ML tasks. This synchronization process ensures that all DAS feature vectors are associated with consistent, temporally aligned vessel metadata.
 
 The closest distance continuous variable supports regression tasks directly as \texttt{Vessel distance labels}, or can be converted into \texttt{vessel detection labels} for the classification task, by simply applying user-defined distance thresholds.
@@ -301,7 +297,7 @@ The closest distance continuous variable supports regression tasks directly as \
 \section{Data Records}
 \label{sec:data records}
 
-The dataset is publicly available on Zenodo~\cite{ramirez2024dasvesseldataset}. To simplify the dataset distribution all the data are stored in a \texttt{hdf5} archive (14 GB in size) with the following structure (summarized in Table~\ref{tab:dataset-content}):
+The dataset is publicly available on Zenodo~\cite{ramirez2024dasvesseldataset}, and to simplify its distribution, all the data are stored in a \texttt{hdf5} archive (14 GB in size) with the following structure (summarized in Table~\ref{tab:dataset-content}):
 \begin{itemize}
   \item \texttt{X}: A 3D NumPy array of shape {($N_{windows}$, $N_{channels}$, $N_{bands}$)}, containing the feature vectors. XXXXXXXXXXX WHICH UNITS?
   \begin{itemize}
@@ -310,7 +306,7 @@ The dataset is publicly available on Zenodo~\cite{ramirez2024dasvesseldataset}. 
     \item \textbf{{$N_{bands}=100$}}: number of energy-band features per channel.
   \end{itemize}
 
-  \item \texttt{y}: A 1D NumPy array of shape {($N_{windows}$)} containing the distance (in meters) to the closest vessel during each 10-second window. This continuous variable supports regression tasks directly, or can be converted into classification labels by applying user-defined distance thresholds.
+  \item \texttt{y}: A 1D NumPy array of shape {($N_{windows}$)} containing the distance (in meters) to the closest vessel during each 10-second window. This continuous variable supports regression tasks directly, or can be converted into classification labels by simply applying user-defined distance thresholds.
 
   \item \texttt{datetimes}: An array of strings in the HDF5 file that records the UTC timestamp (ISO-8601 format) corresponding to each 10-second window, with shape {($N_{windows}$)}.
 
@@ -334,9 +330,9 @@ Three sensors (indices 59, 60, and 61 in the \texttt{X} array) consistently exhi
   \label{tab:dataset-content}
   \begin{tabularx}{\linewidth}{@{}lXl@{}}\toprule
   \textbf{Component} & \textbf{Description} & \textbf{Dimensions} \\ \midrule
-  \texttt{X} & 3D array of energy-band features per channel & $74{,}771 \times 250 \times 100$ \\
-  \texttt{y} & Closest distance from the cable to any vessel [m] & $74{,}771$ \\
-  \texttt{datetimes} & UTC timestamps (ISO-8601 format) for each 10~s window & $74{,}771$ \\
+  \texttt{X} & 3D array of energy-band features per channel & $74,771 \times 250 \times 100$ \\
+  \texttt{y} & Closest distance from the cable to any vessel [m] & $74,771$ \\
+  \texttt{datetimes} & UTC timestamps (ISO-8601 format) for each 10~s window & $74,771$ \\
     \texttt{ship\_info} & AIS metadata for the vessel used to generate \texttt{y} labels &  \\
     & Vessel type & 74,771 \\
     & Vessel length [m] & 74,771 \\
@@ -346,58 +342,65 @@ Three sensors (indices 59, 60, and 61 in the \texttt{X} array) consistently exhi
   \end{tabularx}
 \end{table}
 
+
 \section{Technical Validation}
 \label{sec:technical validation}
 
-Experiments described in our companion study were conducted using this dataset to validate its usability for machine learning. Two main tasks were defined: vessel detection (binary classification) and vessel distance estimation (regression).
+%\subsection{Dataset Partitioning Strategy}
+%\label{sec:technical-validation}
 
-\subsection{Dataset Partitioning Strategy}
-\label{sec:technical-validation}
-
-
-\subsection{Machine Learning Framework}
+\subsection{Machine Learning Framework and Experimental Setup}
 \label{sec:machine learning framework}
 
-Two model families were evaluated: XGBoost and a simple feed-forward neural network. For detection, XGBoost used logistic loss with learning rate 0.3, depth 6, and 100 trees. For regression, it used mean-squared error loss. Neural networks employed three dense layers, ReLU activations, dropout of 0.5, and early stopping based on validation performance.
+The initial technical validation was carried out by applying a XGBoost ML algorithm to the two machine learning tasks defined in Section~\ref{sec:ml-tasks}. The vessel detection task was set with a distance threshold of $1000\,m$, and the vessel distance estimation task evaluated two cases: unrestricted distance estimation, and distance estimation for vessels closer than $1000\,m$ to the cable.
 
-A 10-fold cross-validation scheme was applied, assigning each acquisition day to a distinct fold, ensuring no temporal overlap between training and testing. This design captures realistic generalization behavior for continuous monitoring scenarios.
+The objective functions in the baseline XGBoost models are binary cross-entropy for classification and mean squared error for regression. We used gradient boosted trees, a learning rate $\eta = 0.05$, a maximum tree depth of 10 and 500 boosting rounds.
+
+We exploited spatial redundancy in the DAS channels by averaging the feature vectors from a $N_C$ contiguous channels in the sensed fiber optic segment, which is given as an input to the XGBoost algorithm.
+
+Our experimental approach is based on a rigorous $k$-fold cross validation strategy, in which the dataset is divided into $k$ equal parts (folds). A model is trained on $k – 1$ folds and tested on the remaining one, repeating this process $k$ times so that each fold serves once as test data. The final performance metric is the average of the k test results, giving a more reliable estimate of the model’s performance, while keeping a strict separation between training and testing data. In our case each fold corresponds to 1 full day of data, so that $k=10$. The available source code at \href{https://github.com/UAH-PSI/das-vessel-detection}{the accompanying code at GitHub} also promotes the use of the cross validation strategy as it is integrated in the evaluation scripts.
 
 
 \subsection{Results}
 \label{sec:results}
 
-The XGBoost classifier achieved an overall F1-score exceeding 90\% for vessel detection within 1000~m, with balanced class-wise precision and recall. Regression models estimated vessel distance with a mean absolute error of 141~m, corresponding to a relative error (rMAE) of about 14\% for the 1000~m threshold. Results improved with larger spatial and temporal contexts and plateaued for contexts beyond 50~s and 250 sensors. Neural networks performed consistently worse under identical conditions.
+\begin{itemize}
+  \item For the classification task: Accuracy, and Global and class-wise $f_1$ scores, to assess the impact of the class imbalance in the system performance.
+  \item For the distance estimation task: Global Mean Absolute Error (MAE) defined without restrictions, and $1000\,m MAE$, defined for vessel distances below $1000\,m$ (to assess precision in vessel nearby positions).
+\end{itemize}
 
+Table~\ref{tab:performance} shows the performance metrics corresponding to $N_C \in \lbrace 10, 50, 250 \rbrace$ channels. To summarize, the XGBoost classifier achieved an overall F1-score exceeding 90\% for vessel detection within $1000\,m$, with reasonably balanced global and class-wise $f_1$ metrics, despite the clear data unbalance issues (see Fig.~\ref{fig:data-balance}). Regression models estimated global vessel distance with a MAE of, and a $1000\,m$ MAE of 141~m. Results improved with larger spatial contexts.
 
+\input{table-performance.tex}
 
-% \begin{figure}[H]
-%   \centering
-%   \includegraphics[width=0.85\textwidth]{dt-sample.png}
-%   \caption{Example of spectral feature map (top) and corresponding vessel distance profile (bottom). Energy increases are observed as vessels approach the cable crossing. (Placeholder illustration.)}
-% \end{figure}
+The good results achieved with our initial experimental approach suggests that the provided data do contain discriminative features for the proposed tasks, being a strong evidence of the dataset's technical validity. A much more detailed experimental work on this dataset has been described in~\cite{ramirez2025vessel}.
 
-
-\subsection{Spectral Interpretation and Sensitivity}
-\label{sec:spectral interpretation and sensitivity}
-
-Spectral averages across vessel and non-vessel conditions show strong separation between 2 and 100~Hz, consistent with the spatial Nyquist limit for the 10~m gauge length. Peaks near 50~Hz correspond to environmental and electronic interference, which were filtered. Vessel crossings exhibit energy transients several minutes before and after the event, spanning more than 3~km around the cable intersection.
-
-
-\subsection{Uncertainty Analysis}
-\label{sec:uncertainty analysis}
-
-Bootstrap resampling over folds provided confidence intervals confirming that the XGBoost model\'s performance is statistically stable. Variability across days reflects differences in traffic density and sea-state conditions rather than inconsistencies in data labeling.
 
 \section{Usage Notes}
 \label{sec:usage notes}
 
-The dataset is suitable for classification and regression tasks under temporal cross-validation. Users are advised to:
-\begin{itemize}
-  \item Use day-wise splits to avoid temporal leakage.
-  \item Report both global and class-wise metrics to account for imbalance.
-  \item Consider spatial averaging windows of at least 1~km and temporal contexts of at least 30~s for robust modeling.
-  \item Note that raw AIS and geospatial data are not available due to confidentiality.
-\end{itemize}
+The \texttt{Marlinks-NS DAS} dataset is intended to serve as a benchmark resource for developing and validating machine learning methods for vessel detection, classification, and localization using submarine Distributed Acoustic Sensing (DAS) data in submarine cable protection applications. The dataset is structured to enable reproducible experimentation and flexible adaptation to various modeling approaches.
+
+The spectral feature matrices can be directly used as input to machine learning models for the binary vessel detection, vessel identification or continuous distance regression tasks. For custom experiments, users may re-aggregate energy bands, apply normalization, or augment the data using temporal or spatial transformations. The AIS-based distance labels can also be thresholded to define categorical proximity classes if required, including multi-class classification tasks.
+
+Users can load the dataset using the provided Python scripts available in the \href{https://github.com/UAH-PSI/das-vessel-detection}{public GitHub repository}, which include examples for reading the HDF5 files, splitting data into training and testing subsets using a day-wise $k$-fold cross-validation approach, and additional utilities. The repository also contains the source code of an evaluation framework, in which it is very easy to integrate alternative ML strategies.
+
+All time information is stored in UTC format, and users should be aware that the precise geographical positions of sensing points have been anonymized for confidentiality. The provided metadata preserve relative channel positions, enabling spatial pattern analysis and correlation studies along the fiber.
+
+%Researchers are encouraged to cite the accompanying publication when using this dataset and to share derived models or processing scripts under compatible open licenses to promote reproducibility and extension of this work.
+
+% The dataset is designed for classification and regression tasks, aimed at submarine cable protection applications. Users are advised to:
+
+% \begin{itemize}
+%   \item Use day-wise splits to avoid temporal leakage.
+%   \item Report both global and class-wise metrics to account for imbalance.
+%   \item Further exploit temporal and spatial redundancy.
+%   \item Further apply more sophisticated models for the classification and regression tasks.
+%   \item Extend the application scenario to consider additional metadata considerations (effect of vessel type/size, meteorological analysis, etc.)
+%   %\item Note that raw AIS and geospatial data are not available due to confidentiality.
+% \end{itemize}
+
+% The availability of initial models and a complete evaluation framework in the \href{https://github.com/UAH-PSI/das-vessel-detection/blob/main/data/fbands.csv}{the GitHub repository} facilitates the development of improved approaches by the scientific community.
 
 
 \section{Data availability}
@@ -411,24 +414,27 @@ The Zenodo repository contains the data stored in hdf5 format, and supporting do
 \section{Code Availability}
 \label{sec:code availability}
 
-Source code related to data loading ciated preprocessing, labeling, and baseline model code is available at: \url{https://github.com/UAH-PSI/das-vessel-detection}.
+All code required to load, inspect, and process the \texttt{Marlinks-NS DAS} dataset is openly available in the project repository at \url{https://github.com/UAH-PSI/das-vessel-detection}.
+The repository includes Python scripts for reading the HDF5 files, generating train–test splits, and visualizing both spatial and spectral characteristics of the data. Example functions are provided to read the feature matrices, extract vessel metadata, and prepare the data for machine learning workflows. We have also included a fully-functional evaluation framework where incorporating new ML strategies is relatively easy.
 
-\textit{For all publications, a statement must be included under the subheading "Code Availability" indicating whether and how and custom code can be accessed, including any restrictions to access. This section can also include information on the versions of any software used, if relevant, and any specific variables or parameters used to generate, test, or process the current dataset if these are not included in the Methods. Please see our policy on code availability for more information. The code availability statement should be placed at the end of the manuscript, immediately before the references. }
+All scripts have been tested under Python 3.10 and rely exclusively on widely available open-source Python packages, which are detailed in the source distribution (\texttt{numpy}, \texttt{sklearn}, \texttt{pandas}, \texttt{matplotlib}, \texttt{h5py}, \texttt{opencv}, \texttt{imblearn}, and \texttt(tqdm)).
 
+The code is distributed under a GPLv3 license, ensuring that it is free to use, modify and distribute under the same terms.
 
-\section{Known Limitations}
-\label{sec:known limitations}
+Users are encouraged to adapt and extend the provided scripts for their research needs. Contributions to the repository, including improvements, additional examples, and derived analysis tools, are welcome through standard GitHub pull requests.
 
 
 \section*{Acknowledgements}
 \label{sec:acknowledgements}
 
-This work has been partially supported by the Spanish Ministry of Science and Innovation MICIU/AEI/10.13039/501100011033, FEDER UE, and by the European Union NextGenerationEU/PRTR program under grants PSI (PLEC2021-007875), REMO (CPP2021-008869) NeurEYE-UAH (PID2024-156576OB-C31) and EYEFUL-UAH (PID2020-113118RB-C31); by FEDER Una manera de hacer Europa under grant PRECISION (PID2021-128000OBC21); by the European Innovation Council under grant SAFE (101098992)  and Horizon Europe under grants SUBMERSE (101095055) and ECSTATIC (101189595). We gratefully acknowledge the computer resources at Artemisa, funded by the European Union ERDF and Comunitat Valenciana as well as the technical support provided by the Instituto de Fisica Corpuscular, IFIC (CSIC-UV). We also thank the cable operator and the data owner for allowing data access under confidenciality.
+This work has been partially supported by the Spanish Ministry of Science and Innovation MICIU/AEI/10.13039/501100011033, FEDER UE, and by the European Union NextGenerationEU/PRTR program under grants PSI (PLEC2021-007875), REMO (CPP2021-008869) NeurEYE-UAH (PID2024-156576OB-C31) and EYEFUL-UAH (PID2020-113118RB-C31); by FEDER Una manera de hacer Europa under grant PRECISION (PID2021-128000OBC21); by the European Innovation Council under grant SAFE (101098992)  and Horizon Europe under grants SUBMERSE (101095055) and ECSTATIC (101189595). We gratefully acknowledge the computer resources at Artemisa, funded by the European Union ERDF and Comunitat Valenciana as well as the technical support provided by the Instituto de Fisica Corpuscular, IFIC (CSIC-UV). We also thank the cable operator and the data owner for allowing data access under confidenciality requirements.
+
 
 \section*{Author Contributions}
 \label{sec:author contributions}
 
-E.E.R.-T., J.M.-G., D.P.-P. and S.E.P.-C. designed the study and experiments and performed data processing and model implementation. J.T. and R.V. coordinated access to infrastructure and metadata. S.M.-L. and M.G.-H. supervised optical sensing and signal interpretation. All authors reviewed and approved the manuscript.
+E.E.R.-T., S.E.P.-C. J.M.-G., D.P.-P. and J.T. designed the study and experiments and performed data processing and model implementation. R.V. coordinated access to the DAS data, metadata and preprocessing scripts. S.M.-L. and M.G.-H. supervised optical sensing and signal interpretation. All authors reviewed and approved the manuscript.
+
 
 \section*{Competing Interests}
 \label{sec:competing interests}
