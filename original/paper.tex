@@ -225,14 +225,14 @@ The \texttt{Marlinks-NS DAS} dataset has been designed to support two complement
 
 \begin{figure}[hbtp]
   \centering
-  \includegraphics[width=\columnwidth]{balance-1000-3000.png}
-  \caption{Number of data frames corresponding to vessels located at a distance lower then given threshold distances.}
+  \includegraphics[width=\columnwidth]{class-distribution/class_balance_1000_2000_3000_4000_5000_ship_channel.jpg}
+  \caption{Number of data frames corresponding to vessels located at different distance ranges from the cable.}
   \label{fig:data-balance}
 \end{figure}
 
-To asses whether both tasks are representative and evaluate their statistical balance, a detailed analysis of the vessel geographical distribution along the monitored cable was performed. Initial inspection of the ten-day continuous recording revealed strong spatial distribution nonuniformity. Fig.~\ref{fig:data-balance} shows, as a function of the distance along the cable length, the number of data frames that corresponds to a situation in which there is a vessel at a distance lower than a given threshold (from $500\,$ to $5000,m$ in $500\,m$ increments. From the figure we can identify a cable section around $16\,km$ that exhibits a relevant increase in the number of available data frames with vessels closer to the cable than, for example, $1000,m$ or $2000,m$, which are reasonable thresholds for the vessel detection task. For example, a Spanish company monitoring submarine cables with AIS, establishes a $1000\,m$ distance threshold to trigger enhanced vessel tracking to assess potential threats to the cable.
+To asses whether both tasks are representative and evaluate their statistical balance, a detailed analysis of the vessel distance distribution along the monitored cable was performed. Initial inspection of the ten-day continuous recording revealed strong spatial distribution nonuniformity. Fig.~\ref{fig:data-balance} shows, as a function of the sensor/channel along the cable length, the number of 10-second data frames that corresponds to a situation in which there is a vessel at different distance ranges. From the figure we can identify a cable section around $16\,km$ (channel 1565) that exhibits a relevant increase in the number of available data frames with vessels closer to the cable than, for example, $1000,m$ or $2000,m$, which are reasonable thresholds for the vessel detection task. As an example of the rationale for such statement, a Spanish company monitoring submarine cables with AIS, establishes a $1000\,m$ distance threshold to trigger enhanced vessel tracking to assess potential threats to the cable.
 
-So, given this spatial data distribution, we selected a contiguous cable range of $2553\,m$,  corresponding to a subset of $N_{channels}=250$ equally spaced spatial channels located between $14707\,m$ and $17260\,m$ from the interrogator. This segment exhibits a reasonably balanced distribution of vessel distances, offering sufficient representation of both ``vessel-nearby'' and ``no-vessel-nearby'' cases, as well as a broad dynamic range of distances suitable for regression. The \texttt{Marlinks-NS DAS} dataset contains full data for this cable segment. Figure~\ref{fig:histogram-distance} shows the distribution of data frames as a function of the \textit{minimum} distance of \textit{any} vessel to the cable, which shows the expected behavior (considering that it is not the distribution of vessel distances).
+This region corresponds to the location of the cross between the submarine cable and a dredged channel (approximately $20\,m$ deep) providing harbor access, which is consistent with the higher density of vessels shown in Fig.~\ref{fig:data-balance}. So, given this spatial data distribution, we selected a contiguous cable range of $2553\,m$,  corresponding to a subset of $N_{channels}=250$ equally spaced spatial channels located between $14707\,m$ and $17260\,m$ from the interrogator. This segment exhibits a reasonable availability of data samples, representative of both ``vessel-nearby'' and ``no-vessel-nearby'' cases, as well as a broad dynamic range of distances suitable for regression. The \texttt{Marlinks-NS DAS} dataset contains full data for this cable segment. Fig.~\ref{fig:histogram-distance} shows the distribution of data frames as a function of the \textit{minimum} distance of \textit{any} vessel to the cable, which shows the expected behavior (considering that it is not the distribution of vessel distances).
 
 \begin{figure}[hbtp]
   \centering
@@ -241,6 +241,14 @@ So, given this spatial data distribution, we selected a contiguous cable range o
   \label{fig:histogram-distance}
 \end{figure}
 
+Finally, to give an idea on the distribution of vessel types, Fig.~\ref{fig:piano-distance-by-type} shows the distribution boxplots of minimum distances by vessel types, in which the top numbers ($n=\dots$) state the number of examples of each vessel type in the dataset.
+
+\begin{figure*}[hbtp]
+  \centering
+  \includegraphics[width=\columnwidth]{balance/boxplot_by_type.png}
+  \caption{Histogram of data frames available as a function of the \textit{minimum} distance of \textit{any} vessel to the cable.}
+  \label{fig:piano-distance-by-type}
+\end{figure*}
 
 \todojmg{METER FIGURA CON NÚMERO DE EJEMPLOS DISPONIBLES PARA BARCOS POR DEBAJO DE DISTANCIAS VARIAS 500 1000 1500 2000 3000, ETC, PARA JUSTIFICAR VISUALMENTE LA SELECCIÓN DE LA ZONA DEL CANAL Y PLANTEAR OTRAS COMO LA MÁS CERCANA AL INTERROGADOR. METER TAMBIÉN FIGURA DE HISTOGRAMA DE MÍNIMAS DISTANCIAS DE BARCOS A CABLE, SI QUEDA BIEN.}
 
@@ -264,14 +272,13 @@ The strain signal for each channel was first segmented into non-overlapping wind
 
 The feature vector is then generated from the FFT values, so that each 10-second window is represented by $N_{bands}=100$ logarithmically spaced band-energy features within the 4--100~Hz range, excluding the 49--51~Hz and 98--100~Hz intervals. The logarithmic frequency mapping was designed to equalize the required spectral resolution, allocating more spectral FFT coefficients in the lower frequency region (the specific frequency band limits can be found in \href{https://github.com/UAH-PSI/das-vessel-detection/blob/main/data/fbands.csv}{the GitHub repository}).
 
-The mathematical details for the feature extraction calculation follows. We first assume that $x_c^{(n)}[m]$ denote the discrete version of the $n^{th}$ windowed strain signal corresponding to channel $c$ starting at $n·T_\omega$ seconds, and that $X_c^{(n)}[k]$ is the $N_{\mathrm{FFT}}$-point FFT of $x_c^{(n)}[m]$, with $n=0, 1, \dots, N_{windows}-1$ and $c=0,1,\dots N_{channels}-1$ being $N_{windows}$ and $N_{channels}$ the number of available windows and available channels, respectively. Each spectral band $b = 0, 1, \dots, N_{bands}-1$ is defined by its FFT-bin limits $\big[k_b^{-},\, k_b^{+}\big]$, where $0 \le k_b^{-} \le k_b^{+} < N_{\mathrm{FFT}}$.
+The mathematical details for the feature extraction calculation follows. We first assume that $x_c^{(n)}[m]$ denote the discrete version of the $n^{th}$ windowed strain signal corresponding to channel $c$ starting at $n·T_\omega$ seconds, and that $X_c^{(n)}[k]$ is the $N_{\mathrm{FFT}}$-point FFT of $x_c^{(n)}[m]$, with $n\nobreak=0, 1, \dots, N_{windows}\text{-}1$ and $c=0,1,\dots N_{channels}\text{-}1$ being $N_{windows}$ and $N_{channels}$ the number of available windows and available channels, respectively. Each spectral band $b = 0, 1, \dots, N_{bands}\text{-}1$ is defined by its FFT-bin limits $\big[k_b^{-},\, k_b^{+}\big]$, where $0 \le k_b^{-} \le k_b^{+} < N_{\mathrm{FFT}}$.
 From these definitions, the spectral energy of band $b$ for window $n$ of channel $c$ is computed as:
 \begin{equation}
 E_c^{(n)}[b] = \sum_{k = k_b^{-}}^{k_b^{+}} \big| X_c^{(n)}[k] \big|^2.
 \end{equation}
 
-Finally, the feature vector corresponding to $x_c^{(n)}[m]$ will be $\mathcal{E}_c^{(n)}=\left[ E_c^{(n)}[0], E_c^{(n)}[1], \dots E_c^{(n)}[N_{bands}-1] \right]$, which corresponds to the $N_{windows}\times \left( N_{channels}\times N_{bands}\right)$ values available in the public dataset.
-
+Finally, the feature vector corresponding to $x_c^{(n)}[m]$ will be $\mathcal{E}_c^{(n)}=\left[ E_c^{(n)}[0], E_c^{(n)}[1], \dots, E_c^{(n)}[N_{bands}-1] \right]$, which corresponds to the $N_{windows}\times \left( N_{channels}\times N_{bands}\right)$ values available in the public dataset.
 
 \todojmg{Erick, please verifica que las ecuaciones son las que tú usas.}
 \begin{figure}[htbp]
@@ -294,23 +301,25 @@ The closest distance continuous variable supports regression tasks directly as \
 \section{Data Records}
 \label{sec:data records}
 
-The dataset is publicly available on Zenodo~\cite{ramirez2024dasvesseldataset}
-
-To simplify the dataset distribution all the data are stored in a HDF5 archive with the following structure (summarized in Table~\ref{tab:dataset-content}):
-
+The dataset is publicly available on Zenodo~\cite{ramirez2024dasvesseldataset}. To simplify the dataset distribution all the data are stored in a \texttt{hdf5} archive (14 GB in size) with the following structure (summarized in Table~\ref{tab:dataset-content}):
 \begin{itemize}
-  \item \texttt{X}: A 3D NumPy array of shape \texttt{($N_{windows}$, $N_{channels}$, $N_{bands}$)}, containing the feature vectors.
+  \item \texttt{X}: A 3D NumPy array of shape {($N_{windows}$, $N_{channels}$, $N_{bands}$)}, containing the feature vectors. XXXXXXXXXXX WHICH UNITS?
   \begin{itemize}
-    \item \textbf{\texttt{$N_{windows}$=74771}}: number of non-overlapped 10-seconds signal windows analyzed along the full recording period.
-    \item \textbf{\texttt{$N_{channels}$=250}}: number of spatial channels (sensor positions along the selected fiber segment).
-    \item \textbf{\texttt{$N_{bands}$=100}}: number of energy-band features per channel.
+    \item \textbf{{$N_{windows}=74771$}}: number of non-overlapped 10-seconds signal windows analyzed along the full recording period.
+    \item \textbf{{$N_{channels}=250$}}: number of spatial channels (sensor positions along the selected fiber segment).
+    \item \textbf{{$N_{bands}=100$}}: number of energy-band features per channel.
   \end{itemize}
 
-  \item \texttt{y}: A 1D NumPy array of shape \texttt{($N_{windows}$,)} containing the distance (in meters) to the closest vessel during each 10-second window. This continuous variable supports regression tasks directly, or can be converted into classification labels by applying user-defined distance thresholds.
+  \item \texttt{y}: A 1D NumPy array of shape {($N_{windows}$)} containing the distance (in meters) to the closest vessel during each 10-second window. This continuous variable supports regression tasks directly, or can be converted into classification labels by applying user-defined distance thresholds.
 
-  \item \texttt{datetimes}: An array of strings in the HDF5 file that records the UTC timestamp (ISO-8601 format) corresponding to each 10-second window, with shape \texttt{($N_{windows}$,)}.
+  \item \texttt{datetimes}: An array of strings in the HDF5 file that records the UTC timestamp (ISO-8601 format) corresponding to each 10-second window, with shape {($N_{windows}$)}.
 
-  \item \texttt{ship\_info}: A group in the HDF5 containing AIS metadata (vessel type, length, beam) of the vessel used to generate the \texttt{y} label.
+  \item \texttt{ship\_info}: A group in the HDF5 containing AIS metadata of the vessel used to generate the \texttt{y} label:
+        \begin{itemize}
+          \item Vessel type, as a string value
+          \item Vessel length, in meters
+          \item Vessel beam, in meters
+        \end{itemize}
 \end{itemize}
 
 \begin{quote}
@@ -319,18 +328,19 @@ To simplify the dataset distribution all the data are stored in a HDF5 archive w
 Three sensors (indices 59, 60, and 61 in the \texttt{X} array) consistently exhibited high noise levels and have been forced to zero in the raw data. We recommend excluding these channels from feature matrices prior to training classification or regression models.
 \end{quote}
 
-\todojmg{Erick, check dimensiones please. ship\_info tiene tamaño fijo?... entiendo que también 74771, ¿no?...}
-
 \begin{table}[H]
   \centering
-  \caption{Summary of released dataset contents}
+  \caption{Summary of released dataset contents.}
   \label{tab:dataset-content}
   \begin{tabularx}{\linewidth}{@{}lXl@{}}\toprule
   \textbf{Component} & \textbf{Description} & \textbf{Dimensions} \\ \midrule
   \texttt{X} & 3D array of energy-band features per channel & $74{,}771 \times 250 \times 100$ \\
   \texttt{y} & Closest distance from the cable to any vessel [m] & $74{,}771$ \\
   \texttt{datetimes} & UTC timestamps (ISO-8601 format) for each 10~s window & $74{,}771$ \\
-  \texttt{ship\_info} & AIS metadata (type, length, beam) for the vessel used to generate \texttt{y} labels & 74,771 \\
+    \texttt{ship\_info} & AIS metadata for the vessel used to generate \texttt{y} labels &  \\
+    & Vessel type & 74,771 \\
+    & Vessel length [m] & 74,771 \\
+    & Vessel beam [m] & 74,771 \\
   %Noisy sensors & Channels 59--61 in \texttt{X} forced to zero due to persistent noise & 3 channels \\
   \bottomrule
   \end{tabularx}
@@ -401,7 +411,7 @@ The Zenodo repository contains the data stored in hdf5 format, and supporting do
 \section{Code Availability}
 \label{sec:code availability}
 
-All associated preprocessing, labeling, and baseline model code is available at: \url{https://github.com/UAH-PSI/das-vessel-detection}.
+Source code related to data loading ciated preprocessing, labeling, and baseline model code is available at: \url{https://github.com/UAH-PSI/das-vessel-detection}.
 
 \textit{For all publications, a statement must be included under the subheading "Code Availability" indicating whether and how and custom code can be accessed, including any restrictions to access. This section can also include information on the versions of any software used, if relevant, and any specific variables or parameters used to generate, test, or process the current dataset if these are not included in the Methods. Please see our policy on code availability for more information. The code availability statement should be placed at the end of the manuscript, immediately before the references. }
 
