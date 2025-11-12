@@ -31,6 +31,11 @@
 \captionsetup[subfloat]{font=footnotesize} % Or small/tiny
 \captionsetup[subfloat]{font=scriptsize} % Or small/tiny
 
+\usepackage[dvipsnames]{xcolor}
+\definecolor{darkgreen}{rgb}{0.0, 0.5, 0.0}
+\definecolor{brown}{rgb}{0.6, 0.3, 0.0}
+\definecolor{darkbrown}{rgb}{0.4, 0.2, 0.0}
+
 % todonotes definitions
 \usepackage{todonotes}
 
@@ -159,7 +164,7 @@ The processing pipeline we applied for the generation of the dataset is shown in
 The submarine fiber optic cable was interrogated using a phase-sensitive Optical Time Domain Reflectometry ($\phi$-OTDR) system. This approach uses a narrow-linewidth, highly coherent laser that emits short optical pulses into the fiber core, where microscopic refractive index variations act as Rayleigh scatterers. The backscattered signal from each pulse carries amplitude and phase information that varies with longitudinal deformation in the fiber, that can be related to vibrations and acoustic disturbances in the cable vicinity. By measuring phase differences between consecutive backscatter traces, dynamic strain variations can be reconstructed continuously along the entire length of the fiber.
 
 The DAS data were recorded using an Alcatel OptoDAS interrogator~\cite{OptoDAS} connected to a $28\,km$ ocean-bottom fiber-optic cable originally deployed for power cable monitoring. The cable lies buried between $1.4-7.2\,m$ below the seafloor, offshore Zeebrugge (Belgium), as shown in Fig.~\ref{fig:geographical-location}. The interrogator employs optical pulse-compression reflectometry, that enables distributed vibration sensing over tens of kilometers with meter-scale spatial sampling while mitigating fading effects due to low-intensity points in the Rayleigh pattern \cite{gabai2016sensitivity, Zou_2015, Waagaard_2021}.  with a gauge length of $L=10.21\,m$, generating $2774$ raw spatial channels. The raw differential-phase signals were sampled at $f_s=3125\,Hz$.
-\begin{figure*}[b]
+\begin{figure*}[hbtp]
   \centering
   \mysubfigure{0.292\textwidth}{Regional map.}{area-location-map-google-earth-trimmed.png}
   \label{fig:regional-map}
@@ -221,7 +226,7 @@ In ML applications, maintaining a balanced dataset helps to ensure unbiased mode
 
 The \texttt{Marlinks-NS DAS} dataset has been designed to support two complementary machine learning (ML) tasks related to vessel monitoring for submarine cable protection. The first task, \emph{vessel detection}, is formulated as a binary classification problem that is oriented to discriminate whether there is a vessel closer than a given distance threshold to the cable. The second task, \emph{distance estimation}, is defined as a regression problem in which the model aims to predict the distance between the cable and the nearest vessel. In both cases the required labeling information is derived from the synchronized AIS data.
 
-\begin{figure}
+\begin{figure}[hbtp]
   \centering
   \includegraphics[width=\columnwidth]{balance-1000-3000.png}
   \caption{Number of data frames corresponding to vessels located at a distance lower then given threshold distances.}
@@ -230,24 +235,48 @@ The \texttt{Marlinks-NS DAS} dataset has been designed to support two complement
 
 To asses whether both tasks are representative and evaluate their statistical balance, a detailed analysis of the vessel geographical distribution along the monitored cable was performed. Initial inspection of the ten-day continuous recording revealed strong spatial distribution nonuniformity. Fig.~\ref{fig:data-balance} shows, as a function of the distance along the cable length, the number of data frames that corresponds to a situation in which there is a vessel at a distance lower than a given threshold (from $500\,$ to $5000,m$ in $500\,m$ increments. From the figure we can identify a cable section around $16\,km$ that exhibits a relevant increase in the number of available data frames with vessels closer to the cable than, for example, $1000,m$ or $2000,m$, which are reasonable thresholds for the vessel detection task. For example, a Spanish company monitoring submarine cables with AIS, establishes a $1000\,m$ distance threshold to trigger enhanced vessel tracking to assess potential threats to the cable.
 
-So, given this spatial data distribution, we selected a contiguous cable range of $2553\,m$,  corresponding to a subset of $N_{channels}=250$ equally spaced spatial channels located between $14707\,m$ and $17260\,m$ from the interrogator. This segment exhibits a reasonably balanced distribution of vessel distances, offering sufficient representation of both ``vessel-nearby'' and ``no-vessel-nearby'' cases, as well as a broad dynamic range of distances suitable for regression. The \texttt{Marlinks-NS DAS} dataset contains full data for this cable segment.
+So, given this spatial data distribution, we selected a contiguous cable range of $2553\,m$,  corresponding to a subset of $N_{channels}=250$ equally spaced spatial channels located between $14707\,m$ and $17260\,m$ from the interrogator. This segment exhibits a reasonably balanced distribution of vessel distances, offering sufficient representation of both ``vessel-nearby'' and ``no-vessel-nearby'' cases, as well as a broad dynamic range of distances suitable for regression. The \texttt{Marlinks-NS DAS} dataset contains full data for this cable segment. Figure~\ref{fig:histogram-distance} shows the distribution of data frames as a function of the \textit{minimum} distance of \textit{any} vessel to the cable, which shows the expected behavior (considering that it is not the distribution of vessel distances).
+
+\begin{figure}[hbtp]
+  \centering
+  \includegraphics[width=.75\columnwidth]{balance/histogram_distance.png}
+  \caption{Histogram of data frames available as a function of the \textit{minimum} distance of \textit{any} vessel to the cable.}
+  \label{fig:histogram-distance}
+\end{figure}
+
 
 \todojmg{METER FIGURA CON NÚMERO DE EJEMPLOS DISPONIBLES PARA BARCOS POR DEBAJO DE DISTANCIAS VARIAS 500 1000 1500 2000 3000, ETC, PARA JUSTIFICAR VISUALMENTE LA SELECCIÓN DE LA ZONA DEL CANAL Y PLANTEAR OTRAS COMO LA MÁS CERCANA AL INTERROGADOR. METER TAMBIÉN FIGURA DE HISTOGRAMA DE MÍNIMAS DISTANCIAS DE BARCOS A CABLE, SI QUEDA BIEN.}
 
 \todojmg{Meter figura de distribución de tipo de barcos}
 
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=\textwidth]{strain-silence+spectrum.png}
+  \caption{(a) Strain signal when no vessel is nearby the cable (it corresponds to the right dashed square in Fig.~\ref{fig:energy-dt-map}): Filtered strain signal at $15.4\,km$ in the time interval of the right red dashed square in Fig.~\ref{fig:energy-dt-map}. (b) Filtered strain data as a function of time and distance corresponding to the right red dashed square in Fig.~\ref{fig:energy-dt-map}, time synchronized with Fig.~\ref{fig:strain-silence}.a. (c) Long term averaged strain power spectrum plots (expressed in dBs) for strain measurements for vessels closer than $1000\,m$ to the cable (\textcolor{darkgreen}{\textrm{Vessels 1000m}} trace), and vessels further than $3000\,m$ (\textcolor{darkbrown}{\textrm{Noise 3000m}} trace).}
+  \label{fig:strain-silence}
+\end{figure}
 
 \subsection{Feature Extraction}
 \label{sec:feature extraction}
 
-In this work we carried out a data-driven methodology to decide on the feature vector composition, informed by available AIS data, and fully described in~\cite{ramirez2025vessel}. The main idea here is that we analyzed long-term spectral averages of both vessel and background noise and found out that there were promising spectral differences between both cases in the range between $4\,Hz$ and $100\,Hz$. Additionally we discovered a strong spectral peak located at $100\,Hz$, with harmonics at its integer multiples, and one subharmonic at $50\,Hz$, probably due to the interference generated by rotating mechanical systems or electric noise in the interrogator environment.
+In this work we carried out a data-driven methodology to decide on the feature vector composition, informed by available AIS data, and fully described in~\cite{ramirez2025vessel}. The main idea here is that we analyzed strain long-term  spectral averages of both vessel and background noise and found out that there were promising spectral differences between both cases in the range between $4\,Hz$ and $100\,Hz$. Additionally we discovered a strong spectral peak located at $100\,Hz$, with harmonics at its integer multiples, and one subharmonic at $50\,Hz$, probably due to the interference generated by rotating mechanical systems or electric noise in the interrogator environment. Fig.~\ref{fig:strain-silence}.c shows strain long-term spectral averages (in dBs) for the case of vessels closer than  $1000\,m$ to the cable (\textcolor{darkgreen}{\textrm{Vessels 1000m}} trace) and for the case of vessels further than $3000\,m$ (\textcolor{brown}{\textrm{Noise 3000m}} trace).
 
-The strain signal was first segmented into non-overlapping 10-second windows to which we apply a ¿HAMMING WINDOW? to avoid spectral leakage. The window size was selected to allow for a reasonable resolution in the few-Hz frequency range, considering that we wanted to avoid low frequency noise (mainly from temperature variations and surface waves). For each 10-second windows we run a FFT analysis to provide spectral components for the feature vector build-up, selecting an initial bandwidth between $4\,Hz$ and $100\,Hz$.
 
-The feature vector is then generated from the FFT values, so that each 10-second window is represented by 100 logarithmically spaced band-energy features within the 4---100~Hz range, excluding the 49--51~Hz and 98--100~Hz. The logarithmic frequency mapping was designed to equalize the required spectral resolution, allocating more spectral FFT coefficients in the lower frequency region (the specific frequency band limits can be found in \href{https://github.com/UAH-PSI/das-vessel-detection/blob/main/data/fbands.csv}{the GitHub repository}).
 
-\todojmg{Erick, please mete las ecuaciones de cálculo exacto de la energía en bandas defininiendo los sumatorios que tocan y los valores de amplitud (módulo) de la fft para referencia de los interesados.}
+The strain signal for each channel was first segmented into non-overlapping windows of length $T_\omega=10\,s$, to which we apply a ¿HAMMING WINDOW? to avoid spectral leakage. The window size was selected to allow for a reasonable resolution in the few-Hz frequency range, considering that we wanted to avoid low frequency noise (mainly from temperature variations and surface waves). Thus, for each 10-second windows we run a Fast Fourier Transform (FFT) analysis to provide spectral components for the feature vector build-up, selecting an initial bandwidth between $4\,Hz$ and $100\,Hz$.
 
+The feature vector is then generated from the FFT values, so that each 10-second window is represented by $N_{bands}=100$ logarithmically spaced band-energy features within the 4--100~Hz range, excluding the 49--51~Hz and 98--100~Hz intervals. The logarithmic frequency mapping was designed to equalize the required spectral resolution, allocating more spectral FFT coefficients in the lower frequency region (the specific frequency band limits can be found in \href{https://github.com/UAH-PSI/das-vessel-detection/blob/main/data/fbands.csv}{the GitHub repository}).
+
+The mathematical details for the feature extraction calculation follows. We first assume that $x_c^{(n)}[m]$ denote the discrete version of the $n^{th}$ windowed strain signal corresponding to channel $c$ starting at $n·T_\omega$ seconds, and that $X_c^{(n)}[k]$ is the $N_{\mathrm{FFT}}$-point FFT of $x_c^{(n)}[m]$, with $n=0, 1, \dots, N_{windows}-1$ and $c=0,1,\dots N_{channels}-1$ being $N_{windows}$ and $N_{channels}$ the number of available windows and available channels, respectively. Each spectral band $b = 0, 1, \dots, N_{bands}-1$ is defined by its FFT-bin limits $\big[k_b^{-},\, k_b^{+}\big]$, where $0 \le k_b^{-} \le k_b^{+} < N_{\mathrm{FFT}}$.
+From these definitions, the spectral energy of band $b$ for window $n$ of channel $c$ is computed as:
+\begin{equation}
+E_c^{(n)}[b] = \sum_{k = k_b^{-}}^{k_b^{+}} \big| X_c^{(n)}[k] \big|^2.
+\end{equation}
+
+Finally, the feature vector corresponding to $x_c^{(n)}[m]$ will be $\mathcal{E}_c^{(n)}=\left[ E_c^{(n)}[0], E_c^{(n)}[1], \dots E_c^{(n)}[N_{bands}-1] \right]$, which corresponds to the $N_{windows}\times \left( N_{channels}\times N_{bands}\right)$ values available in the public dataset.
+
+
+\todojmg{Erick, please verifica que las ecuaciones son las que tú usas.}
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{dt-full.png}
@@ -255,52 +284,58 @@ The feature vector is then generated from the FFT values, so that each 10-second
   \label{fig:energy-dt-map}
 \end{figure}
 
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=.5\textwidth]{strain-silence.png}
-  \caption{Strain signal when no vessel is nearby the cable (it corresponds to the right dashed square in Fig.~\ref{fig:energy-dt-map}). (a) Filtered strain signal at $15.4\,km$ in the time interval of the right red dashed square in Fig.~\ref{fig:energy-dt-map}. (b) Filtered strain data as a function of time and distance corresponding to the right red dashed square in Fig.~\ref{fig:energy-dt-map}, time synchronized with Fig.~\ref{fig:strain-silence}.}
-  \label{fig:strain-silence}
-\end{figure}
 
-\subsection{Label Generation}
+\subsection{Data Synchronization and Labeling}
 \label{sec:ais data and label generation}
 
 
-SIN PROCESAR To align the AIS information with the 10~s non‐overlapping DAS feature windows, vessel positions were interpolated to a uniform 1~Hz temporal resolution. Linear interpolation was applied to latitude and longitude coordinates within each vessel trajectory, ensuring continuous coverage between consecutive AIS transmissions, which typically occurred every 2–10~s depending on vessel speed and class. The interpolated positions were then projected onto the local coordinate system of the submarine cable to compute the shortest distance between each vessel and every DAS sensing point. These distance values were aggregated within each 10~s DAS window to determine the minimum vessel–cable distance used as the primary label for the machine‐learning tasks. This synchronization process ensures that all DAS feature vectors are associated with consistent, temporally aligned vessel metadata.
+Time synchronization between the DAS signals and the interpolated AIS information is carried out as a required step before data labeling is carried out. The interpolated AIS positions are then used to continuously compute the shortest distance between each vessel and every DAS sensing point. These distance values are considered within each 10-seconds strain signal window to determine the minimum vessel to cable distance used as the primary label for the ML tasks. This synchronization process ensures that all DAS feature vectors are associated with consistent, temporally aligned vessel metadata.
 
-SIN PROCESAR For each DAS frame and cable segment, we computed:
-\begin{itemize}
-  \item A binary detection label: 1 if any vessel is within 1000~m, 0 otherwise.
-  \item A continuous distance label: the distance to the nearest vessel (in meters).
-\end{itemize}
-All AIS information and cable coordinates were geospatially synchronized; however, the distributed dataset contains only anonymized identifiers.
+The closest distance continuous variable supports regression tasks directly as \texttt{Vessel distance labels}, or can be converted into \texttt{vessel detection labels} for the classification task, by simply applying user-defined distance thresholds.
+
 
 \section{Data Records}
 \label{sec:data records}
 
-The dataset is publicly available on Zenodo~\cite{ramirez2024dasvesseldataset}...
+The dataset is publicly available on Zenodo~\cite{ramirez2024dasvesseldataset}
 
-The data are distributed as an HDF5 archive with the following structure:
+To simplify the dataset distribution all the data are stored in a HDF5 archive with the following structure (summarized in Table~\ref{tab:dataset-content}):
+
 \begin{itemize}
-  \item \texttt{/features}: (N, 100) float32 array containing spectral band energies.
-  \item \texttt{/labels/class}: (N,) int array with binary vessel-detection labels.
-  \item \texttt{/labels/distance}: (N,) float32 array with continuous vessel distances.
-  \item \texttt{/meta/timestamps}: (N,) UTC timestamps.
-  \item \texttt{/meta/sensor\_ids}: (N,) integer array mapping to spatial segment identifiers.
+  \item \texttt{X}: A 3D NumPy array of shape \texttt{($N_{windows}$, $N_{channels}$, $N_{bands}$)}, containing the feature vectors.
+  \begin{itemize}
+    \item \textbf{\texttt{$N_{windows}$=74771}}: number of non-overlapped 10-seconds signal windows analyzed along the full recording period.
+    \item \textbf{\texttt{$N_{channels}$=250}}: number of spatial channels (sensor positions along the selected fiber segment).
+    \item \textbf{\texttt{$N_{bands}$=100}}: number of energy-band features per channel.
+  \end{itemize}
+
+  \item \texttt{y}: A 1D NumPy array of shape \texttt{($N_{windows}$,)} containing the distance (in meters) to the closest vessel during each 10-second window. This continuous variable supports regression tasks directly, or can be converted into classification labels by applying user-defined distance thresholds.
+
+  \item \texttt{datetimes}: An array of strings in the HDF5 file that records the UTC timestamp (ISO-8601 format) corresponding to each 10-second window, with shape \texttt{($N_{windows}$,)}.
+
+  \item \texttt{ship\_info}: A group in the HDF5 containing AIS metadata (vessel type, length, beam) of the vessel used to generate the \texttt{y} label.
 \end{itemize}
 
+\begin{quote}
+\textbf{Note on Noisy Sensors}
+
+Three sensors (indices 59, 60, and 61 in the \texttt{X} array) consistently exhibited high noise levels and have been forced to zero in the raw data. We recommend excluding these channels from feature matrices prior to training classification or regression models.
+\end{quote}
+
+\todojmg{Erick, check dimensiones please. ship_info tiene tamaño fijo?... entiendo que también 74771, ¿no?...}
 \begin{table}[H]
   \centering
   \caption{Summary of released dataset contents}
-  \begin{tabular}{@{}lll@{}}\toprule
-  Component & Description & Dimensions \\ \midrule
-  Spectral features & Log-spaced band energies (4--98~Hz) & 74,771 $\times$ 100 \\
-  Binary labels & Vessel within 1000~m (0/1) & 74,771 \\
-  Distance labels & Closest vessel distance [m] & 74,771 \\
-  Temporal info & UTC-aligned timestamps & 74,771 \\
-  Sensor info & Spatial averaging over 250 sensors & 74,771 \\
+  \label{tab:dataset-content}
+  \begin{tabularx}{\linewidth}{@{}lXl@{}}\toprule
+  \textbf{Component} & \textbf{Description} & \textbf{Dimensions} \\ \midrule
+  \texttt{X} & 3D array of energy-band features per channel & $74{,}771 \times 250 \times 100$ \\
+  \texttt{y} & Closest distance from the cable to any vessel [m] & $74{,}771$ \\
+  \texttt{datetimes} & UTC timestamps (ISO-8601 format) for each 10~s window & $74{,}771$ \\
+  \texttt{ship\_info} & AIS vessel metadata (type, length, beam) used to generate \texttt{y} labels & --- \\
+  %Noisy sensors & Channels 59--61 in \texttt{X} forced to zero due to persistent noise & 3 channels \\
   \bottomrule
-  \end{tabular}
+  \end{tabularx}
 \end{table}
 
 \section{Technical Validation}
