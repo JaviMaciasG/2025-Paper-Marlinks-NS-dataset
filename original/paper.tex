@@ -122,14 +122,14 @@ Distributed Acoustic Sensing (DAS) technology allows repurposing of standard opt
 Publicly available datasets enabling the development of data-driven algorithms for DAS-based vessel detection are scarce. Existing works are often limited in scale, or lack of properly labeled metadata that allow research in Artificial Intelligence Machine Learning strategies (AI/ML). This scarcity is particularly severe in specialized environments like submarine cables. Initiatives such as PubDAS~\cite{pubDAS2023} (the first large-scale open-source repository for DAS data) have demonstrably accelerated research by providing multiple experiment datasets for benchmarking and algorithm development. So, the number of publicly available resources in submarine environments are very limited. Some relevant examples in this scenario are:
 
 \begin{itemize}
-  \item The DAShip dataset, described by Huang et al. in~\cite{Huang2025DAShip} (available at \cite{DAShip2025}).
-  \item The MARS DAS experiment dataset by Cheng et al. described in~\cite{cheng2021utilizing} (available at~\cite{cheng2020mbari_das_data} with a \href{https://github.com/njlindsey/Photonic-seismology-in-Monterey-Bay-Dark-fiber1DAS-illuminates-offshore-faults-and-coastal-ocean}{source code repository at Github}).
+  \item The DAShip dataset, by Huang et al.~\cite{Huang2025DAShip} (available at \cite{DAShip2025}).
+  \item The MARS DAS experiment dataset by Cheng et al.~\cite{cheng2021utilizing} (available at~\cite{cheng2020mbari_das_data} with a \href{https://github.com/njlindsey/Photonic-seismology-in-Monterey-Bay-Dark-fiber1DAS-illuminates-offshore-faults-and-coastal-ocean}{repository at Github}).
   \item The MEUST DAS dataset by Sladen et al.~\cite{sladen2019distributed} (available at~\cite{sladen2019meust_km3net_das}).
   \item The HCMR+NESTOR+MEUST DAS datasets by Lior et al.~\cite{lior2021detection} (available at~\cite{lior2021detection_dataset}).
-  \item The DAS4Microseism dataset, by Taweesintananon et al. described in~\cite{Taweesintananon2023} (available at~\cite{VPRD2H_2022}).
-  \item The OOI Regional Cabled Array Dataset, by Lipowsky et al. described in~\cite{shi2025multiplexed} (available at \cite{lipovsky2024rapid_das_ooi} with a \href{https://github.com/uwfiberlab/OOI_DAS_2024}{source code repository at GitHub}).
-  \item The Valencia-IslaLink DAS dataset, which is distributed within PubDAS~\cite{pubDAS2023}.%, recorded in a telecommunication fiber-optic cable operated by IslaLink Holding Iberia S.L. and connecting Valencia to Palma de Mallorca. Data corresponds to the first $50\,km$ of the cable (the first $~10\,km$ are on land and the remaining corresponds to a buried cable about $1\,m$ below the Mediterranean seabed). 7 days of continuous data are available (from September $1^{st}$ to $7^{st}$ 2023).
-  \item The Yellow River Delta Dataset, by Song et al., described in~\cite{song2024near} and available at~\cite{song_2024_dataset}.
+  \item The DAS4Microseism dataset, by Taweesintananon et al.~\cite{Taweesintananon2023} (available at~\cite{VPRD2H_2022}).
+  \item The OOI Regional Cabled Array (RCA) Dataset, by Lipowsky et al.~\cite{shi2025multiplexed} (available at \cite{lipovsky2024rapid_das_ooi} with a \href{https://github.com/uwfiberlab/OOI_DAS_2024}{source code repository at GitHub}).
+  \item The Valencia-IslaLink DAS dataset, by Spica and Gaite, which is distributed within PubDAS~\cite{pubDAS2023}.%, recorded in a telecommunication fiber-optic cable operated by IslaLink Holding Iberia S.L. and connecting Valencia to Palma de Mallorca. Data corresponds to the first $50\,km$ of the cable (the first $~10\,km$ are on land and the remaining corresponds to a buried cable about $1\,m$ below the Mediterranean seabed). 7 days of continuous data are available (from September $1^{st}$ to $7^{st}$ 2023).
+  \item The Yellow River Delta Dataset, by Song et al.~\cite{song2024near} (available at~\cite{song_2024_dataset}).
 \end{itemize}
 
 \input{table-datasets-v4.tex}
@@ -138,11 +138,8 @@ Table~\ref{tab:das_datasets} shows the relevant characteristics of each of them.
 
 We can mention other properly labeled recent datasets which address event classification tasks, but in terrestrial domains, such as that by Tomasov et al.~\cite{tomasov2025comprehensive} that presented a fully labeled DAS dataset, including band-limited feature vectors. The fiber was $1663\,m$ long, and was buried $1\,m$ below the surface around a rectangular area in an university campus. The selected events included walking, running, longboarding, and driving, as well as potential security-related events like fence climbing, fiber manipulation, and opening/closing of manholes.
 
-The \texttt{Marlinks-NS DAS} dataset we present in this paper addresses the lack of publicly accessible, well-annotated DAS data aimed at submarine cable protection tasks, by defining two AI/ML tasks, one for vessel detection, and another for vessel distance estimation. The dataset provides a large-scale, machine-learning-ready collection of preprocessed spectral features and vessel metadata derived from a ten-day continuous recording campaign on a submarine cable. It comprises $74,771$ feature vectors computed at $250$ sensing positions in a relevant fiber optic range, each containing energy values in $100$ logarithmically spaced frequency bands, together with synchronized vessel distance and vessel presence labels, plus anonymized vessel related information obtained from AIS (beam, and length). By releasing this curated dataset, we aim to foster transparency and reproducibility in AI/ML-based DAS research while enabling the community to benchmark vessel detection and localization algorithms under realistic conditions. Additionally, accompanying code has been made available at \url{https://github.com/UAH-PSI/das-vessel-detection} to ease the scientific community in this research area to quickly .
-
-
-% By releasing 75,000 feature‐vector samples across 250 positions with detailed labels (distance, vessel type, length, beam), your dataset will not only parallel these successful initiatives but also uniquely address submarine‐cable scenarios—enabling future researchers to benchmark vessel detection and distance‐estimation models under comparable conditions.
-
+The \texttt{Marlinks-NS DAS} dataset we present in this paper addresses the lack of publicly accessible, well-annotated DAS data aimed at submarine cable protection applications, by defining two AI/ML tasks, one for vessel detection, and another for vessel distance estimation. The dataset provides a large-scale, machine-learning-ready collection of preprocessed spectral features and vessel metadata derived from a ten-day continuous recording campaign on a submarine cable. It comprises $74,771$ data instances (feature vectors) computed at $250$ channels in a relevant fiber optic range, each containing energy values in $100$ logarithmically spaced frequency bands, together with synchronized vessel distance % and vessel presence
+labels, plus anonymized vessel related information obtained from AIS (type, beam, and length). By releasing this curated dataset, we aim to promote transparency and reproducibility in AI/ML-based DAS research while enabling the scientific community to benchmark vessel detection and localization algorithms under realistic conditions. Additionally, accompanying code has been made available at \url{https://github.com/UAH-PSI/das-vessel-detection} to ease the community in this research area to quickly engage in experimental work.
 
 
 \section{Methods}
@@ -322,7 +319,8 @@ To simplify the dataset distribution all the data are stored in a HDF5 archive w
 Three sensors (indices 59, 60, and 61 in the \texttt{X} array) consistently exhibited high noise levels and have been forced to zero in the raw data. We recommend excluding these channels from feature matrices prior to training classification or regression models.
 \end{quote}
 
-\todojmg{Erick, check dimensiones please. ship_info tiene tamaño fijo?... entiendo que también 74771, ¿no?...}
+\todojmg{Erick, check dimensiones please. ship\_info tiene tamaño fijo?... entiendo que también 74771, ¿no?...}
+
 \begin{table}[H]
   \centering
   \caption{Summary of released dataset contents}
@@ -332,7 +330,7 @@ Three sensors (indices 59, 60, and 61 in the \texttt{X} array) consistently exhi
   \texttt{X} & 3D array of energy-band features per channel & $74{,}771 \times 250 \times 100$ \\
   \texttt{y} & Closest distance from the cable to any vessel [m] & $74{,}771$ \\
   \texttt{datetimes} & UTC timestamps (ISO-8601 format) for each 10~s window & $74{,}771$ \\
-  \texttt{ship\_info} & AIS vessel metadata (type, length, beam) used to generate \texttt{y} labels & --- \\
+  \texttt{ship\_info} & AIS metadata (type, length, beam) for the vessel used to generate \texttt{y} labels & 74,771 \\
   %Noisy sensors & Channels 59--61 in \texttt{X} forced to zero due to persistent noise & 3 channels \\
   \bottomrule
   \end{tabularx}
