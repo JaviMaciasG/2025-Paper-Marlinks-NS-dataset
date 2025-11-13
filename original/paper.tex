@@ -296,7 +296,7 @@ The closest distance continuous variable supports regression tasks directly as \
 
 The dataset is publicly available on Zenodo~\cite{ramirez2024dasvesseldataset}, and to simplify its distribution, all the data are stored in a \texttt{hdf5} archive (14 GB in size) with the following structure (summarized in Table~\ref{tab:dataset-content}):
 \begin{itemize}
-  \item \texttt{X}: A 3D NumPy array of shape {($N_{windows}$, $N_{channels}$, $N_{bands}$)}, containing the feature vectors in strain$^2$ units, captured by the sensors at each timestamp. 
+  \item \texttt{X}: A 3D NumPy array of shape {($N_{windows}$, $N_{channels}$, $N_{bands}$)}, containing the feature vectors in squared strain units ($(m/m)^2$), captured by the sensors at each timestamp.
   \begin{itemize}
     \item \textbf{{$N_{windows}=74{,}771$}}: number of non-overlapped 10-seconds signal windows analyzed along the full recording period.
     \item \textbf{{$N_{channels}=250$}}: number of spatial channels (sensor positions along the selected fiber segment).
