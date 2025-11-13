@@ -265,7 +265,7 @@ In this work we carried out a data-driven methodology to decide on the feature v
 
 
 
-The strain signal for each channel was first segmented into non-overlapping windows of length $T_\omega=10\,s$, to which we apply a ¿HAMMING WINDOW? to avoid spectral leakage. The window size was selected to allow for a reasonable resolution in the few-Hz frequency range, considering that we wanted to avoid low frequency noise (mainly from temperature variations and surface waves). Thus, for each 10-second windows we run a Fast Fourier Transform (FFT) analysis to provide spectral components for the feature vector build-up, selecting an initial bandwidth between $4\,Hz$ and $100\,Hz$.
+The strain signal for each channel was first segmented into non-overlapping windows of length $T_\omega=10\,s$, to which we apply a Blackman window to reduce spectral leakage. The window size was selected to allow for a reasonable resolution in the few-Hz frequency range, considering that we wanted to avoid low frequency noise (mainly from temperature variations and surface waves). Thus, for each 10-second windows we run a Fast Fourier Transform (FFT) analysis to provide spectral components for the feature vector build-up, selecting an initial bandwidth between $4\,Hz$ and $100\,Hz$.
 
 The feature vector is then generated from the FFT values, so that each 10-second window is represented by $N_{bands}=100$ logarithmically spaced band-energy features within the 4--100~Hz range, excluding the 49--51~Hz and 98--100~Hz intervals. The logarithmic frequency mapping was designed to equalize the required spectral resolution, allocating more spectral FFT coefficients in the lower frequency region (the specific frequency band limits can be found in \href{https://github.com/UAH-PSI/das-vessel-detection/blob/main/data/fbands.csv}{the GitHub repository}).
 
@@ -277,7 +277,7 @@ E_c^{(n)}[b] = \sum_{k = k_b^{-}}^{k_b^{+}} \big| X_c^{(n)}[k] \big|^2.
 
 Finally, the feature vector for $x_c^{(n)}[m]$ will be $\mathcal{E}_c^{(n)}=\left[ E_c^{(n)}[0], E_c^{(n)}[1], \dots, E_c^{(n)}[N_{bands}-1] \right]$ which, extended in time and channels, corresponds to the $N_{windows}\times \left( N_{channels}\times N_{bands}\right)$ values available in the public dataset.
 
-\begin{figure}[htbp]
+\begin{figure}[thbp]
   \centering
   \includegraphics[width=\textwidth]{dt-full.png}
   \caption{(a) Raw strain signal sensed at $15.4\,km$ in the time interval of the red dashed square in Fig.~\ref{fig:energy-dt-map}.d. (b) Filtered strain signal ($4\,Hz$ to $98\,Hz$, excluding the $(49-51)\,Hz$) corresponding to the raw signal in Fig.~\ref{fig:energy-dt-map}.a and time-synchronized with it. (c) Filtered strain data as a function of time and distance along the cable corresponding to the red dashed square in Fig.~\ref{fig:energy-dt-map}.d, time synchronized with Figs.~\ref{fig:energy-dt-map}.a and~\ref{fig:energy-dt-map}.b. (d) Feature vector energy (in dBs) as a function of time and distance along the cable. (e) Distance from cable to nearest vessel (in meters), time-synchronized with Fig.~\ref{fig:energy-dt-map}.d.}
