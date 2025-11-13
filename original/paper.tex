@@ -352,7 +352,7 @@ Three sensors (indices 59, 60, and 61 in the \texttt{X} array) consistently exhi
 \subsection{Machine Learning Framework and Experimental Setup}
 \label{sec:machine learning framework}
 
-The initial technical validation was carried out by applying a XGBoost ML algorithm to the two machine learning tasks defined in Section~\ref{sec:ml-tasks}. The vessel detection task was set with a distance threshold of $1000\,m$, and the vessel distance estimation task evaluated two cases: unrestricted distance estimation, and distance estimation for vessels closer than $1000\,m$ to the cable.
+We carried out the initial technical validation by applying a XGBoost ML algorithm to the two machine learning tasks defined in Section~\ref{sec:ml-tasks}. The vessel detection task was set with a distance threshold of $1000\,m$, and the vessel distance estimation task evaluated two cases: unrestricted distance estimation, and distance estimation for vessels closer than $1000\,m$ to the cable.
 
 The objective functions in the baseline XGBoost models are binary cross-entropy for classification and mean squared error for regression. We used gradient boosted trees, a learning rate $\eta = 0.05$, a maximum tree depth of 10 and 500 boosting rounds.
 
@@ -373,7 +373,7 @@ Table~\ref{tab:performance} shows the performance metrics corresponding to $N_C 
 
 \input{table-performance.tex}
 
-The good results achieved with our initial experimental approach suggests that the provided data do contain discriminative features for the proposed tasks, being a strong evidence of the dataset's technical validity. A much more detailed experimental work on this dataset has been described in~\cite{ramirez2025vessel}.
+The good results achieved with our initial experimental approach suggests that the provided data do contain discriminative features for the proposed tasks, being a strong evidence of the dataset's technical validity. We carried out a much more detailed experimental work on this dataset, described in~\cite{ramirez2025vessel}.
 
 
 \section{Usage Notes}
