@@ -275,9 +275,8 @@ From these definitions, the spectral energy of band $b$ for window $n$ of channe
 E_c^{(n)}[b] = \sum_{k = k_b^{-}}^{k_b^{+}} \big| X_c^{(n)}[k] \big|^2.
 \end{equation}
 
-Finally, the feature vector corresponding to $x_c^{(n)}[m]$ will be $\mathcal{E}_c^{(n)}=\left[ E_c^{(n)}[0], E_c^{(n)}[1], \dots, E_c^{(n)}[N_{bands}-1] \right]$, which corresponds to the $N_{windows}\times \left( N_{channels}\times N_{bands}\right)$ values available in the public dataset.
+Finally, the feature vector for $x_c^{(n)}[m]$ will be $\mathcal{E}_c^{(n)}=\left[ E_c^{(n)}[0], E_c^{(n)}[1], \dots, E_c^{(n)}[N_{bands}-1] \right]$ which, extended in time and channels, corresponds to the $N_{windows}\times \left( N_{channels}\times N_{bands}\right)$ values available in the public dataset.
 
-\todojmg{Erick, please verifica que las ecuaciones son las que tú usas.}
 \begin{figure}[htbp]
   \centering
   \includegraphics[width=\textwidth]{dt-full.png}
