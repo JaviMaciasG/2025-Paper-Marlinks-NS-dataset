@@ -349,28 +349,33 @@ Three sensors (indices 59, 60, and 61 in the \texttt{X} array) consistently exhi
 \subsection{Machine Learning Framework and Experimental Setup}
 \label{sec:machine learning framework}
 
-We carried out the initial technical validation by applying a XGBoost ML algorithm to the two machine learning tasks defined in Section~\ref{sec:ml-tasks}. The vessel detection task was set with a distance threshold of $1000\,m$, and the vessel distance estimation task evaluated two cases: unrestricted distance estimation, and distance estimation for vessels closer than $1000\,m$ to the cable.
+We carried out the initial technical validation by applying a XGBoost ML algorithm to the two ML tasks defined in Section~\ref{sec:ml-tasks}.
 
-The objective functions in the baseline XGBoost models are binary cross-entropy for classification and mean squared error for regression. We used gradient boosted trees, a learning rate $\eta = 0.05$, a maximum tree depth of 10 and 500 boosting rounds.
-
-We exploited spatial redundancy in the DAS channels by averaging the feature vectors from a $N_C$ contiguous channels in the sensed fiber optic segment, which is given as an input to the XGBoost algorithm.
+The objective functions in the baseline XGBoost models are binary cross-entropy for classification and mean squared error for regression. We used gradient boosted trees, a learning rate $\eta = 0.05$, a maximum tree depth of 10, with 500 boosting rounds.
 
 Our experimental approach is based on a rigorous $k$-fold cross validation strategy, in which the dataset is divided into $k$ equal parts (folds). A model is trained on $k – 1$ folds and tested on the remaining one, repeating this process $k$ times so that each fold serves once as test data. The final performance metric is the average of the k test results, giving a more reliable estimate of the model’s performance, while keeping a strict separation between training and testing data. In our case each fold corresponds to 1 full day of data, so that $k=10$. The available source code at \href{https://github.com/UAH-PSI/das-vessel-detection}{the accompanying code at GitHub} also promotes the use of the cross validation strategy as it is integrated in the evaluation scripts.
+
+The vessel detection task was set with a distance threshold of $1000\,m$, and the vessel distance estimation task evaluated two cases: unrestricted distance estimation, and distance estimation for vessels closer than $1000\,m$ to the cable.
+
+We exploited spatial redundancy in the DAS channels by averaging the feature vectors from $N_C$ contiguous channels in the sensed fiber optic segment, which is given as an input to the XGBoost algorithm.
+
 
 
 \subsection{Results}
 \label{sec:results}
 
+The evaluation metrics used depended on the ML task:
+
 \begin{itemize}
-  \item For the classification task: Accuracy, and Global and class-wise $f_1$ scores, to assess the impact of the class imbalance in the system performance.
-  \item For the distance estimation task: Global Mean Absolute Error (MAE) defined without restrictions, and $1000\,m MAE$, defined for vessel distances below $1000\,m$ (to assess precision in vessel nearby positions).
+  \item For the classification task (vessel detection): Accuracy, and global and class-wise $F_1$ scores, to assess the impact of the class imbalance in the system performance, with higher values meaning better performance. In our evaluation results below, class 0 and class 1 cases refer to vessels closer or further than the distance threshold, respectively.
+  \item For the regression task (vessel distance estimation): Global Mean Absolute Error (MAE) defined considering all the available vessels in the dataset, and $1000\,m$ MAE, defined for vessel distances below $1000\,m$ (to assess precision in vessel nearby positions). The lower the MAE values, the better the performance.
 \end{itemize}
 
-Table~\ref{tab:performance} shows the performance metrics corresponding to $N_C \in \lbrace 10, 50, 250 \rbrace$ channels. To summarize, the XGBoost classifier achieved an overall F1-score exceeding 89\% for vessel detection within $1000\,m$, with reasonably balanced global and class-wise $f_1$ metrics, despite the clear data unbalance issues (see Fig.~\ref{fig:data-balance}). Regression models estimated global vessel distance with a MAE of, and a $1000\,m$ MAE of 171~m. Results improved with larger spatial contexts.
+Table~\ref{tab:performance} shows the performance metrics corresponding to $N_C \in \lbrace 10, 50, 250 \rbrace$ channels. To summarize, the XGBoost classifier achieved a global $F_1$-score exceeding 89\% for vessel detection, with reasonably balanced class-wise $F_1$ metrics, despite the clear data unbalance issues (see Fig.~\ref{fig:data-balance}). Regression models estimated global vessel distance with a MAE in the order of $800\,m$, which is again reasonably considering the unrestricted conditions, that include vessels as far as $8\,km$ from the cable. The $1000\,m$ MAE gets as low as $171\,m$, which is also a good precision for for vessels that are in a $1000\,m$ radius from the cable. Finally, all the performance results improve when using larger spatial contexts.
 
 \input{table-performance.tex}
 
-The good results achieved with our initial experimental approach suggests that the provided data do contain discriminative features for the proposed tasks, being a strong evidence of the dataset's technical validity. We carried out a much more detailed experimental work on this dataset, described in~\cite{ramirez2025vessel}.
+The good results achieved with our initial experimental approach suggests that the provided data do contain discriminative features for the proposed tasks, being a strong evidence of the dataset's technical validity. We carried out a much more detailed experimental work on this dataset, that is fully described in~\cite{ramirez2025vessel}.
 
 
 \section{Usage Notes}
@@ -380,9 +385,9 @@ The \texttt{Marlinks-NS DAS} dataset is intended to serve as a benchmark resourc
 
 The spectral feature matrices can be directly used as input to machine learning models for the binary vessel detection, vessel identification or continuous distance regression tasks. For custom experiments, users may re-aggregate energy bands, apply normalization, or augment the data using temporal or spatial transformations. The AIS-based distance labels can also be thresholded to define categorical proximity classes if required, including multi-class classification tasks.
 
-Users can load the dataset using the provided Python scripts available in the \href{https://github.com/UAH-PSI/das-vessel-detection}{public GitHub repository}, which include examples for reading the HDF5 files, splitting data into training and testing subsets using a day-wise $k$-fold cross-validation approach, and additional utilities. The repository also contains the source code of an evaluation framework, in which it is very easy to integrate alternative ML strategies.
+Users can load the dataset using the provided Python scripts available in the \href{https://github.com/UAH-PSI/das-vessel-detection}{public GitHub repository}, which include examples for reading the HDF5 files, splitting data into training and testing subsets using a day-wise $k$-fold cross-validation approach, and additional utilities. The repository also contains the source code of an evaluation framework, designed to allow an easy integration of alternative ML strategies.
 
-All time information is stored in UTC format, and users should be aware that the precise geographical positions of sensing points have been anonymized for confidentiality. The provided metadata preserve relative channel positions, enabling spatial pattern analysis and correlation studies along the fiber.
+%All time information is stored in UTC format, and users should be aware that the precise geographical positions of sensing points have been anonymized for confidentiality. The provided metadata preserve relative channel positions, enabling spatial pattern analysis and correlation studies along the fiber.
 
 %Researchers are encouraged to cite the accompanying publication when using this dataset and to share derived models or processing scripts under compatible open licenses to promote reproducibility and extension of this work.
 
@@ -405,7 +410,7 @@ All time information is stored in UTC format, and users should be aware that the
 
 The data is avaliable in a open Zenodo repository~\cite{ramirez2024dasvesseldataset} (\url{https://doi.org/10.5281/zenodo.15611778}) and it has been released under a Creative Commons Attribution–NonCommercial–ShareAlike 4.0 International license for research and educational purposes, aimed to enable reproducible development and benchmarking of machine-learning models for vessel detection and vessel distance estimation in submarine cable protection applications.
 
-The Zenodo repository contains the data stored in hdf5 format, and supporting documentation.
+The Zenodo repository contains the data (stored in hdf5 format), and supporting documentation.
 
 
 \section{Code Availability}
@@ -418,7 +423,7 @@ All scripts have been tested under Python 3.10 and rely exclusively on widely av
 
 The code is distributed under a GPLv3 license, ensuring that it is free to use, modify and distribute under the same terms.
 
-Users are encouraged to adapt and extend the provided scripts for their research needs. Contributions to the repository, including improvements, additional examples, and derived analysis tools, are welcome through standard GitHub pull requests.
+Users are encouraged to adapt and extend the provided scripts for their research needs. Contributions to the repository, including improvements, additional examples, and derived analysis tools, are very welcome through standard GitHub pull requests.
 
 
 \section*{Acknowledgements}
@@ -430,7 +435,7 @@ This work has been partially supported by the Spanish Ministry of Science and In
 \section*{Author Contributions}
 \label{sec:author contributions}
 
-E.E.R.-T., S.E.P.-C. J.M.-G., D.P.-P. and J.T. designed the study and experiments and performed data processing and model implementation. R.V. coordinated access to the DAS data, metadata and preprocessing scripts. S.M.-L. and M.G.-H. supervised optical sensing and signal interpretation. All authors reviewed and approved the manuscript.
+E.E.R.-T., S.E.P.-C. J.M.-G., D.P.-P. and J.T. carried out the dataset design, designed the experimental study and and performed data processing and model implementation tasks. R.V. coordinated access to the DAS data, metadata and preprocessing scripts. S.M.-L. and M.G.-H. supervised optical sensing and signal interpretation. All authors reviewed and approved the manuscript.
 
 
 \section*{Competing Interests}
