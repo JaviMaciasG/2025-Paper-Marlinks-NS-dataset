@@ -200,9 +200,7 @@ Figs.~\ref{fig:energy-dt-map}.a+b and~\ref{fig:strain-silence}.a+b show two exam
 \subsection{Metadata Processing: AIS Data Processing}
 \label{sec:ais-data-processing}
 
-\todojmg{Erick, revisa please las estadísticas de AIS que pone aquí.}
-
-The AIS data provided by the cable operator included vessel identifiers (MMSI), timestamps, coordinates, course, and speed for 745 unique vessels with 64,417 position reports. A relevant problem when using AIS data is the unpredictable and typically low position update rates~\cite{emmens2021promisesAIS}. A detailed analysis on our DAS data showed that $88\%$ of vessels reported positions only every 1 to 3 minutes, which may imply a significant positional uncertainty. To overcome this issue, we applied a linear interpolation between consecutive reported positions at $1\,Hz$ position update rate. %, discarding trajectories with gaps exceeding $60$ minutes.
+The AIS data provided by the cable operator included vessel identifiers (MMSI), timestamps, coordinates, course, and speed for 744 unique vessels with 64,621 position reports. A relevant problem when using AIS data is the unpredictable and typically low position update rates~\cite{emmens2021promisesAIS}. A detailed analysis on our DAS data showed that $88\%$ of vessels reported positions only every 1 to 3 minutes, which may imply a significant positional uncertainty. To overcome this issue, we applied a linear interpolation between consecutive reported positions at $1\,Hz$ position update rate. %, discarding trajectories with gaps exceeding $60$ minutes.
 We did not have the possibility of a direct quantitative validation on the precision of this simple interpolation approach (provided AIS data was the only available source of vessel positioning), but the good results obtained (see Section~\ref{sec:technical validation}) served us a kind of ``indirect validation'', so that we did not require to apply more sophisticated interpolation methods~\cite{guo2021improved}.
 
 After the interpolation process, we had over $1,200,000$ AIS position entries, which we further enriched with web-scrapped additional AIS metadata (namely, vessel type, length and beam) that can be useful in further studies or AI/ML tasks requiring information related to vessel type and size.
@@ -298,7 +296,7 @@ The closest distance continuous variable supports regression tasks directly as \
 
 The dataset is publicly available on Zenodo~\cite{ramirez2024dasvesseldataset}, and to simplify its distribution, all the data are stored in a \texttt{hdf5} archive (14 GB in size) with the following structure (summarized in Table~\ref{tab:dataset-content}):
 \begin{itemize}
-  \item \texttt{X}: A 3D NumPy array of shape {($N_{windows}$, $N_{channels}$, $N_{bands}$)}, containing the feature vectors. XXXXXXXXXXX WHICH UNITS?
+  \item \texttt{X}: A 3D NumPy array of shape {($N_{windows}$, $N_{channels}$, $N_{bands}$)}, containing the feature vectors in strain$^2$ units, captured by the sensors at each timestamp. 
   \begin{itemize}
     \item \textbf{{$N_{windows}=74771$}}: number of non-overlapped 10-seconds signal windows analyzed along the full recording period.
     \item \textbf{{$N_{channels}=250$}}: number of spatial channels (sensor positions along the selected fiber segment).
@@ -368,7 +366,7 @@ Our experimental approach is based on a rigorous $k$-fold cross validation strat
   \item For the distance estimation task: Global Mean Absolute Error (MAE) defined without restrictions, and $1000\,m MAE$, defined for vessel distances below $1000\,m$ (to assess precision in vessel nearby positions).
 \end{itemize}
 
-Table~\ref{tab:performance} shows the performance metrics corresponding to $N_C \in \lbrace 10, 50, 250 \rbrace$ channels. To summarize, the XGBoost classifier achieved an overall F1-score exceeding 90\% for vessel detection within $1000\,m$, with reasonably balanced global and class-wise $f_1$ metrics, despite the clear data unbalance issues (see Fig.~\ref{fig:data-balance}). Regression models estimated global vessel distance with a MAE of, and a $1000\,m$ MAE of 141~m. Results improved with larger spatial contexts.
+Table~\ref{tab:performance} shows the performance metrics corresponding to $N_C \in \lbrace 10, 50, 250 \rbrace$ channels. To summarize, the XGBoost classifier achieved an overall F1-score exceeding 89\% for vessel detection within $1000\,m$, with reasonably balanced global and class-wise $f_1$ metrics, despite the clear data unbalance issues (see Fig.~\ref{fig:data-balance}). Regression models estimated global vessel distance with a MAE of, and a $1000\,m$ MAE of 171~m. Results improved with larger spatial contexts.
 
 \input{table-performance.tex}
 
