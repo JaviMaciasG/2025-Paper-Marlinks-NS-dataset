@@ -1,0 +1,126 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{enumitem}
+\usepackage{hyperref}
+
+% Remove borders around links/form fields
+\hypersetup{
+    pdfborder={0 0 0}
+}
+
+\title{Checklist for LaTeX Submission of a Data Descriptor\\\large Scientific Data (Nature Research)}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+% All checkboxes must be inside a Form environment
+\begin{Form}
+
+\section*{1. Overall manuscript structure}
+
+\begin{itemize}[leftmargin=1.5cm]
+    \item \CheckBox{} Title
+    \item \CheckBox{} Authors \& affiliations
+    \item \CheckBox{} Abstract
+    \item \CheckBox{} Background \& Summary
+    \item \CheckBox{} Methods
+    \item \CheckBox{} Data Records
+    \item \CheckBox{} Technical Validation
+    \item \CheckBox{} Usage Notes
+    \item \CheckBox{} Code Availability (if applicable)
+    \item \CheckBox{} Acknowledgements
+    \item \CheckBox{} Author contributions
+    \item \CheckBox{} Competing interests
+    \item \CheckBox{} Figures, tables, and legends
+    \item \CheckBox{} References
+    \item \CheckBox{} Section titles follow exact journal requirements
+    \item \CheckBox{} Manuscript focuses on data description, not hypotheses or interpretations
+\end{itemize}
+
+\section*{2. Methods \& reproducibility}
+
+\begin{itemize}[leftmargin=1.5cm]
+    \item \CheckBox{} Acquisition methods described in full detail
+    \item \CheckBox{} Preprocessing and filtering steps fully described
+    \item \CheckBox{} All metadata required for reuse included
+    \item \CheckBox{} Datasets deposited in an approved public repository
+    \item \CheckBox{} DOIs or accession numbers included in Data Records
+    \item \CheckBox{} Code for preprocessing or validation archived and linked
+\end{itemize}
+
+\section*{3. Figures and tables}
+
+\begin{itemize}[leftmargin=1.5cm]
+    \item \CheckBox{} Figures numbered in order of mention
+    \item \CheckBox{} High-resolution images provided
+    \item \CheckBox{} Figure captions included in the \texttt{figure} environment
+    \item \CheckBox{} Tables fit on a single page (otherwise marked Online-only)
+    \item \CheckBox{} Tables include full headings and units
+    \item \CheckBox{} All figures and tables referenced in the text
+    \item \CheckBox{} Placement acceptable: inline or at end of document
+\end{itemize}
+
+\section*{4. LaTeX-specific requirements}
+
+\subsection*{4.1 Standalone \texttt{.tex} file}
+
+\begin{itemize}[leftmargin=1.5cm]
+    \item \CheckBox{} Single \texttt{.tex} file compiles without external files
+    \item \CheckBox{} No external \texttt{.bib}, \texttt{.bst}, or custom \texttt{.sty} files
+    \item \CheckBox{} No journal class or template required
+    \item \CheckBox{} \texttt{.bbl} content manually pasted into \texttt{.tex}
+    \item \CheckBox{} No use of \texttt{\textbackslash bibliography\{\}} or \texttt{\textbackslash bibliographystyle\{\}}
+    \item \CheckBox{} Only standard LaTeX packages used
+    \item \CheckBox{} No non-standard fonts
+\end{itemize}
+
+\subsection*{4.2 Internal consistency}
+
+\begin{itemize}[leftmargin=1.5cm]
+    \item \CheckBox{} All references compile correctly
+    \item \CheckBox{} No clickable cross-references or \texttt{\textbackslash cref}
+    \item \CheckBox{} Equations numbered (1), (2), \dots
+    \item \CheckBox{} Equations referenced as ``equation (1)''
+\end{itemize}
+
+\section*{5. References}
+
+\begin{itemize}[leftmargin=1.5cm]
+    \item \CheckBox{} References pasted directly inside the \texttt{.tex} file
+    \item \CheckBox{} Formatting follows journal requirements
+    \item \CheckBox{} Dataset citations included in ``Data Citations'' if applicable
+\end{itemize}
+
+\section*{6. Supplementary files}
+
+\begin{itemize}[leftmargin=1.5cm]
+    \item \CheckBox{} Oversized tables labeled Online-only and uploaded separately
+    \item \CheckBox{} Supplementary figures in a separate PDF
+    \item \CheckBox{} Extended methods or notes provided separately if needed
+    \item \CheckBox{} All datasets uploaded and accessible
+\end{itemize}
+
+\section*{7. Metadata and compliance}
+
+\begin{itemize}[leftmargin=1.5cm]
+    \item \CheckBox{} Ethical approvals included if required
+    \item \CheckBox{} No sensitive or personal data exposed
+    \item \CheckBox{} All DOIs and repository links verified
+\end{itemize}
+
+\section*{8. Final checks before submission}
+
+\begin{itemize}[leftmargin=1.5cm]
+    \item \CheckBox{} Manuscript compiles to PDF without errors
+    \item \CheckBox{} PDF inspected for figure/table quality
+    \item \CheckBox{} All authors, affiliations, and ORCIDs checked
+    \item \CheckBox{} Repository contents complete and verified
+\end{itemize}
+
+\end{Form}
+
+\end{document}
+

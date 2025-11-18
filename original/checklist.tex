@@ -1,0 +1,120 @@
+\documentclass[11pt]{article}
+
+\usepackage{enumitem}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+
+% Checkbox symbol
+\newcommand{\cbox}{$\square$ }
+
+\title{Checklist for LaTeX Submission of a Data Descriptor\\\large Scientific Data (Nature Research)}
+\date{}
+
+\begin{document}
+
+\maketitle
+
+\section*{1. Overall manuscript structure}
+
+\begin{itemize}[leftmargin=1.2cm]
+    \item \cbox Title
+    \item \cbox Authors \& affiliations
+    \item \cbox Abstract
+    \item \cbox Background \& Summary
+    \item \cbox Methods
+    \item \cbox Data Records
+    \item \cbox Technical Validation
+    \item \cbox Usage Notes
+    \item \cbox Code Availability (if applicable)
+    \item \cbox Acknowledgements
+    \item \cbox Author contributions
+    \item \cbox Competing interests
+    \item \cbox Figures, tables, and legends
+    \item \cbox References
+    \item \cbox Section titles follow exact journal requirements
+    \item \cbox Manuscript focuses on data description, not hypotheses or interpretations
+\end{itemize}
+
+\section*{2. Methods \& reproducibility}
+
+\begin{itemize}[leftmargin=1.2cm]
+    \item \cbox Acquisition methods described in full detail
+    \item \cbox Preprocessing and filtering steps fully described
+    \item \cbox All metadata required for reuse included
+    \item \cbox Datasets deposited in an approved public repository
+    \item \cbox DOIs or accession numbers included in Data Records
+    \item \cbox Code for preprocessing or validation archived and linked
+\end{itemize}
+
+\section*{3. Figures and tables}
+
+\begin{itemize}[leftmargin=1.2cm]
+    \item \cbox Figures numbered in order of mention
+    \item \cbox High-resolution images provided
+    \item \cbox Figure captions included in the \texttt{figure} environment
+    \item \cbox Tables fit on a single page (otherwise marked Online-only)
+    \item \cbox Tables include full headings and units
+    \item \cbox All figures and tables referenced in the text
+    \item \cbox Placement acceptable: inline or at end of document
+\end{itemize}
+
+\section*{4. LaTeX-specific requirements}
+
+\subsection*{4.1 Standalone \texttt{.tex} file}
+
+\begin{itemize}[leftmargin=1.2cm]
+    \item \cbox Single \texttt{.tex} file compiles without external files
+    \item \cbox No external \texttt{.bib}, \texttt{.bst}, or custom \texttt{.sty} files
+    \item \cbox No journal class or template required
+    \item \cbox \texttt{.bbl} content manually pasted into \texttt{.tex}
+    \item \cbox No use of \texttt{\textbackslash bibliography\{\}} or \texttt{\textbackslash bibliographystyle\{\}}
+    \item \cbox Only standard LaTeX packages used
+    \item \cbox No non-standard fonts
+\end{itemize}
+
+\subsection*{4.2 Internal consistency}
+
+\begin{itemize}[leftmargin=1.2cm]
+    \item \cbox All references compile correctly
+    \item \cbox No clickable hyperlinks or \texttt{\textbackslash cref}
+    \item \cbox Equations numbered (1), (2), ...
+    \item \cbox Equations referenced as ``equation (1)''
+\end{itemize}
+
+\section*{5. References}
+
+\begin{itemize}[leftmargin=1.2cm]
+    \item \cbox References pasted directly inside the \texttt{.tex} file
+    \item \cbox Formatting follows journal requirements
+    \item \cbox Dataset citations included in ``Data Citations'' if applicable
+\end{itemize}
+
+\section*{6. Supplementary files}
+
+\begin{itemize}[leftmargin=1.2cm]
+    \item \cbox Oversized tables labeled Online-only and uploaded separately
+    \item \cbox Supplementary figures in a separate PDF
+    \item \cbox Extended methods or notes provided separately if needed
+    \item \cbox All datasets uploaded and accessible
+\end{itemize}
+
+\section*{7. Metadata and compliance}
+
+\begin{itemize}[leftmargin=1.2cm]
+    \item \cbox Ethical approvals included if required
+    \item \cbox No sensitive or personal data exposed
+    \item \cbox All DOIs and repository links verified
+\end{itemize}
+
+\section*{8. Final checks before submission}
+
+\begin{itemize}[leftmargin=1.2cm]
+    \item \cbox Manuscript compiles to PDF without errors
+    \item \cbox PDF inspected for figure/table quality
+    \item \cbox All authors, affiliations, and ORCIDs checked
+    \item \cbox Repository contents complete and verified
+\end{itemize}
+
+\end{document}
+
