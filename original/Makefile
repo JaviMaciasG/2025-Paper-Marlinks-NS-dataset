@@ -70,7 +70,7 @@ paper.zip: $(DEPFILE)
 ### Limpieza sin rubber: usa latexmk -C y borra artefactos auxiliares
 clean:
 	$(LATEXMK) -C $(BASENAME)
-	rm -f $(DEPFILE) paper.zip .deps.lst .deps.lst.tmp \
+	rm -f $(DEPFILE) $(BASENAME).zip .deps.lst .deps.lst.tmp $(BASENAME).bbl \
 	      $(DIFF_FLATTEN_BASENAME).aux $(DIFF_FLATTEN_BASENAME).bbl \
 	      $(DIFF_FLATTEN_BASENAME).blg $(DIFF_FLATTEN_BASENAME).log \
 	      figures/*converted-to.pdf
