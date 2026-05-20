@@ -224,19 +224,17 @@ We can mention other properly labeled recent datasets which address event classi
 
 The \texttt{Marlinks-NS DAS} dataset that we present in this paper addresses the lack of publicly accessible, well-annotated DAS data aimed at submarine cable protection applications, by defining two AI/ML tasks, one for vessel detection, and another for vessel distance estimation. The dataset provides a large-scale, machine-learning-ready collection of preprocessed spectral features and vessel metadata derived from a ten-day continuous recording campaign on a submarine cable. It comprises $74{,}771$ data instances (feature vectors) computed at $250$ channels in a relevant fiber optic range, each containing energy values in $100$ logarithmically-spaced frequency bands, together with synchronized vessel distance % and vessel presence
 labels, plus anonymized vessel-related information obtained from AIS (type, beam, and length). By releasing this curated dataset, we aim to promote transparency and reproducibility in AI/ML-based DAS research while enabling the scientific community to benchmark vessel detection and localization algorithms under realistic conditions. Additionally, accompanying code has been made available at \url{https://github.com/UAH-PSI/das-vessel-detection} to ease the community in this research area to quickly engage in experimental work.
-
-
-\section{Methods}
-\label{sec:methods}
-
-The processing pipeline we applied for the generation of the dataset is shown in Fig.~\ref{fig:architecture}, to provide a full reference about the data curation process. All the relevant methods and modules are described in the following subsections.
-
 \begin{figure}[H]
   \centering
   \includegraphics[width=\textwidth]{system-architecture-v7.png}
   \caption{Dataset curation and processing pipeline, covering DAS acquisition and raw signal preprocessing; spectral feature extraction; metadata (AIS, geographical location and bathymetry) processing, synchronization and label generation; and cross-validation partitioning.}
   \label{fig:architecture}
 \end{figure}
+
+\section{Methods}
+\label{sec:methods}
+
+The processing pipeline we applied for the generation of the dataset is shown in Fig.~\ref{fig:architecture}, to provide a full reference about the data curation process. All the relevant methods and modules are described in the following subsections.
 
 
 \subsection{DAS interrogator: Acquisition Method and Setup}
