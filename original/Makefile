@@ -1,4 +1,4 @@
-.PHONY: main $(FLS_FILE) paper.zip ### clean
+.PHONY: main $(FLS_FILE) paper.zip gitadd refresh-deps project-files ### clean
 
 BASENAME  = paper
 TEX_FILE  = $(BASENAME).tex
@@ -6,8 +6,8 @@ PDF_FILE  = $(BASENAME).pdf
 PDF_TOOL=pdflatex
 BIBLIO_TOOL=bibtex
 
-ORIGINAL_FLATTEN_TEX_FILE = ../original/$(BASENAME)-flatten-v1.tex
-ORIGINAL_BIB_FILE = ../original/$(BASENAME).bbl
+ORIGINAL_FLATTEN_TEX_FILE = ../revised3/$(BASENAME)-flatten-v3.tex
+ORIGINAL_BIB_FILE = ../revised3/$(BASENAME).bbl
 FLATTEN_TEX_FILE = $(BASENAME)-flatten.tex
 DIFF_FLATTEN_BASENAME = $(BASENAME)-flatten-diff
 DIFF_FLATTEN_TEX_FILE = $(DIFF_FLATTEN_BASENAME).tex
@@ -20,6 +20,8 @@ LATEXMK = latexmk
 LATEXMK_OPTS = -pdf -interaction=nonstopmode -file-line-error -use-make -recorder
 LATEXMK_OPTS += -pdflatex='pdflatex -synctex=1 %O %S'   ### Synctex vía latexmk
 DEPFILE = $(BASENAME).d
+PROJECT_FILES_LIST = .deps.lst
+PROJECT_FILES_TMP = .deps.lst.tmp
 -include $(DEPFILE)
 ### --------------------------------------------------------
 
@@ -45,12 +47,13 @@ latexdiff: flatten
 zip: paper.zip
 #	zip paper.zip Makefile *.tex figures/* *.bib *.cls *.sty logo-eps-converted-to.pdf
 
-# Asegura que existe el .d con todas las dependencias reales
-$(DEPFILE): $(TEX_FILE)
-	$(LATEXMK) $(LATEXMK_OPTS) -deps -deps-out=$(DEPFILE) $(BASENAME)
+# Regenera una sola vez el fichero de dependencias para zip y gitadd.
+refresh-deps: $(TEX_FILE)
+	@echo "Refreshing LaTeX dependencies..."
+	@$(LATEXMK) $(LATEXMK_OPTS) -deps -deps-out=$(DEPFILE) $(BASENAME)
 
-# Build paper2.zip from the deps file, keeping only project-local, existing files
-paper.zip: $(DEPFILE)
+# Extrae una única lista compartida de ficheros locales necesarios para compilar.
+project-files: refresh-deps
 	@echo "Collecting inputs from $(DEPFILE)..."
 	@sed -e ':a' -e 'N' -e 's/\\\n/ /' -e 'ta' $(DEPFILE) \
 	  | sed 's/^[^:]*:[[:space:]]*//' \
@@ -59,19 +62,38 @@ paper.zip: $(DEPFILE)
 	  | grep -v '^[[:space:]]*$$' \
 	  | grep -v '^/' \
 	  | grep -v '^\.\./' \
-	  | sort -u > .zip.candidates
-	@while read f; do [ -f "$$f" ] && echo "$$f"; done < .zip.candidates > .zip.list
-	@test -s .zip.list || { echo "No project-local inputs found in $(DEPFILE)."; rm -f .zip.candidates .zip.list; exit 12; }
-	@echo "Makefile" >> .zip.list
-	@zip -@ $@ < .zip.list
-	@rm -f .zip.candidates .zip.list
+	  | sort -u > $(PROJECT_FILES_TMP)
+	@while IFS= read -r f; do \
+	    [ -f "$$f" ] && printf '%s\n' "$$f"; \
+	  done < $(PROJECT_FILES_TMP) > $(PROJECT_FILES_LIST)
+	@test -s $(PROJECT_FILES_LIST) || { \
+	  echo "No project-local inputs found in $(DEPFILE)."; \
+	  rm -f $(PROJECT_FILES_TMP) $(PROJECT_FILES_LIST); \
+	  exit 12; \
+	}
+	@printf '%s\n' Makefile >> $(PROJECT_FILES_LIST)
+	@sort -u -o $(PROJECT_FILES_LIST) $(PROJECT_FILES_LIST)
+	@rm -f $(PROJECT_FILES_TMP)
+
+# Build paper.zip from the shared project-file list.
+paper.zip: project-files
+	@zip -@ $@ < $(PROJECT_FILES_LIST)
 	@echo "Created $@ with project files only."
+
+
+gitadd: project-files
+	@command -v git >/dev/null 2>&1 || { echo "Error: git is not installed."; exit 2; }
+	@git rev-parse --is-inside-work-tree >/dev/null 2>&1 || { echo "Error: not inside a Git repository."; exit 2; }
+	@set -e; while IFS= read -r f; do \
+	    echo "git add -- $$f"; \
+	    git add -- "$$f"; \
+	  done < $(PROJECT_FILES_LIST)
+	@echo "All project-local compilation dependencies have been added to Git."
 
 ### Limpieza sin rubber: usa latexmk -C y borra artefactos auxiliares
 clean:
 	$(LATEXMK) -C $(BASENAME)
-	rm -f $(DEPFILE) $(BASENAME).zip .deps.lst .deps.lst.tmp $(BASENAME).bbl \
+	rm -f $(DEPFILE) paper.zip $(PROJECT_FILES_LIST) $(PROJECT_FILES_TMP) paper.bbl *.out \
 	      $(DIFF_FLATTEN_BASENAME).aux $(DIFF_FLATTEN_BASENAME).bbl \
 	      $(DIFF_FLATTEN_BASENAME).blg $(DIFF_FLATTEN_BASENAME).log \
 	      figures/*converted-to.pdf
-
