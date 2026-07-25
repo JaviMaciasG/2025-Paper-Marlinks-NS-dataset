@@ -1,8 +1,11 @@
-.PHONY: main $(FLS_FILE) paper.zip gitadd refresh-deps project-files ### clean
+.PHONY: main $(FLS_FILE) paper.zip gitadd refresh-deps project-files submission ### clean
 
 BASENAME  = paper
 TEX_FILE  = $(BASENAME).tex
 PDF_FILE  = $(BASENAME).pdf
+SUBMISSION_BASENAME = $(BASENAME)-submission
+SUBMISSION_TEX_FILE = $(SUBMISSION_BASENAME).tex
+SUBMISSION_PDF_FILE = $(SUBMISSION_BASENAME).pdf
 PDF_TOOL=pdflatex
 BIBLIO_TOOL=bibtex
 
@@ -25,11 +28,29 @@ PROJECT_FILES_TMP = .deps.lst.tmp
 -include $(DEPFILE)
 ### --------------------------------------------------------
 
-all: $(PDF_FILE)
+all: $(PDF_FILE) $(SUBMISSION_PDF_FILE)
 
 ### Compilación con latexmk + generación de dependencias reales
 $(PDF_FILE): $(TEX_FILE)
 	$(LATEXMK) $(LATEXMK_OPTS) -deps -deps-out=$(DEPFILE) $(BASENAME)
+
+submission: $(SUBMISSION_PDF_FILE)
+
+$(SUBMISSION_TEX_FILE): $(PDF_FILE) $(TEX_FILE)
+	@test -f $(BASENAME).bbl || { echo "Error: $(BASENAME).bbl not found after compiling $(TEX_FILE)."; exit 2; }
+	@awk ' \
+	  /^[[:space:]]*\\bibliography[[:space:]]*\{$(BASENAME)\}/ { next } \
+	  /^[[:space:]]*%[[:space:]]*\\input[[:space:]]*\{$(BASENAME)\.bbl\}/ { \
+	    while ((getline line < "$(BASENAME).bbl") > 0) print line; \
+	    close("$(BASENAME).bbl"); \
+	    next; \
+	  } \
+	  { print } \
+	' $(TEX_FILE) > $@
+
+$(SUBMISSION_PDF_FILE): $(SUBMISSION_TEX_FILE)
+	$(PDF_TOOL) $(FLAGS_SYNCTEX_PDFLATEX) $(SUBMISSION_TEX_FILE)
+	$(PDF_TOOL) $(FLAGS_SYNCTEX_PDFLATEX) $(SUBMISSION_TEX_FILE)
 
 flatten:
 	latexpand $(TEX_FILE) > $(FLATTEN_TEX_FILE)
@@ -94,6 +115,8 @@ gitadd: project-files
 clean:
 	$(LATEXMK) -C $(BASENAME)
 	rm -f $(DEPFILE) paper.zip $(PROJECT_FILES_LIST) $(PROJECT_FILES_TMP) paper.bbl *.out \
+	      $(SUBMISSION_TEX_FILE) $(SUBMISSION_PDF_FILE) $(SUBMISSION_BASENAME).aux \
+	      $(SUBMISSION_BASENAME).log $(SUBMISSION_BASENAME).out \
 	      $(DIFF_FLATTEN_BASENAME).aux $(DIFF_FLATTEN_BASENAME).bbl \
 	      $(DIFF_FLATTEN_BASENAME).blg $(DIFF_FLATTEN_BASENAME).log \
 	      figures/*converted-to.pdf
