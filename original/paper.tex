@@ -144,12 +144,12 @@ Publicly available datasets enabling the development of data-driven algorithms f
 \caption{Summary of publicly released DAS datasets cited in this work, including application domain, fiber length, dataset size, sampling frequency, gauge length and annotation availability.}
 \label{tab:das_datasets}
 \begin{tabularx}{\linewidth}{
-  >{\RaggedRight\arraybackslash}p{2.8cm}  % Dataset
-  >{\RaggedRight\arraybackslash}p{3.3cm}  % Domain
-  >{\RaggedRight\arraybackslash}p{2.0cm}  % Fiber length
-  >{\RaggedRight\arraybackslash}p{2.0cm}  % Dataset size
-  >{\RaggedRight\arraybackslash}p{1.8cm}  % Sampling frequency
-  Y                                        % Notes
+  >{\RaggedRight\arraybackslash}p{2.8cm}
+  >{\RaggedRight\arraybackslash}p{3.3cm}
+  >{\RaggedRight\arraybackslash}p{2.0cm}
+  >{\RaggedRight\arraybackslash}p{2.0cm}
+  >{\RaggedRight\arraybackslash}p{1.8cm}
+  Y
 }
 \hline
 \textbf{Dataset} &
@@ -214,7 +214,7 @@ Nearshore ocean current monitoring &
 25 days &
 50\,Hz  GL=5\,m&
 Provide labels for wind speed and tidal data \\
-\hline\bottomrule
+\hline
 \end{tabularx}
 \end{table*}
 
@@ -477,7 +477,7 @@ The \texttt{Marlinks-NS DAS} dataset is intended to serve as a benchmark resourc
 
 The spectral feature matrices can be directly used as input to ML models for the binary vessel detection, vessel identification or continuous distance regression tasks. For custom experiments, users may re-aggregate energy bands, apply normalization, or augment the data using temporal or spatial transformations. The AIS-based distance labels can also be thresholded to define categorical proximity classes if required, including multi-class classification tasks.
 
-Users can load the dataset using the provided Python scripts available in the \href{https://github.com/UAH-PSI/das-vessel-detection}{public GitHub repository}, which include examples for reading the \texttt{HDF5} files, splitting data into training and testing subsets using a day-wise $k$-fold cross-validation approach, and additional utilities. The repository also contains the source code of an evaluation framework, designed to allow an easy integration of alternative ML strategies.
+Users can load the dataset using the provided Python scripts available in the \href{https://github.com/UAH-PSI/das-vessel-detection}{public GitHub repository}, which include examples for reading the \texttt{HDF5} files, splitting data into training and testing subsets using a day-wise $k$-fold cross-validation approach, and additional utilities. %The repository will be updated with the source code of an evaluation framework, designed to allow an easy integration of alternative ML strategies.
 
 %All time information is stored in UTC format, and users should be aware that the precise geographical positions of sensing points have been anonymized for confidentiality. The provided metadata preserve relative channel positions, enabling spatial pattern analysis and correlation studies along the fiber.
 
@@ -509,7 +509,7 @@ The Zenodo repository contains the data (stored in \texttt{HDF5} format), along 
 \label{sec:code availability}
 
 All code required to load, inspect, and process the \texttt{Marlinks-NS DAS} dataset is openly available in the project repository at \url{https://github.com/UAH-PSI/das-vessel-detection}.
-The repository includes Python scripts for reading the \texttt{HDF5} files, generating training–testing splits, and visualizing both spatial and spectral characteristics of the data. Example functions are provided to read the feature matrices, extract vessel metadata, and prepare the data for ML workflows. We will also include a fully-functional evaluation framework where incorporating new ML strategies is relatively easy.
+The repository includes Python scripts for reading the \texttt{HDF5} files, generating training–testing splits, and visualizing both spatial and spectral characteristics of the data. Example functions are provided to read the feature matrices, extract vessel metadata, and prepare the data for ML workflows. %We will also include a fully-functional evaluation framework where incorporating new ML strategies is relatively easy.
 
 All scripts have been tested under Python 3.10 and rely exclusively on widely available open-source Python packages, which are detailed in the source distribution (\texttt{numpy}, \texttt{sklearn}, \texttt{pandas}, \texttt{matplotlib}, \texttt{h5py}, \texttt{opencv}, \texttt{imblearn}, and \texttt{tqdm}).
 
