@@ -1,0 +1,387 @@
+\documentclass[11pt]{article}
+
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{enumitem}
+\usepackage{amssymb}
+\usepackage{xcolor}
+\usepackage[a4paper,margin=2.2cm]{geometry}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+
+% Checkbox and status labels
+\newcommand{\cbox}{$\square$\,}
+\newcommand{\mandatory}{\textcolor{red!70!black}{\textbf{Mandatory}}}
+\newcommand{\optional}{\textcolor{blue!65!black}{\textbf{Optional}}}
+\newcommand{\conditional}{\textcolor{orange!80!black}{\textbf{If applicable}}}
+\newcommand{\firstround}{\textcolor{teal!70!black}{\textbf{First round}}}
+\newcommand{\revision}{\textcolor{violet!75!black}{\textbf{Revision}}}
+
+\setlist[itemize]{leftmargin=1.15cm,itemsep=0.32em,topsep=0.35em}
+\setlist[itemize,2]{leftmargin=0.95cm,itemsep=0.2em,topsep=0.2em}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{0.4em}
+\emergencystretch=3em
+\Urlmuskip=0mu plus 1mu
+
+\title{Checklist for Submission of a Data Descriptor\\
+\large \textit{Scientific Data} (Nature Portfolio)}
+\author{}
+\date{Guidance checked 27 July 2026}
+
+\begin{document}
+
+\maketitle
+
+\noindent\textbf{Purpose.} This checklist consolidates the journal's current submission guidelines, data policies, repository requirements, and LaTeX instructions. Requirements are separated between the initial submission and a revised manuscript because the file requirements differ substantially.
+
+\section*{1. Scope and article type}
+
+\begin{itemize}
+    \item \cbox The manuscript is submitted as a \textbf{Data Descriptor}, not as a conventional results paper.
+    \item \cbox The principal output is a dataset deposited in an appropriate repository.
+    \item \cbox The manuscript describes how the data were generated, processed, organised, validated, and can be reused.
+    \item \cbox The manuscript does not present an extended results section, hypothesis testing, broad scientific interpretation, or a conclusions section.
+    \item \cbox Claims of novelty, impact, superiority, or general utility are avoided unless they are objective and directly supported.
+    \item \cbox Any previous publication using all or part of the data is cited and its relationship to the Data Descriptor is explained.
+    \item \cbox The Data Descriptor provides substantial new value beyond related publications, such as fuller methods, file-level documentation, metadata, or broader technical validation.
+\end{itemize}
+
+\section*{2. Mandatory manuscript structure}
+
+\begin{itemize}
+    \item \cbox Title --- \mandatory
+    \item \cbox Author list and affiliations --- \mandatory
+    \item \cbox Abstract --- \mandatory
+    \item \cbox Background \& Summary --- \mandatory
+    \item \cbox Methods --- \mandatory
+    \item \cbox Data Records --- \mandatory
+    \item \cbox Data Overview --- \optional
+    \item \cbox Technical Validation --- \mandatory
+    \item \cbox Usage Notes --- \optional
+    \item \cbox Data Availability --- \mandatory
+    \item \cbox Code Availability --- \mandatory, even when no custom code was used
+    \item \cbox References --- \mandatory
+    \item \cbox Author Contributions --- \mandatory
+    \item \cbox Competing Interests --- \mandatory
+    \item \cbox Acknowledgements --- \optional
+    \item \cbox Funding --- \mandatory, including a statement when no external funding was received
+    \item \cbox Ethics statement --- \conditional, normally within Methods for human or animal studies
+    \item \cbox The exact journal section names are used.
+\end{itemize}
+
+\textbf{Submission-system note.} In the newer SNAPP system, Acknowledgements, Author Contributions, and Competing Interests may be collected directly in the submission form and should not be duplicated if the system instructs authors to omit them from the manuscript. Follow the instructions shown by the active submission system.
+
+\section*{3. Title, abstract, authors, and affiliations}
+
+\subsection*{3.1 Title}
+
+\begin{itemize}
+    \item \cbox The title contains no more than \textbf{110 characters}, including spaces.
+    \item \cbox The title contains no colon or parentheses.
+    \item \cbox Acronyms and abbreviations are avoided unless universally recognised.
+    \item \cbox The title does not contain the dataset brand name or a self-created acronym.
+    \item \cbox The title avoids promotional wording such as ``novel'', ``first'', ``AI-ready'', or ``open''.
+    \item \cbox Capitalisation is sentence-style: only the first word and proper nouns are capitalised.
+    \item \cbox The title objectively describes the type of data, subject, setting, and/or acquisition method.
+\end{itemize}
+
+\subsection*{3.2 Abstract}
+
+\begin{itemize}
+    \item \cbox The abstract is preferably no longer than \textbf{170 words}.
+    \item \cbox It briefly describes the dataset, how it was generated, and its potential reuse.
+    \item \cbox It does not claim new scientific findings or present extensive quantitative results.
+    \item \cbox It contains no subheadings.
+    \item \cbox It does not include dataset download URLs or detailed access instructions.
+\end{itemize}
+
+\subsection*{3.3 Authors and affiliations}
+
+\begin{itemize}
+    \item \cbox Every author meets the journal's authorship criteria and has approved the manuscript.
+    \item \cbox Author order has been agreed by all authors.
+    \item \cbox Each affiliation includes department, institution, and country, where relevant.
+    \item \cbox Affiliations are numbered in the order in which they first appear in the author list.
+    \item \cbox Corresponding author e-mail addresses are supplied.
+    \item \cbox All author details are entered completely and consistently in the submission system.
+    \item \cbox ORCID identifiers are checked where supplied.
+    \item \cbox Equal-contribution statements are used only where appropriate; labels such as ``senior author'' are not used.
+\end{itemize}
+
+\section*{4. Section-by-section content checks}
+
+\subsection*{4.1 Background \& Summary}
+
+\begin{itemize}
+    \item \cbox The motivation for creating the dataset is clear.
+    \item \cbox The scientific and practical context is understandable to readers outside the immediate specialty.
+    \item \cbox Potential reuse scenarios are described without advertising language.
+    \item \cbox Related datasets and relevant previous work are cited.
+    \item \cbox Any previous publications using these data are cited and briefly summarised.
+    \item \cbox Subjective claims about novelty, impact, or utility are avoided.
+\end{itemize}
+
+\subsection*{4.2 Methods}
+
+\begin{itemize}
+    \item \cbox Experimental design and study setting are described in sufficient detail.
+    \item \cbox Data acquisition hardware, software, configurations, calibration, and acquisition conditions are documented.
+    \item \cbox Sampling rates, units, time references, coordinate systems, and synchronisation procedures are specified where relevant.
+    \item \cbox Preprocessing, filtering, quality control, feature extraction, annotation, and labelling steps are described completely.
+    \item \cbox Software names, versions, packages, and material parameter values are reported.
+    \item \cbox Randomisation, exclusion, missing-data, and error-handling procedures are described where relevant.
+    \item \cbox Input or source datasets are identified precisely and formally cited when possible.
+    \item \cbox Methods are detailed enough for another researcher to reproduce the released data products.
+    \item \cbox The section documents procedures rather than presenting general scientific results.
+    \item \cbox Any use of generative AI or large language models is disclosed as required by current Nature Portfolio policy.
+\end{itemize}
+
+\subsection*{4.3 Data Records}
+
+\begin{itemize}
+    \item \cbox The repository name and dataset DOI, accession, or temporary reviewer-access URL are provided.
+    \item \cbox The dataset citation is included and cited from the text.
+    \item \cbox All released files and directories are described.
+    \item \cbox File formats, naming conventions, directory hierarchy, and archive structure are explained.
+    \item \cbox Variables, dimensions, units, data types, labels, flags, and metadata fields are documented.
+    \item \cbox Links between files, records, samples, sensors, subjects, or acquisition sessions are explained.
+    \item \cbox Checksums, manifests, or integrity-verification information are described where available.
+    \item \cbox Temporary access instructions for anonymous peer review are included when the final public repository is not yet used.
+    \item \cbox The section focuses on what is stored and how it is organised rather than on broad statistical analysis.
+\end{itemize}
+
+\subsection*{4.4 Data Overview --- optional}
+
+\begin{itemize}
+    \item \cbox The section is included only when a limited overview materially helps readers understand the dataset.
+    \item \cbox It is restricted to approximately one paragraph and one or two figures or tables.
+    \item \cbox It does not develop into a conventional results or exploratory-analysis section.
+\end{itemize}
+
+\subsection*{4.5 Technical Validation}
+
+\begin{itemize}
+    \item \cbox The checks, experiments, or analyses demonstrate the technical quality of the dataset.
+    \item \cbox Validation addresses relevant aspects such as accuracy, calibration, consistency, completeness, noise, uncertainty, annotation quality, or reproducibility.
+    \item \cbox Validation methods and evaluation data are described sufficiently for independent assessment.
+    \item \cbox Figures and tables are limited to evidence supporting data quality and reuse.
+    \item \cbox Validation is clearly distinguished from scientific interpretation or application benchmarking that is outside the Data Descriptor's scope.
+\end{itemize}
+
+\subsection*{4.6 Usage Notes --- optional}
+
+\begin{itemize}
+    \item \cbox Practical instructions for loading, processing, interpreting, or reusing the data are provided where useful.
+    \item \cbox Known limitations, caveats, biases, dependencies, and computational requirements are stated.
+    \item \cbox The section does not function as a conclusions section, promotional summary, or collection of extended case studies.
+\end{itemize}
+
+\subsection*{4.7 Data Availability}
+
+\begin{itemize}
+    \item \cbox A concise Data Availability statement is included near the end of the manuscript.
+    \item \cbox It identifies the repository, persistent identifier, and corresponding numbered dataset citation.
+    \item \cbox It states what files, folders, and data products are being shared.
+    \item \cbox Any access conditions or temporary reviewer instructions are described accurately.
+    \item \cbox Repository links and identifiers match those in Data Records and the reference list.
+\end{itemize}
+
+\subsection*{4.8 Code Availability}
+
+\begin{itemize}
+    \item \cbox A Code Availability statement appears immediately before the References section.
+    \item \cbox Previously unreported custom code or algorithms used to generate or process the dataset are available to editors, reviewers, and eventual readers.
+    \item \cbox The statement gives the code location, access conditions, licence, and version or release identifier.
+    \item \cbox A permanent DOI-backed software archive is provided where practical, in addition to a development repository.
+    \item \cbox Software versions and key parameters are reported here or in Methods.
+    \item \cbox If no custom code was used, the statement explicitly says so.
+\end{itemize}
+
+\section*{5. Dataset and repository compliance}
+
+\begin{itemize}
+    \item \cbox The dataset is shared at an appropriate level of rawness for meaningful reuse.
+    \item \cbox Primary data are deposited in a repository rather than supplied only as Supplementary Information.
+    \item \cbox A discipline-specific, community-recognised repository is used where one exists; otherwise, a compliant generalist repository is used.
+    \item \cbox The repository supports long-term preservation and stable access.
+    \item \cbox The repository provides a persistent identifier; a DOI is normally expected for non-omics datasets.
+    \item \cbox The DOI landing page provides direct HTTPS download, preferably as a single download unit.
+    \item \cbox Non-sensitive data can be accessed publicly without substantive barriers or manual approval.
+    \item \cbox The data licence is \textbf{CC BY, CC0, or an equivalent open licence}.
+    \item \cbox The data licence does not include NC or SA restrictions, except where the journal's limited secondary-data exception applies.
+    \item \cbox No source material licensed with an ND restriction has been used to create an unauthorised derivative dataset.
+    \item \cbox The repository landing page, README, metadata, licence, files, and manuscript all use consistent titles, authors, versions, and identifiers.
+    \item \cbox The authors can preserve a copy of the dataset for at least five years after publication.
+\end{itemize}
+
+\subsection*{5.1 Access by peer-review stage}
+
+\begin{itemize}
+    \item \cbox \firstround: reviewers can download the complete dataset through a seamless and anonymous URL.
+    \item \cbox \firstround: any private link, passcode, or temporary instructions are visible in Data Records or on a cover page of the review manuscript.
+    \item \cbox \revision: from the second review round onward, the dataset is public in a formal repository that satisfies the journal policy.
+    \item \cbox \revision: the public DOI or accession replaces temporary links throughout the manuscript.
+\end{itemize}
+
+\section*{6. References and data citations}
+
+\begin{itemize}
+    \item \cbox References are numbered sequentially in order of first citation.
+    \item \cbox Each reference number corresponds to one publication or dataset.
+    \item \cbox The reference list contains only published, accepted, or recognised preprint material.
+    \item \cbox The standard Nature numerical style is followed consistently; exact punctuation is less important than completeness.
+    \item \cbox Every dataset described or reused is cited in the text and listed in the main References section.
+    \item \cbox Dataset citations reproduce the repository-recorded authors and title.
+    \item \cbox Dataset citations include repository name, year, and a stable DOI URL or accession URL.
+    \item \cbox Custom software with a DOI is formally cited where appropriate.
+    \item \cbox All DOIs, accession numbers, and repository URLs have been tested.
+    \item \cbox The journal abbreviation is written as \textit{Sci. Data}.
+\end{itemize}
+
+\section*{7. Figures, tables, equations, and internal references}
+
+\subsection*{7.1 Figures}
+
+\begin{itemize}
+    \item \cbox Every figure is cited in numerical order in the text.
+    \item \cbox Each figure has a complete legend and all panels, symbols, abbreviations, and units are explained.
+    \item \cbox Multipanel figures are supplied as one combined figure with panel labels embedded.
+    \item \cbox SI units and standard nomenclature are used; unusual units are defined.
+    \item \cbox Scale bars are used instead of magnification factors where relevant.
+    \item \cbox Figures are legible at publication size and do not contain unnecessary decorative content.
+    \item \cbox Permission has been obtained for any reused or copyrighted material.
+    \item \cbox The manuscript preferably contains no more than eight figures unless more are genuinely needed.
+\end{itemize}
+
+\subsection*{7.2 Tables}
+
+\begin{itemize}
+    \item \cbox Every table is cited in numerical order in the text.
+    \item \cbox Titles, headings, units, abbreviations, and footnotes are complete and unambiguous.
+    \item \cbox Tables use a simple machine-readable row/column structure without complex nested or merged cells.
+    \item \cbox Tables that fit on one A4 page remain main-text tables.
+    \item \cbox Oversize tables are labelled and cited as Supplementary Tables and numbered separately.
+    \item \cbox The manuscript preferably contains no more than ten main-text tables unless more are genuinely needed.
+    \item \cbox Very large data tables are deposited in the data repository rather than used as article supplements.
+\end{itemize}
+
+\subsection*{7.3 Equations and cross-references}
+
+\begin{itemize}
+    \item \cbox Mathematical expressions are included in the main manuscript text.
+    \item \cbox Equations referred to in the text are numbered consecutively as (1), (2), and so on.
+    \item \cbox Numbered equations are cited as ``equation (1)''.
+    \item \cbox Internal hyperlinks to sections, headings, figures, or tables are removed from the submitted LaTeX source.
+    \item \cbox Commands that create internal links, such as \texttt{\textbackslash cref}, are not used in the revised LaTeX file.
+    \item \cbox External DOI and repository URLs remain available where required.
+\end{itemize}
+
+\section*{8. Supplementary Information}
+
+\begin{itemize}
+    \item \cbox Supplementary Information is used only when the material cannot reasonably be included in the main manuscript.
+    \item \cbox Extended methods and validation details remain in the main manuscript unless they would substantially increase its length.
+    \item \cbox Supplementary Information does not contain results, discussion, or analysis that is outside the scope of a Data Descriptor.
+    \item \cbox A single self-contained Supplementary Information PDF is supplied when needed.
+    \item \cbox Supplementary figures and tables are numbered independently as Figure S1, Table S1, and so on.
+    \item \cbox Every supplementary item has a brief title and legend.
+    \item \cbox Multiple supplementary figures are merged into the one PDF, with legends immediately below the figures.
+    \item \cbox A contents page is included when the PDF contains multiple supplementary figures.
+    \item \cbox Supplementary references restart from 1 and are separate from the main article references.
+    \item \cbox The Supplementary Information PDF is no larger than 10 MB.
+    \item \cbox Oversize Supplementary Tables are supplied as \texttt{.xlsx} or \texttt{.csv}, not embedded as unreadable pages in the PDF.
+    \item \cbox Repository-hosted dataset files are not called ``Supplementary'' files in the manuscript.
+\end{itemize}
+
+\section*{9. Files for initial submission --- first review round}
+
+\begin{itemize}
+    \item \cbox \firstround: the main article is submitted as one readable PDF.
+    \item \cbox \firstround: all main-text figures, tables, and captions are included in that PDF.
+    \item \cbox \firstround: every figure and table is discussed in the manuscript text.
+    \item \cbox \firstround: a separate Supplementary Information PDF is uploaded only if Supplementary Information exists.
+    \item \cbox \firstround: separate figure files, table files, and a machine-readable manuscript are not required when the complete article PDF is readable.
+    \item \cbox \firstround: a covering-letter file is uploaded because the submission system technically requires one.
+    \item \cbox \firstround: related manuscripts not publicly accessible are uploaded and disclosed through the appropriate submission-system fields.
+    \item \cbox \firstround: the dataset is anonymously and seamlessly accessible to reviewers.
+    \item \cbox \firstround: custom code is accessible to reviewers where applicable.
+\end{itemize}
+
+\section*{10. Files for a revised LaTeX submission}
+
+\subsection*{10.1 Main article source}
+
+\begin{itemize}
+    \item \cbox \revision: one clean, machine-readable \texttt{.tex} file is uploaded as the main Article file.
+    \item \cbox \revision: the \texttt{.tex} file is standalone and compiles without external \texttt{.bib}, \texttt{.bbl}, custom \texttt{.sty}, template, or other source dependencies.
+    \item \cbox \revision: the reference list from the generated \texttt{.bbl} has been pasted directly into the \texttt{.tex} file.
+    \item \cbox \revision: \texttt{\textbackslash bibliography\{\}} and \texttt{\textbackslash bibliographystyle\{\}} commands have been removed.
+    \item \cbox \revision: no unsupported journal class or legacy Scientific Data template is used.
+    \item \cbox \revision: only legible, standard LaTeX formatting and packages are used.
+    \item \cbox \revision: Computer Modern or another standard font is used; non-standard fonts are avoided.
+    \item \cbox \revision: numerical citations are used throughout.
+    \item \cbox \revision: the file contains every mandatory section and all figure and table captions.
+    \item \cbox \revision: the manuscript is clean, with no tracked changes, highlighting, or revision markup.
+    \item \cbox \revision: no author-generated PDF or ZIP archive is uploaded as a substitute for the standalone Article source.
+\end{itemize}
+
+\subsection*{10.2 Separate files required at revision}
+
+\begin{itemize}
+    \item \cbox \revision: one publication-quality file is supplied for each complete figure.
+    \item \cbox \revision: figure panels are already merged and panel labels are embedded.
+    \item \cbox \revision: machine-readable tables are embedded in the main source when practical.
+    \item \cbox \revision: oversize Supplementary Tables are supplied separately as \texttt{.xlsx} or \texttt{.csv}.
+    \item \cbox \revision: a Supplementary Information PDF is supplied if relevant.
+    \item \cbox \revision: a PDF response addresses every editor and reviewer comment.
+    \item \cbox \revision: an optional highlighted PDF is supplied only when it helps reviewers identify changes.
+    \item \cbox \revision: all temporary dataset links have been replaced by public repository records.
+\end{itemize}
+
+\section*{11. Ethics, licences, declarations, and permissions}
+
+\begin{itemize}
+    \item \cbox Ethical approvals and relevant committee details are included when required.
+    \item \cbox Informed consent and consent-to-publish statements are included where applicable.
+    \item \cbox The Human Data Checklist is uploaded for every human-derived dataset.
+    \item \cbox Sensitive or identifiable information is handled using appropriate anonymisation or controlled access.
+    \item \cbox Animal-study reporting and approval statements comply with Nature Portfolio policies where applicable.
+    \item \cbox Competing financial and non-financial interests are declared for all authors.
+    \item \cbox Funding sources and funder roles are stated accurately.
+    \item \cbox Author Contributions identify the contribution of every author.
+    \item \cbox Permissions are documented for reused figures, images, maps, or other copyrighted content.
+    \item \cbox Third-party data and software licences permit the redistribution and processing performed in the released dataset.
+    \item \cbox The article licence and dataset licence are treated separately and selected appropriately.
+\end{itemize}
+
+\section*{12. Final verification before upload}
+
+\begin{itemize}
+    \item \cbox The manuscript compiles without errors.
+    \item \cbox The generated PDF has been inspected page by page.
+    \item \cbox No text, equation, figure, table, or legend is clipped, missing, or unreadable.
+    \item \cbox All section, figure, table, equation, and reference citations resolve correctly.
+    \item \cbox Terminology, abbreviations, units, symbols, and dataset names are consistent.
+    \item \cbox Author names, affiliations, correspondence details, and ORCIDs are correct.
+    \item \cbox All authors have approved the final files and submission.
+    \item \cbox Repository files, checksums, documentation, metadata, licence, and DOI landing page have been inspected.
+    \item \cbox Dataset and code links work in a private/incognito browser session without author credentials.
+    \item \cbox Dataset version numbers and identifiers match across the manuscript, repository, README, and citations.
+    \item \cbox The submission-system metadata match the manuscript.
+    \item \cbox Every required upload for the relevant peer-review stage is present and assigned the correct file type.
+\end{itemize}
+
+\section*{Official sources}
+
+\begin{itemize}
+    \item Scientific Data, Submission Guidelines: \url{https://www.nature.com/sdata/publish/submission-guidelines}
+    \item Scientific Data, Data Policies: \url{https://www.nature.com/sdata/policies/data-policies}
+    \item Scientific Data, Data Repository Guidance: \url{https://www.nature.com/sdata/policies/repositories}
+    \item Scientific Data, Editorial \& Publishing Policies: \url{https://www.nature.com/sdata/policies/editorial-and-publishing-policies}
+\end{itemize}
+
+\vfill
+\noindent\small\textit{This is an author-prepared working checklist, not an official form issued by the journal. Journal instructions may change; consult the linked pages immediately before submission or revision.}
+
+\end{document}
