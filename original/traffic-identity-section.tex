@@ -1,0 +1,16 @@
+Traffic diversity and passage-level independence of the day-wise folds
+
+
+To characterize the local maritime traffic and assess the extent to which the day-wise folds represent distinct physical vessel passages over the cable rather than repeated observations of the same events, we analyzed vessel activity within a cable-adjacent region defined by expanding the bounding box of the monitored cable segment by 1 km in all directions. This analysis comprised 4,290 AIS observations, representing 565 distinct MMSIs and 1,033 reconstructed physical passage events. The complete daily folds contained between 97 and 122 passages. Passage duration had a median of 4.02 min, the median path length within the region was 1.77 km, and the median vessel speed was 13.86 kn. Traffic was approximately balanced between two opposite travel directions, with 507 and 526 passages, respectively. Passage directions were strongly bimodal: 95.4\% of the reconstructed passages had AIS course-over-ground headings within two 30°-wide angular sectors centred on nearly opposite dominant travel directions. At a common reference transect, the corresponding directional traffic streams had median crossing positions separated by approximately 390 m, indicating spatially distinct navigation corridors.
+
+Most vessel identities were transient during the observation campaign. Of the 565 MMSIs, 322 occurred on one day and 198 on exactly two days; thus, 92.0\% were present in no more than two daily folds. Among the 243 identities appearing on multiple days, 198 occurred on exactly two days, and 192 of these generated one passage on each day. For 189 of the 192 cases, the second passage occurred in the opposite traffic direction. These paired passages were separated by a median of 40.4 h and differed in lateral crossing position by a median of approximately 311 m. The identity recurrence observed between folds therefore primarily represents distinct outward and return passages rather than repeated measurements of equivalent traffic events.
+
+Only four of the 1,033 reconstructed passages crossed a daily fold boundary, corresponding to 0.39\% of all passage events and 16 of the 4,290 filtered AIS observations. Among the fold-specific cases in which an MMSI was also represented in the training folds, only 1.35\% involved the same continuous physical passage. After excluding these boundary events, the minimum temporal separation from a same-identity training passage had a median of 36.7 h, and 81.8\% of the cases were separated by more than 24 h.
+
+These results indicate that the day-wise partitioning is effectively passage-disjoint and evaluates new physical traffic events under realistic maritime conditions. Although vessel identities naturally recur in an operational monitoring region, such recurrence rarely corresponds to duplication of the same passage or adjacent DAS observations. The resulting folds therefore provide a robust and realistic basis for model validation, with negligible passage-level overlap and substantial variation in vessel identities, passage timing, travel direction, and crossing geometry.
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% ispell-local-dictionary: "en_US"
+%%% End:
