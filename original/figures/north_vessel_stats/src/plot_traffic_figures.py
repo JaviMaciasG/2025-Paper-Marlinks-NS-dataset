@@ -360,7 +360,7 @@ def plot_lane_histogram_from_binned_counts(
             label=DEFAULT_DIRECTION_LABELS.get(direction, direction),
         )
 
-    ax.set_xlabel("Anonymized lateral crossing offset at the reference transect (m)")
+    ax.set_xlabel("Lateral crossing offset at the reference transect (m)")
     ax.set_ylabel("Passage events")
     ax.set_ylim(bottom=0)
     ax.legend()

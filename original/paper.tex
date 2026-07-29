@@ -237,12 +237,8 @@ Basic data-handling examples are archived with the dataset on Zenodo, while addi
   \label{fig:architecture}
 \end{figure}
 
-%The DAS and AIS measurements underlying this dataset were previously analysed in~\cite{RamirezTorres2026VesselDAS} to develop and evaluate machine-learning methods for vessel detection and vessel-to-cable distance estimation. That research article focused on algorithm design and application performance, including spatial and temporal aggregation, model comparisons, beamforming-based localization, vessel-dependent error analysis, and computational requirements. The present Data Descriptor provides dataset-centred documentation and reproducibility material that complements the application-centred study in~\cite{RamirezTorres2026VesselDAS}, rather than repeating its broader experimental analysis. Specifically, it provides a detailed account of dataset generation and curation, the released feature representation, HDF5 organisation, repository contents, metadata, known limitations, archived data-handling code, and baseline technical validation to support independent reuse.
+The DAS and AIS measurements underlying this dataset were previously analysed in~\cite{RamirezTorres2026VesselDAS} to develop and evaluate machine-learning methods for vessel detection and vessel-to-cable distance estimation. That research article focused on algorithm design and application performance, including spatial and temporal aggregation, model comparisons, beamforming-based localization, vessel-dependent error analysis, and computational requirements. The present Data Descriptor provides dataset-centred documentation and reproducibility material that complements that application-centred study, rather than repeating its broader experimental analysis. Specifically, it provides a detailed account of dataset generation and curation, the released feature representation, HDF5 organisation, repository contents, metadata, known limitations and archived data-handling code, together with a new passage-level characterization of maritime-traffic diversity and potential train–test overlap in the recommended day-wise folds, and baseline technical validation to support independent reuse.
 
-The DAS and AIS measurements underlying this dataset were previously analysed in~\cite{RamirezTorres2026VesselDAS} to develop and evaluate machine-learning methods for vessel detection and vessel-to-cable distance estimation. That research article focused on algorithm design and application performance, including spatial and temporal aggregation, model comparisons, beamforming-based localization, vessel-dependent error analysis, and computational requirements. The present Data Descriptor provides dataset-centred documentation and reproducibility material that complements that application-centred study, rather than repeating its broader experimental analysis. Specifically, it provides a detailed account of dataset generation and curation, the released feature representation, HDF5 organisation, repository contents, metadata, known limitations, archived data-handling code, and baseline technical validation to support independent reuse.
-
-
-%The DAS and AIS measurements underlying this dataset were previously analysed in~\cite{RamirezTorres2026VesselDAS} to develop and evaluate machine-learning methods for vessel detection and vessel-to-cable distance estimation. That research article focused on algorithm design and application performance, including spatial and temporal aggregation, model comparisons, beamforming-based localization, vessel-dependent error analysis, and computational requirements. The present Data Descriptor instead focuses on the dataset itself, providing a detailed account of its generation and curation, the released feature representation, HDF5 organisation, repository contents, metadata, known limitations, archived data-handling code, and baseline technical validation to support independent reuse.
 
 \section{Methods}
 \label{sec:methods}
@@ -525,12 +521,62 @@ We carried out the initial technical validation by applying an XGBoost ML algori
 
 The objective functions in the baseline XGBoost models are binary cross-entropy for classification and mean squared error for regression. We used gradient boosted trees, a learning rate $\eta = 0.05$, and a maximum tree depth of 10, with 500 boosting rounds.
 
-Our experimental approach is based on a rigorous $k$-fold cross-validation strategy, in which the dataset is divided into $k$ equal parts (folds). A model is trained on $k-1$ folds and tested on the remaining one, repeating this process $k$ times so that each fold serves once as test data. The final performance metric is the average of the $k$ test results, giving a more reliable estimate of the model’s performance, while keeping a strict separation between training and testing data. In our case, each fold corresponds to 1 full day of data, so that $k=10$. The available source code at the \href{https://github.com/UAH-PSI/das-vessel-detection}{companion GitHub repository} also promotes the use of the cross-validation strategy.
+Our experimental approach is based on a rigorous $k$-fold cross-validation strategy, in which the dataset is divided into $k$ equal parts (folds). A model is trained on $k-1$ folds and tested on the remaining one, repeating this process $k$ times so that each fold serves once as test data. The final performance metric is the average of the $k$ test results, giving a more reliable estimate of the model’s performance, while keeping a strict separation between training and testing data. In our case, each fold corresponds to 1 full day of data, so that $k=10$ and the cross-validation is day-wise based. The available source code at the \href{https://github.com/UAH-PSI/das-vessel-detection}{companion GitHub repository} also promotes the use of the cross-validation strategy.
 
 The vessel detection task was set with a distance threshold of $1{,}000\,m$, and the vessel distance estimation task evaluated two cases: unrestricted distance estimation, and distance estimation for vessels closer than $1{,}000\,m$ to the cable.
 
 We exploited spatial redundancy in the DAS channels by averaging the feature vectors from $N_C$ contiguous channels in the monitored fiber-optic segment, which is given as an input to the XGBoost algorithm.
 
+\subsection{Maritime Traffic Diversity Across the Day-Wise Folds}
+\label{sec:marit-traff-divers}
+
+To characterize the local maritime traffic and assess the extent to which the day-wise folds represent distinct physical vessel passages within the monitored area rather than repeated observations of the same events, we analyzed vessel activity within a cable-adjacent region defined by expanding the bounding box of the monitored cable segment by $1\,km$ in all directions. This analysis comprised $4,290$ original AIS observations (without interpolation), representing $565$ unique MMSIs and $1,033$ reconstructed physical passage events\footnote{The original MMSI identifiers were used only for this post hoc characterization of vessel recurrence and are not included in the released feature representation or provided as inputs to the machine-learning models.}. The complete daily folds contained between 97 and 122 passages. %Passage duration had a median of $4.02\,min$, the median path length within the region was $1.77\,km$, and the median vessel speed was $13.86\,kn$.
+Traffic was approximately balanced between two opposite travel directions, with 507 and 526 passages, respectively. Passage directions were strongly bimodal: $95.4\%$ of the reconstructed passages had AIS course-over-ground headings within two \(30^{\circ}\)-wide angular sectors centred on nearly opposite dominant travel directions. At a fixed reference transect approximately perpendicular to the dominant traffic direction, the corresponding directional traffic streams had median crossing positions separated by approximately $390\,m$, consistent with direction-dependent traffic lanes whose lateral distributions partially overlap as shown in Fig.~\ref{fig:traffic-characterization}.a.
+
+Most vessel identities were transient during the observation campaign, as shown by their distribution across the day-wise folds in Fig.~\ref{fig:traffic-characterization}.b. Of the 565 MMSIs, 322 occurred on one day and 198 on exactly two days; thus, $92.0\%$ were present in no more than two daily folds. Among the 198 identities appearing on exactly two days, 192 generated only one passage on each day. For 189 of the 192 cases, the second passage occurred in the opposite traffic direction. These paired passages were separated by a median of $40.4\,h$ and differed in lateral crossing position by a median of approximately $311\,m$ (see distribution in Fig.~\ref{fig:traffic-characterization}.a). The identity recurrence observed between folds therefore primarily represents distinct outward and return passages rather than repeated measurements of equivalent traffic events.
+
+\begin{figure*}[t]
+    \centering
+    \begin{minipage}[t]{0.495\textwidth}
+        \raggedright{\footnotesize (a)}\par\vspace{0.2em}
+        \centering
+        \includegraphics[width=\linewidth]{./north_vessel_stats/src/traffic_directional_lane_offsets.png}
+    \end{minipage}%
+    \hfill
+    \begin{minipage}[t]{0.495\textwidth}
+        \raggedright{\footnotesize (b)}\par\vspace{0.2em}
+        \centering
+        \includegraphics[width=\linewidth]{./north_vessel_stats/src/traffic_vessel_recurrence_by_fold_count.png}
+    \end{minipage}
+    \caption{Directional traffic structure and recurrence of vessel identities across the day-wise folds: (a) Distribution of the lateral crossing positions of the 1,033 reconstructed passage events, separated according to the two dominant travel directions. %Crossing positions were measured at a fixed reference transect approximately perpendicular to the dominant traffic direction and expressed relative to an arbitrary anonymized origin; therefore, they do not disclose absolute vessel positions.
+      (b) Distribution of the 565 unique vessel identities according to the number of day-wise folds in which each MMSI was observed.% Percentages are relative to all 565 identities. Most identities occurred in only one (57.0\%) or two (35.0\%) folds.
+    }
+    \label{fig:traffic-characterization}
+\end{figure*}
+
+Only four of the 1,033 reconstructed passages crossed a daily fold boundary (over midnight), corresponding to $0.39\%$ of all passage events and 16 of the 4,290 filtered AIS observations. Among the test-fold MMSI occurrences for which the same MMSI also occurred in the training folds, $1.35\%$ corresponded to the same continuous physical passage. After excluding these boundary events, the minimum temporal separation from a same-identity training passage had a median of $36.7\,h$, and $81.8\%$ of the cases were separated by more than $24\,h$.
+
+These results indicate that the day-wise partitioning is effectively passage-disjoint and predominantly evaluates new physical traffic events under realistic maritime conditions. Although vessel identities naturally recur in an operational monitoring region, such recurrence rarely corresponds to duplication of the same passage or adjacent DAS observations. The resulting folds therefore provide a robust and realistic basis for model validation, with negligible passage-level overlap and substantial variation in vessel identities, passage timing, travel direction, and crossing geometry.
+
+\subsection{Environmental Variability Across the Day-Wise Folds}
+\label{sec:environmental_variability}
+
+To complement the maritime-traffic characterization, we examined the environmental conditions covered by the ten day-wise folds. Historical marine and meteorological data were retrieved through the Stormglass API at several query locations covering the monitored region. The variables considered were wave height, wave period, wind speed, water temperature, precipitation, and current speed. Fig.~\ref{fig:meteorological_ranges} shows the daily ranges at the closest location to the monitored region. Variables identified by the \texttt{sg} source correspond to the Stormglass aggregate source, whereas those identified by \texttt{noaa} correspond to NOAA-source values returned through the same API.
+
+Under the applicable data-use conditions, the original time-resolved StormGlass API responses cannot be publicly redistributed. We therefore release the derived file \texttt{meteorological\_daily\_summary.csv}, which contains, for each UTC day, the minimum and maximum values of the six variables shown in Fig.~\ref{fig:meteorological_ranges}. These summaries are intended to document the environmental conditions represented in each fold, rather than to provide a replacement for the original meteorological data feed.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[width=.8\textwidth]{custom_weather_ranges-extended.png}
+    \caption{Daily minimum-to-maximum ranges of six environmental variables during the ten-day acquisition campaign.}
+    \label{fig:meteorological_ranges}
+  \end{figure}
+
+The daily ranges show substantial variation during the acquisition campaign. Across the ten days, wave height ranged from $0.10$ to $1.31\,m$, wave period from $1.95$ to $5.78\,s$, wind speed from $0.26$ to $9.46\,m/s$, water temperature from $16$ to $21.21\textdegree$ C, precipitation from $0$ to $0.54\,mm/h$, and current speed from $0$ to $1.07\,m/s$. Both the positions and widths of the daily intervals varied across folds. For example, the largest wave-height and wind-speed values occurred on 19 June, whereas the highest water temperature and longest wave period occurred on 25 June. Precipitation was absent during most daily intervals but reached measurable values on a subset of days.
+
+Consistent with this descriptive characterization, previous analysis of the original time-resolved records reported statistically significant day-to-day differences in water temperature ($H=211.39$, $p=1.4\times10^{-40}$, $\eta^2=0.88$) and wave height ($H=114.31$, $p=1.9\times10^{-20}$, $\eta^2=0.46$). Taken together, these results show that the day-wise folds were acquired under measurably different marine and meteorological conditions rather than under a nearly stationary environmental state.
+
+This analysis is intended to characterize the environmental diversity of the released dataset and the recommended validation folds. It should not be interpreted as demonstrating that model performance is independent of meteorological conditions, nor as establishing representativeness across the full seasonal range of the deployment region. In particular, the ten-day June campaign does not include the more severe sea states that may occur during winter.
 
 \subsection{Baseline Validation Results}
 \label{sec:results}
@@ -544,7 +590,7 @@ The evaluation metrics used depended on the ML task:
 
 Table~\ref{tab:performance} shows the performance metrics corresponding to $N_C \in \lbrace 10, 50, 250 \rbrace$ channels. To summarize, the classifier achieved a global $F_1$-score of $89.43\%$ when averaging all $250$ channels, with class-wise $F_1$-scores of $83.10\%$ for the vessel-nearby class and $92.47\%$ for the no-vessel-nearby class. For distance estimation, the corresponding global MAE was $829.90\,m$, while the MAE evaluated for samples below $1,000\,m$ was $171.01\,m$. Performance improved consistently as the number of spatial channels used for averaging increased.
 
-%the XGBoost classifier achieved a global $F_1$-score exceeding 89\% for vessel detection, with reasonably balanced class-wise $F_1$ metrics, despite the clear data unbalance issues (see Fig.~\ref{fig:data-balance}). Regression models estimated global vessel distance with a MAE in the order of $800\,m$, which is again reasonably considering the unrestricted conditions, which include vessels as far as $8\,km$ from the cable. The $1{,}000\,m$ MAE gets as low as $171\,m$, which is also a good precision for vessels that are in a $1{,}000\,m$ radius from the cable. Finally, all the performance results improve when using larger spatial contexts, as expected.
+%the XGBoost classifier achieved a global $F_1$-score exceeding $89\%$ for vessel detection, with reasonably balanced class-wise $F_1$ metrics, despite the clear data unbalance issues (see Fig.~\ref{fig:data-balance}). Regression models estimated global vessel distance with a MAE in the order of $800\,m$, which is again reasonably considering the unrestricted conditions, which include vessels as far as $8\,km$ from the cable. The $1{,}000\,m$ MAE gets as low as $171\,m$, which is also a good precision for vessels that are in a $1{,}000\,m$ radius from the cable. Finally, all the performance results improve when using larger spatial contexts, as expected.
 
 \begin{table}[htbp]
   \caption{Performance metrics for the vessel detection and distance estimation tasks under different spatial contexts (\textrm{\# channels} refers to the number of channels considered for averaging).}
@@ -553,9 +599,9 @@ Table~\ref{tab:performance} shows the performance metrics corresponding to $N_C 
     % \cline{2-7}
     & \multicolumn{4}{c}{Vessel detection task (distance threshold $1000\,m$)} & \multicolumn{2}{c}{Distance estimation task} \\ \hline
     \# channels & Accuracy     & Global $F_1$     & Class 0 $F_1$     & Class 1 $F_1$     & Global MAE           & Below-$1000\,m$ MAE         \\ \hline
-    10          &87.38 \%              &87.01 \%                   &78.54 \%                    &91.06 \%                    &979.84 $m$                      &196.89 $m$                       \\ \hline
-    50          &89.23 \%               &88.99 \%                   &82.11 \%                    &92.29 \%                    &882.79 $m$                      &191.33 $m$                       \\ \hline
-    250         &89.58 \%               &89.43 \%                   &83.10 \%                    &92.47 \%                    &829.90 $m$                      &171.01 $m$                       \\ \hline
+    10          &87.38\%              &87.01\%                   &78.54\%                    &91.06\%                    &$979.84\,m$                      &$196.89\,m$                       \\ \hline
+    50          &89.23\%              &88.99\%                   &82.11\%                    &92.29\%                    &$882.79\,m$                      &$191.33\,m$                       \\ \hline
+    250         &89.58\%              &89.43\%                   &83.10\%                    &92.47\%                    &$829.90\,m$                      &$171.01\,m$                       \\ \hline
   \end{tabular}
 \end{table}
 
@@ -597,7 +643,7 @@ Simple Python examples for basic interaction with the dataset are distributed wi
 \section{Data Availability}
 \label{sec:data-availability}
 
-The Marlinks-NS DAS dataset and its accompanying documentation are openly available in the Zenodo repository~\cite{ramirez2024dasvesseldataset} at \url{https://doi.org/10.5281/zenodo.15611778}. The versioned deposit contains the complete processed dataset in HDF5 format (\texttt{dataset\_sensor\_range\_1440\_1690\_0.h5}); dataset documentation in Markdown and PDF formats (\texttt{README.md} and \texttt{README.pdf}); supporting citation, licensing, provenance, funding, creators, changelog, DOI, and frequency-band metadata in \texttt{misc.zip}; and simple Python examples for inspecting, loading, checking, and partitioning the HDF5 data in \texttt{src.zip}. The data and accompanying documentation are released under the Creative Commons Attribution 4.0 International license.
+The Marlinks-NS DAS dataset and its accompanying documentation are openly available in the Zenodo repository~\cite{ramirez2024dasvesseldataset} at \url{https://doi.org/10.5281/zenodo.15611778}. The versioned deposit contains the complete processed dataset in HDF5 format (\texttt{dataset\_sensor\_range\_1440\_1690\_0.h5}); dataset documentation in Markdown and PDF formats (\texttt{README.md} and \texttt{README.pdf}); supporting citation, licensing, provenance, funding, creators, changelog, DOI, value ranges of meteorogical variables, and frequency-band metadata in \texttt{misc.zip}; and simple Python examples for inspecting, loading, checking, and partitioning the HDF5 data in \texttt{src.zip}. The data and accompanying documentation are released under the Creative Commons Attribution 4.0 International license.
 
 
 \section{Code Availability}
@@ -622,7 +668,7 @@ Users are encouraged to adapt and extend the provided scripts for their research
 
 \section*{Author Contributions}
 
-E.E.R.-T., J.M.-G., D.P.-P., J.T., S.E.P.-C., M.R.F.-R., S.M.-L., M.G.-H. and R.V. conceived the study, designed the experimental methodology, and defined the released dataset and machine-learning tasks. R.V. coordinated the acquisition of and access to the DAS data, acquisition metadata, and preprocessing software. M.R.F.-R., S.M.-L. and M.G.-H. contributed to DAS preprocessing and optical-signal interpretation. E.E.R.-T., J.M.-G., D.P.-P. and S.E.P.-C.  processed the AIS and geospatial information, synchronized it with the DAS measurements, and generated the vessel-distance labels. E.E.R.-T., D.P.-P. and J.M.-G. performed feature extraction, dataset curation, and design of the released HDF5 structure. E.E.R.-T., D.P.-P., J.M.-G. and J.T. developed the machine-learning software and carried out the technical validation. E.E.R.-T., J.M.-G. and S.E.P.-C.  prepared and published the data and code repositories and, together, drafted the manuscript. J.M.-G., M.R.F.-R., S.M.-L. and M.G.-H. provided scientific supervision, project coordination, and funding acquisition. All authors reviewed and approved the manuscript.
+All authors defined the released dataset, conceived the study, and designed the experimental methodology machine-learning tasks. R.V. coordinated the acquisition of and access to the DAS data, acquisition metadata, and preprocessing software. M.R.F.-R., S.M.-L. and M.G.-H. contributed to DAS preprocessing and optical-signal interpretation. E.E.R.-T., J.M.-G., D.P.-P. and S.E.P.-C.  processed the AIS and geospatial information, synchronized it with the DAS measurements, and generated the vessel-distance labels. E.E.R.-T., D.P.-P. and J.M.-G. performed feature extraction, dataset curation, and design of the released HDF5 structure. E.E.R.-T., D.P.-P., J.M.-G. and J.T. developed the machine-learning software and carried out the technical validation. E.E.R.-T., J.M.-G. and S.E.P.-C.  prepared and published the data and code repositories and, together, drafted the manuscript. J.M.-G., M.R.F.-R., S.M.-L. and M.G.-H. provided scientific supervision, project coordination, and funding acquisition. All authors reviewed and approved the manuscript.
 
 
 \section*{Competing Interests}
