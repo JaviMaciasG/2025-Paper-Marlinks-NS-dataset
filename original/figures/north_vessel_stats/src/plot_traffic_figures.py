@@ -35,6 +35,14 @@ Generate PDF figures:
         --recurrence-output recurrence.pdf \
         --lane-output directional_lanes.pdf
 
+Control the shared size and typography:
+
+    python plot_traffic_figures.py \
+        --figure-width 10 --figure-height 6.5 \
+        --axis-title-font-size 26 \
+        --axis-label-font-size 24 \
+        --bar-label-font-size 22
+
 Show figures interactively in addition to saving them:
 
     python plot_traffic_figures.py --show
@@ -49,7 +57,6 @@ from typing import Iterable
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-
 
 # =============================================================================
 # DEFAULT CONFIGURATION
@@ -66,9 +73,11 @@ DEFAULT_RECURRENCE_OUTPUT = SCRIPT_DIR / "traffic_vessel_recurrence_by_fold_coun
 DEFAULT_LANE_OUTPUT = SCRIPT_DIR / "traffic_directional_lane_offsets.png"
 
 DEFAULT_DPI = 300
-DEFAULT_FONT_SIZE = 13
-DEFAULT_RECURRENCE_SIZE = (10.0, 6.5)
-DEFAULT_LANE_SIZE = (11.5, 7.0)
+DEFAULT_FONT_SIZE = 26
+DEFAULT_AXIS_TITLE_FONT_SIZE = 26
+DEFAULT_AXIS_LABEL_FONT_SIZE = 24
+DEFAULT_BAR_LABEL_FONT_SIZE = 22
+DEFAULT_FIGURE_SIZE = (10.0, 6.5)
 DEFAULT_LANE_BINS = 30
 DEFAULT_ALPHA = 0.58
 
@@ -124,14 +133,18 @@ def prepare_output_path(path: Path) -> Path:
     return path
 
 
-def configure_matplotlib(font_size: float) -> None:
+def configure_matplotlib(
+    font_size: float,
+    axis_title_font_size: float,
+    axis_label_font_size: float,
+) -> None:
     """Apply global typography without selecting a custom color palette."""
     plt.rcParams.update(
         {
             "font.size": font_size,
-            "axes.labelsize": font_size,
-            "xtick.labelsize": font_size - 1,
-            "ytick.labelsize": font_size - 1,
+            "axes.labelsize": axis_title_font_size,
+            "xtick.labelsize": axis_label_font_size,
+            "ytick.labelsize": axis_label_font_size,
             "legend.fontsize": font_size,
         }
     )
@@ -142,10 +155,11 @@ def plot_recurrence(
     output_path: Path,
     *,
     metric: str = "unique_vessels",
-    figsize: tuple[float, float] = DEFAULT_RECURRENCE_SIZE,
+    figsize: tuple[float, float] = DEFAULT_FIGURE_SIZE,
     dpi: int = DEFAULT_DPI,
     title: str | None = None,
     show_percentages: bool = False,
+    bar_label_font_size: float = DEFAULT_BAR_LABEL_FONT_SIZE,
 ) -> None:
     """
     Plot vessel-identity recurrence across day-wise folds.
@@ -171,7 +185,10 @@ def plot_recurrence(
         validate_columns(df, [percentage_column], csv_path)
 
     plot_df = (
-        df[["number_of_folds", metric] + ([percentage_column] if show_percentages else [])]
+        df[
+            ["number_of_folds", metric]
+            + ([percentage_column] if show_percentages else [])
+        ]
         .copy()
         .sort_values("number_of_folds")
     )
@@ -179,7 +196,11 @@ def plot_recurrence(
     # Ensure that omitted zero-count recurrence categories still appear.
     maximum_fold = max(10, int(plot_df["number_of_folds"].max()))
     full_index = pd.Index(range(1, maximum_fold + 1), name="number_of_folds")
-    plot_df = plot_df.set_index("number_of_folds").reindex(full_index, fill_value=0).reset_index()
+    plot_df = (
+        plot_df.set_index("number_of_folds")
+        .reindex(full_index, fill_value=0)
+        .reset_index()
+    )
 
     x = plot_df["number_of_folds"].to_numpy()
     y = plot_df[metric].to_numpy()
@@ -211,12 +232,12 @@ def plot_recurrence(
                 f"{percentage:.1f}%",
                 ha="center",
                 va="bottom",
-                fontsize=max(8.0, plt.rcParams["font.size"] - 2),
+                fontsize=bar_label_font_size,
             )
         ax.margins(y=0.10)
 
     output_path = prepare_output_path(output_path)
-    fig.savefig(output_path, dpi=dpi, bbox_inches="tight")
+    fig.savefig(output_path, dpi=dpi)
     print(f"Saved recurrence figure: {output_path}")
 
 
@@ -225,7 +246,9 @@ def _direction_order(
     preferred_order: tuple[str, ...] = DEFAULT_DIRECTION_ORDER,
 ) -> list[str]:
     """Return a stable direction order while preserving unexpected labels."""
-    observed = [str(value) for value in pd.unique(np.asarray(list(values), dtype=object))]
+    observed = [
+        str(value) for value in pd.unique(np.asarray(list(values), dtype=object))
+    ]
     ordered = [value for value in preferred_order if value in observed]
     ordered.extend(value for value in observed if value not in ordered)
     return ordered
@@ -289,7 +312,7 @@ def plot_lane_histogram_from_offsets(
         ax.set_title(title)
 
     output_path = prepare_output_path(output_path)
-    fig.savefig(output_path, dpi=dpi, bbox_inches="tight")
+    fig.savefig(output_path, dpi=dpi)
     print(f"Saved directional-lane figure: {output_path}")
 
 
@@ -346,7 +369,7 @@ def plot_lane_histogram_from_binned_counts(
         ax.set_title(title)
 
     output_path = prepare_output_path(output_path)
-    fig.savefig(output_path, dpi=dpi, bbox_inches="tight")
+    fig.savefig(output_path, dpi=dpi)
     print(f"Saved directional-lane figure: {output_path}")
 
 
@@ -356,7 +379,7 @@ def plot_lanes(
     *,
     bins: int = DEFAULT_LANE_BINS,
     alpha: float = DEFAULT_ALPHA,
-    figsize: tuple[float, float] = DEFAULT_LANE_SIZE,
+    figsize: tuple[float, float] = DEFAULT_FIGURE_SIZE,
     dpi: int = DEFAULT_DPI,
     title: str | None = None,
 ) -> None:
@@ -487,32 +510,44 @@ def build_argument_parser() -> argparse.ArgumentParser:
         "--font-size",
         type=positive_float,
         default=DEFAULT_FONT_SIZE,
-        help="Base Matplotlib font size.",
+        help="Base font size, including legends and optional plot titles.",
+    )
+    parser.add_argument(
+        "--axis-title-font-size",
+        type=positive_float,
+        default=DEFAULT_AXIS_TITLE_FONT_SIZE,
+        help="Font size of the x- and y-axis titles.",
+    )
+    parser.add_argument(
+        "--axis-label-font-size",
+        type=positive_float,
+        default=DEFAULT_AXIS_LABEL_FONT_SIZE,
+        help="Font size of the tick labels on both axes.",
+    )
+    parser.add_argument(
+        "--bar-label-font-size",
+        type=positive_float,
+        default=DEFAULT_BAR_LABEL_FONT_SIZE,
+        help="Font size of percentage labels above recurrence bars.",
     )
 
     parser.add_argument(
+        "--figure-width",
         "--recurrence-width",
-        type=positive_float,
-        default=DEFAULT_RECURRENCE_SIZE[0],
-        help="Recurrence figure width in inches.",
-    )
-    parser.add_argument(
-        "--recurrence-height",
-        type=positive_float,
-        default=DEFAULT_RECURRENCE_SIZE[1],
-        help="Recurrence figure height in inches.",
-    )
-    parser.add_argument(
         "--lane-width",
+        dest="figure_width",
         type=positive_float,
-        default=DEFAULT_LANE_SIZE[0],
-        help="Directional-lane figure width in inches.",
+        default=DEFAULT_FIGURE_SIZE[0],
+        help="Width of both figures in inches (old figure-specific names are aliases).",
     )
     parser.add_argument(
+        "--figure-height",
+        "--recurrence-height",
         "--lane-height",
+        dest="figure_height",
         type=positive_float,
-        default=DEFAULT_LANE_SIZE[1],
-        help="Directional-lane figure height in inches.",
+        default=DEFAULT_FIGURE_SIZE[1],
+        help="Height of both figures in inches (old figure-specific names are aliases).",
     )
 
     parser.add_argument(
@@ -538,7 +573,11 @@ def main() -> int:
     parser = build_argument_parser()
     args = parser.parse_args()
 
-    configure_matplotlib(args.font_size)
+    configure_matplotlib(
+        args.font_size,
+        args.axis_title_font_size,
+        args.axis_label_font_size,
+    )
 
     try:
         if args.figure in {"both", "recurrence"}:
@@ -546,10 +585,11 @@ def main() -> int:
                 args.recurrence_csv,
                 args.recurrence_output,
                 metric=args.recurrence_metric,
-                figsize=(args.recurrence_width, args.recurrence_height),
+                figsize=(args.figure_width, args.figure_height),
                 dpi=args.dpi,
                 title=args.recurrence_title,
                 show_percentages=args.show_recurrence_percentages,
+                bar_label_font_size=args.bar_label_font_size,
             )
 
         if args.figure in {"both", "lanes"}:
@@ -558,7 +598,7 @@ def main() -> int:
                 args.lane_output,
                 bins=args.lane_bins,
                 alpha=args.alpha,
-                figsize=(args.lane_width, args.lane_height),
+                figsize=(args.figure_width, args.figure_height),
                 dpi=args.dpi,
                 title=args.lane_title,
             )
@@ -568,7 +608,12 @@ def main() -> int:
         else:
             plt.close("all")
 
-    except (FileNotFoundError, PermissionError, ValueError, pd.errors.ParserError) as exc:
+    except (
+        FileNotFoundError,
+        PermissionError,
+        ValueError,
+        pd.errors.ParserError,
+    ) as exc:
         parser.error(str(exc))
 
     return 0
