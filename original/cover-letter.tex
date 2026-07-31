@@ -1,34 +1,95 @@
 \documentclass[11pt]{letter}
 
-\usepackage[a4paper,margin=2.5cm]{geometry}
-\usepackage{setspace}
-\usepackage{hyperref}
+\usepackage[T1]{fontenc}
+\usepackage[utf8]{inputenc}
+\usepackage[a4paper,margin=25mm]{geometry}
+\usepackage{microtype}
+\usepackage[colorlinks=true,urlcolor=blue,linkcolor=black,citecolor=black]{hyperref}
 
-\signature{Javier Macias-Guarasa\\Universidad de Alcalá\\\texttt{javier.maciasguarasa@uah.es}}
+\address{%
+Javier Macias-Guarasa\\
+Departamento de Electronica\\
+Universidad de Alcala\\
+Alcala de Henares, Spain\\
+\href{mailto:javier.maciasguarasa@uah.es}{javier.maciasguarasa@uah.es}}
+
+\signature{Javier Macias-Guarasa\\
+Corresponding author, on behalf of all authors}
+
+\date{\today}
 
 \begin{document}
 
-\begin{letter}{Editors of \textit{Scientific Data}}
+\begin{letter}{Editors\\\textit{Scientific Data}}
 
-\opening{Dear Editors,}
+\opening{Dear Editors of \textit{Scientific Data},}
 
-We are pleased to submit our manuscript entitled \textbf{``A distributed acoustic sensing dataset for vessel detection and localization in submarine cable protection tasks''} to be considered for publication the \textit{Scientific Data} Journal. The submission includes a curated submarine DAS dataset to be used in submarine cable protection applications, together with the associated processing scripts, provided in accordance with the journal's data-transparency requirements.
+We are pleased to submit the manuscript entitled
+\textbf{``A Distributed Acoustic Sensing Dataset for Vessel Detection and
+Localization in Submarine Cable Protection''}, in which we describe the
+Marlinks North Sea Distributed Acoustic Sensing Dataset (Marlinks-NS DAS), for
+consideration as a Data Descriptor in \textit{Scientific Data}.
 
-In line with the journal’s guidance for covering letters, we note the following:
+The context motivating this dataset is the need to monitor submarine
+telecommunications and power cables, which are critical infrastructure exposed
+to accidental damage and deliberate interference. Distributed acoustic sensing
+(DAS) can support this objective by turning optical-fibre cables into dense
+arrays of vibration sensors. However, openly reusable and labelled DAS datasets
+acquired in submarine environments, particularly those synchronised with vessel
+information, remain scarce. The Marlinks-NS DAS dataset addresses this data gap
+through a ten-day acquisition campaign in the North Sea. It contains 74,771
+labelled 10-s observations, each comprising spectral-energy features from 250
+sensing channels and 100 frequency bands, together with AIS-derived
+vessel-to-cable distance labels and anonymised vessel type, length, and beam
+information. The dataset supports research on vessel detection and
+vessel-to-cable distance estimation for submarine-infrastructure monitoring and
+protection.
 
-\begin{itemize}
-    \item We have no suggested or non-preferred reviewers beyond standard conflict-of-interest criteria handled by the submission system.
-    \item All related prior publications have been disclosed through the submission portal.
-    \item Authorship, affiliations, and contributions have been entered as required.
-\end{itemize}
+We consider the manuscript well suited to \textit{Scientific Data} because it
+is centred on the creation, curation, organisation, validation, and reuse of a
+publicly deposited research dataset. It provides a detailed account of the data
+curation process, including DAS acquisition and preprocessing, AIS trajectory
+interpolation and synchronisation, geospatial distance-label generation,
+spectral-feature extraction, and the organisation of the released HDF5 data.
+The deposited research object also includes documentation, supporting metadata,
+frequency-band definitions, daily environmental summaries, and archived Python
+examples for inspecting, loading, checking, and partitioning the data. The
+technical validation goes beyond baseline classification and regression
+experiments by also examining physical-passage overlap and vessel-identity
+recurrence across the recommended day-wise folds, as well as environmental
+variability across those folds. These analyses are intended to help prospective
+users assess dataset quality, acquisition diversity, and the suitability of the
+recommended evaluation protocol.
 
-We confirm that the manuscript is original, has not been published previously, and is not under consideration elsewhere. All authors approve the submitted version.
+The dataset may be useful to researchers developing machine-learning methods
+for distributed acoustic sensing, studying vessel detection and
+vessel-to-cable distance estimation for submarine-infrastructure monitoring and
+protection, investigating marine acoustics and submarine-fibre sensing, and
+developing spatial, spectral, or spatiotemporal learning methods for distributed
+sensor arrays. The dataset, documentation, metadata, and example code are openly
+available on Zenodo at
+\href{https://doi.org/10.5281/zenodo.15611778}{https://doi.org/10.5281/zenodo.15611778}.
 
-Thank you for your consideration.
+For transparency, the DAS and AIS measurements underlying this dataset were
+also used in a related application-centred article that was recently accepted
+for publication in the \textit{IEEE Journal of Selected Topics in Applied Earth
+Observations and Remote Sensing}. An early-access version is available at
+\href{https://doi.org/10.1109/JSTARS.2026.3716768}{https://doi.org/10.1109/JSTARS.2026.3716768},
+with minor editorial corrections currently being processed. That article
+focuses on algorithm development and application performance. The present
+manuscript explicitly describes the relationship to that publication and adds
+substantial new and more detailed dataset-centred information to establish the
+released data as an independently reusable research resource. A preprint of the
+current Data Descriptor is also available on arXiv at
+\href{https://doi.org/10.48550/arXiv.2607.28306}{https://doi.org/10.48550/arXiv.2607.28306}.
 
-\closing{Sincerely,\\[1.5ex]On behalf of all authors,}
+The manuscript is not under consideration by another journal, and all authors
+have reviewed and approved both the manuscript and its submission to
+\textit{Scientific Data}.
+
+Thank you for considering our submission.
+
+\closing{Sincerely,}
 
 \end{letter}
-
 \end{document}
-
