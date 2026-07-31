@@ -3,6 +3,8 @@
 BASENAME  = paper
 TEX_FILE  = $(BASENAME).tex
 PDF_FILE  = $(BASENAME).pdf
+METADATA_FILES = title.txt authors.txt abstract.txt
+COMMENTS_FILE = comments.txt
 SUBMISSION_BASENAME = $(BASENAME)-submission
 SUBMISSION_TEX_FILE = $(SUBMISSION_BASENAME).tex
 SUBMISSION_PDF_FILE = $(SUBMISSION_BASENAME).pdf
@@ -31,8 +33,46 @@ PROJECT_FILES_TMP = .deps.lst.tmp
 all: $(PDF_FILE) $(SUBMISSION_PDF_FILE)
 
 ### Compilación con latexmk + generación de dependencias reales
-$(PDF_FILE): $(TEX_FILE)
+$(PDF_FILE) $(COMMENTS_FILE) &: $(TEX_FILE) $(METADATA_FILES)
 	$(LATEXMK) $(LATEXMK_OPTS) -deps -deps-out=$(DEPFILE) $(BASENAME)
+	@pages=$$(pdfinfo $(PDF_FILE) | awk '/^Pages:/ { print $$2 }'); \
+	figures=$$(awk '/^[[:space:]]*\\begin{figure\*?}/ { n++ } END { print n + 0 }' $(TEX_FILE)); \
+	tables=$$(awk '/^[[:space:]]*\\begin{table\*?}/ { n++ } END { print n + 0 }' $(TEX_FILE)); \
+	printf '%s pages, %s figures, %s tables. Submitted to be considered for publication as a Data Descriptor in the Scientific Data Journal.\n' \
+	  "$$pages" "$$figures" "$$tables" > $(COMMENTS_FILE)
+
+# Plain-text metadata accompanying the paper.
+$(METADATA_FILES) &: $(TEX_FILE)
+	@sed -n 's/^[[:space:]]*\\title{\(.*\)}[[:space:]]*$$/\1/p' $< > title.txt
+	@sed -n 's/^[[:space:]]*\\author\(\[[^]]*\]\)\?{\(.*\)}[[:space:]]*$$/\2/p' $< \
+	  | awk '{ author[++n] = $$0 } END { \
+	      for (i = 1; i <= n; i++) { \
+	        if (i > 1) printf (i == n ? (n == 2 ? " and " : ", and ") : ", "); \
+	        printf "%s", author[i]; \
+	      } \
+	      if (n) printf "\n"; \
+	    }' > authors.txt
+	@awk ' \
+	  /^[[:space:]]*\\begin{abstract}[[:space:]]*$$/ { in_abstract = 1; next } \
+	  /^[[:space:]]*\\end{abstract}[[:space:]]*$$/   { \
+	    if (paragraph != "") print paragraph; \
+	    exit; \
+	  } \
+	  in_abstract { \
+	    line = $$0; \
+	    sub(/^[[:space:]]+/, "", line); \
+	    sub(/[[:space:]]+$$/, "", line); \
+	    if (line == "") { \
+	      if (paragraph != "") { print paragraph; print ""; paragraph = ""; } \
+	    } else { \
+	      paragraph = paragraph (paragraph == "" ? "" : " ") line; \
+	    } \
+	  } \
+	' $< \
+	  | sed -e 's/\\texttt{\([^}]*\)}/\1/g' \
+	        -e 's/\\,/ /g' \
+	        -e 's/[$$]//g' \
+	        -e 's/[[:space:]]*$$//' > abstract.txt
 
 submission: $(SUBMISSION_PDF_FILE)
 
@@ -115,8 +155,27 @@ gitadd: project-files
 clean:
 	$(LATEXMK) -C $(BASENAME)
 	rm -f $(DEPFILE) paper.zip $(PROJECT_FILES_LIST) $(PROJECT_FILES_TMP) paper.bbl *.out \
+	      $(METADATA_FILES) $(COMMENTS_FILE) \
 	      $(SUBMISSION_TEX_FILE) $(SUBMISSION_PDF_FILE) $(SUBMISSION_BASENAME).aux \
 	      $(SUBMISSION_BASENAME).log $(SUBMISSION_BASENAME).out \
 	      $(DIFF_FLATTEN_BASENAME).aux $(DIFF_FLATTEN_BASENAME).bbl \
 	      $(DIFF_FLATTEN_BASENAME).blg $(DIFF_FLATTEN_BASENAME).log \
 	      figures/*converted-to.pdf
+
+.PHONY: zip-distrib
+
+# Build a self-contained archive for compiling the generated submission source.
+zip-distrib: submission project-files Makefile.distrib
+	@rm -rf .zip-distrib
+	@mkdir -p .zip-distrib
+	@set -e; while IFS= read -r f; do \
+	  case "$$f" in Makefile|paper.tex|paper.bib|IEEEtran-nonote.bst) continue;; esac; \
+	  mkdir -p ".zip-distrib/$$(dirname "$$f")"; \
+	  cp "$$f" ".zip-distrib/$$f"; \
+	done < $(PROJECT_FILES_LIST)
+	@cp $(SUBMISSION_TEX_FILE) .zip-distrib/
+	@cp Makefile.distrib .zip-distrib/Makefile
+	@rm -f $(SUBMISSION_BASENAME).zip
+	@cd .zip-distrib && zip -q -r ../$(SUBMISSION_BASENAME).zip .
+	@rm -rf .zip-distrib
+	@echo "Created $(SUBMISSION_BASENAME).zip; unpack it and run 'make'."
