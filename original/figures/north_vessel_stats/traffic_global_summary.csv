@@ -1,0 +1,16 @@
+metric,value,unit
+Filtered AIS records,4290.0,records
+Distinct vessel identities,565.0,MMSIs
+Reconstructed physical passages,1033.0,passages
+Passages crossing a fold boundary,4.0,passages
+Cross-boundary passage fraction,0.3872216844143272,%
+Median passage duration,4.016666666666667,min
+Interquartile passage duration,2.1500000000000004,min
+Median path length within region,1.7663875288387754,km
+Median passage speed,13.86,kn
+Direction A passages,507.0,passages
+Direction B passages,526.0,passages
+Vessels observed on one day,322.0,MMSIs
+Vessels observed on two days,198.0,MMSIs
+Vessels observed on no more than two days,520.0,MMSIs
+Vessels observed on at least five days,13.0,MMSIs
