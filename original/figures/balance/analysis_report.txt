@@ -1,0 +1,111 @@
+================================================================================
+SHIP DISTANCE DISTRIBUTION ANALYSIS REPORT
+================================================================================
+
+OVERVIEW
+--------------------------------------------------------------------------------
+Total samples: 74771
+Distance range: [13.35, 9127.73] meters
+Unique ship types: 14
+
+DESCRIPTIVE STATISTICS
+--------------------------------------------------------------------------------
+Mean:         2135.63 m
+Median:       1722.43 m
+Std Dev:      1759.01 m
+Q1 (25%):     739.52 m
+Q3 (75%):     3118.25 m
+IQR:          2378.72 m
+
+95% Confidence Interval for Mean:
+  [2123.30, 2148.03] m
+
+DISTRIBUTION TEST
+--------------------------------------------------------------------------------
+Test: Kolmogorov-Smirnov
+Statistic: 0.113808
+P-value: 0.000000e+00
+Result: Not normal
+
+DISTRIBUTION FITTING ANALYSIS
+--------------------------------------------------------------------------------
+Best fitting distributions (ranked by AIC):
+
+Rank 1: Half-Normal Distribution
+  Description: Absolute value of normal, symmetric spatial distribution
+  Parameters: location=13.3512, scale (σ)=2767.5442
+  KS statistic: 0.047023
+  P-value: 4.099687e-144
+  AIC: 1293170.72
+  BIC: 1293189.16
+  Interpretation: Poor fit (p ≤ 0.01)
+
+Rank 2: Weibull Distribution
+  Description: Flexible shape, used in reliability analysis
+  Parameters: shape (c)=1.1105, location=13.2773, scale=2199.8942
+  KS statistic: 0.031929
+  P-value: 1.166004e-66
+  AIC: 1293886.77
+  BIC: 1293914.44
+  Interpretation: Poor fit (p ≤ 0.01)
+
+Rank 3: Gamma Distribution
+  Description: Flexible right-skewed distribution for positive data
+  Parameters: shape (α)=1.1062, location=13.3245, scale (θ)=1918.4735
+  KS statistic: 0.042646
+  P-value: 1.332314e-118
+  AIC: 1294608.31
+  BIC: 1294635.98
+  Interpretation: Poor fit (p ≤ 0.01)
+
+Rank 4: Exponential Distribution
+  Description: Memoryless property, constant hazard rate
+  Parameters: location=13.3512, scale (λ)=2122.2778
+  KS statistic: 0.054160
+  P-value: 4.545011e-191
+  AIC: 1295074.39
+  BIC: 1295092.84
+  Interpretation: Poor fit (p ≤ 0.01)
+
+Rank 5: Log-Normal Distribution
+  Description: Common for multiplicative processes
+  Parameters: shape (σ)=6.4647, location=13.3512, scale=4.0584
+  KS statistic: 0.644179
+  P-value: 0.000000e+00
+  AIC: 1546859.72
+  BIC: 1546887.39
+  Interpretation: Poor fit (p ≤ 0.01)
+
+Best overall fit (by AIC): Half-Normal
+
+CRITICAL DISTANCE ANALYSIS
+--------------------------------------------------------------------------------
+Threshold (m)   Count      Percentage  
+--------------------------------------------------------------------------------
+500             13264      17.74       %
+1000            24250      32.43       %
+2000            41931      56.08       %
+5000            69273      92.65       %
+
+SHIP TYPE STATISTICS
+--------------------------------------------------------------------------------
+Ship Type                      Count      Mean (m)     Median (m)   Std (m)     
+--------------------------------------------------------------------------------
+Large Cargo Ship               15960      1800.66      1446.01      1482.81     
+Tanker                         15684      1882.74      1510.48      1528.37     
+Vehicles Carrier               14578      1939.23      1357.76      1916.08     
+Hopper Dredger                 13382      2676.18      2573.46      1673.51     
+Cargo Ship                     6473       2278.83      1949.41      1910.28     
+Unknown                        2847       2106.49      1752.50      1760.29     
+Fishing Vessel                 2690       3280.54      2596.93      2171.21     
+Military/Patrol/Salvage        1302       2202.30      1765.20      1712.96     
+Passenger Ship                 572        1884.09      1716.45      1305.85     
+Tug                            529        2096.26      1709.77      1727.19     
+Utility Vessel                 347        3808.86      3324.41      2679.29     
+Research Vessel                247        4732.52      5239.56      1738.54     
+Pilot Vessel                   132        1426.91      1229.73      1106.44     
+Sailing Vessel                 28         972.11       1392.63      655.89      
+
+================================================================================
+END OF REPORT
+================================================================================

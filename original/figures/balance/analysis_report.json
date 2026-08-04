@@ -1,0 +1,284 @@
+{
+  "overview": {
+    "total_samples": 74771,
+    "distance_min": 13.351159680235986,
+    "distance_max": 9127.726219558663,
+    "distance_range": 9114.375059878426
+  },
+  "descriptive_statistics": {
+    "count": 74771,
+    "mean": 2135.629005229675,
+    "median": 1722.4310716243056,
+    "std": 1759.0139678414712,
+    "min": 13.351159680235986,
+    "max": 9127.726219558663,
+    "q1": 739.5226153069029,
+    "q3": 3118.247473442916,
+    "iqr": 2378.724858136013,
+    "ci_lower_0.95": 2123.301905954243,
+    "ci_upper_0.95": 2148.0271671654923
+  },
+  "distribution_test": {
+    "test": "Kolmogorov-Smirnov",
+    "statistic": 0.11380781361314196,
+    "p_value": 0.0,
+    "is_normal": false,
+    "alpha": 0.05,
+    "interpretation": "Not normal"
+  },
+  "critical_distance_analysis": {
+    "500.0": {
+      "count": 13264,
+      "percentage": 17.73949793369087,
+      "threshold_m": 500.0
+    },
+    "1000.0": {
+      "count": 24250,
+      "percentage": 32.432360139626326,
+      "threshold_m": 1000.0
+    },
+    "2000.0": {
+      "count": 41931,
+      "percentage": 56.0792285779246,
+      "threshold_m": 2000.0
+    },
+    "5000.0": {
+      "count": 69273,
+      "percentage": 92.6468818124674,
+      "threshold_m": 5000.0
+    }
+  },
+  "distribution_fitting": {
+    "gamma": {
+      "name": "Gamma",
+      "description": "Flexible right-skewed distribution for positive data",
+      "params": [
+        1.106246505697535,
+        13.324454271921333,
+        1918.4734898917611
+      ],
+      "param_names": [
+        "shape (\u03b1)",
+        "location",
+        "scale (\u03b8)"
+      ],
+      "ks_statistic": 0.042646342141204385,
+      "p_value": 1.3323142486973658e-118,
+      "aic": 1294608.3095111435,
+      "bic": 1294635.9760673083,
+      "log_likelihood": -647301.1547555717,
+      "n_params": 3,
+      "interpretation": "Poor fit (p \u2264 0.01)",
+      "rank_aic": 3,
+      "rank_bic": 3
+    },
+    "lognorm": {
+      "name": "Log-Normal",
+      "description": "Common for multiplicative processes",
+      "params": [
+        6.46472754032837,
+        13.351159680235984,
+        4.058425767641715
+      ],
+      "param_names": [
+        "shape (\u03c3)",
+        "location",
+        "scale"
+      ],
+      "ks_statistic": 0.6441791602247122,
+      "p_value": 0.0,
+      "aic": 1546859.7233993225,
+      "bic": 1546887.3899554873,
+      "log_likelihood": -773426.8616996612,
+      "n_params": 3,
+      "interpretation": "Poor fit (p \u2264 0.01)",
+      "rank_aic": 5,
+      "rank_bic": 5
+    },
+    "weibull_min": {
+      "name": "Weibull",
+      "description": "Flexible shape, used in reliability analysis",
+      "params": [
+        1.1105146791228584,
+        13.277349922188497,
+        2199.894236962852
+      ],
+      "param_names": [
+        "shape (c)",
+        "location",
+        "scale"
+      ],
+      "ks_statistic": 0.031929266011567425,
+      "p_value": 1.1660042520186813e-66,
+      "aic": 1293886.771987351,
+      "bic": 1293914.4385435157,
+      "log_likelihood": -646940.3859936754,
+      "n_params": 3,
+      "interpretation": "Poor fit (p \u2264 0.01)",
+      "rank_aic": 2,
+      "rank_bic": 2
+    },
+    "expon": {
+      "name": "Exponential",
+      "description": "Memoryless property, constant hazard rate",
+      "params": [
+        13.351159680235986,
+        2122.277845549439
+      ],
+      "param_names": [
+        "location",
+        "scale (\u03bb)"
+      ],
+      "ks_statistic": 0.054159954811797584,
+      "p_value": 4.54501114161434e-191,
+      "aic": 1295074.3946221631,
+      "bic": 1295092.8389929396,
+      "log_likelihood": -647535.1973110816,
+      "n_params": 2,
+      "interpretation": "Poor fit (p \u2264 0.01)",
+      "rank_aic": 4,
+      "rank_bic": 4
+    },
+    "halfnorm": {
+      "name": "Half-Normal",
+      "description": "Absolute value of normal, symmetric spatial distribution",
+      "params": [
+        13.351159168042493,
+        2767.5442479717003
+      ],
+      "param_names": [
+        "location",
+        "scale (\u03c3)"
+      ],
+      "ks_statistic": 0.047022983452072176,
+      "p_value": 4.099687404268564e-144,
+      "aic": 1293170.7154073375,
+      "bic": 1293189.159778114,
+      "log_likelihood": -646583.3577036688,
+      "n_params": 2,
+      "interpretation": "Poor fit (p \u2264 0.01)",
+      "rank_aic": 1,
+      "rank_bic": 1
+    }
+  },
+  "best_fit_distribution": {
+    "key": "halfnorm",
+    "name": "Half-Normal",
+    "aic": 1293170.7154073375,
+    "bic": 1293189.159778114
+  },
+  "ship_type_statistics": {
+    "Cargo Ship": {
+      "count": 6473,
+      "mean": 2278.832214927685,
+      "median": 1949.4135265876225,
+      "std": 1910.2815019940715,
+      "min": 16.205417409705184,
+      "max": 9127.726219558663
+    },
+    "Fishing Vessel": {
+      "count": 2690,
+      "mean": 3280.5426063926147,
+      "median": 2596.92779971599,
+      "std": 2171.2062874400185,
+      "min": 14.606699454359221,
+      "max": 8069.313379378777
+    },
+    "Hopper Dredger": {
+      "count": 13382,
+      "mean": 2676.182069493173,
+      "median": 2573.460159338945,
+      "std": 1673.510694428258,
+      "min": 13.37537697194266,
+      "max": 8174.461569899133
+    },
+    "Large Cargo Ship": {
+      "count": 15960,
+      "mean": 1800.6632079613917,
+      "median": 1446.0069947004004,
+      "std": 1482.810015714328,
+      "min": 16.79537900020465,
+      "max": 8290.327375667375
+    },
+    "Military/Patrol/Salvage": {
+      "count": 1302,
+      "mean": 2202.2993484741837,
+      "median": 1765.2040757674092,
+      "std": 1712.9590697073234,
+      "min": 13.828896232070274,
+      "max": 7110.201131467604
+    },
+    "Passenger Ship": {
+      "count": 572,
+      "mean": 1884.0863437445457,
+      "median": 1716.44964911328,
+      "std": 1305.8521566862396,
+      "min": 25.50163858624852,
+      "max": 5347.383701227018
+    },
+    "Pilot Vessel": {
+      "count": 132,
+      "mean": 1426.9129487574344,
+      "median": 1229.7296938929212,
+      "std": 1106.4416410655201,
+      "min": 17.863151712478633,
+      "max": 3985.7414942040828
+    },
+    "Research Vessel": {
+      "count": 247,
+      "mean": 4732.518459752781,
+      "median": 5239.563738881413,
+      "std": 1738.5360418837438,
+      "min": 550.8388017005788,
+      "max": 6677.236362670093
+    },
+    "Sailing Vessel": {
+      "count": 28,
+      "mean": 972.1148214384772,
+      "median": 1392.626626412781,
+      "std": 655.8855226218258,
+      "min": 244.00779014631644,
+      "max": 1775.2514208009159
+    },
+    "Tanker": {
+      "count": 15684,
+      "mean": 1882.738585056587,
+      "median": 1510.4822723385503,
+      "std": 1528.3693612407399,
+      "min": 14.81852391816647,
+      "max": 7081.8481460814455
+    },
+    "Tug": {
+      "count": 529,
+      "mean": 2096.256644057144,
+      "median": 1709.7698431155197,
+      "std": 1727.1945970450467,
+      "min": 14.148010372202355,
+      "max": 8319.626927099203
+    },
+    "Unknown": {
+      "count": 2847,
+      "mean": 2106.49313404809,
+      "median": 1752.4963745425428,
+      "std": 1760.2886242367729,
+      "min": 14.899225940405222,
+      "max": 8519.624435318747
+    },
+    "Utility Vessel": {
+      "count": 347,
+      "mean": 3808.8624441611805,
+      "median": 3324.413063897601,
+      "std": 2679.28900201766,
+      "min": 25.77262576289246,
+      "max": 7584.162692801538
+    },
+    "Vehicles Carrier": {
+      "count": 14578,
+      "mean": 1939.2286103004853,
+      "median": 1357.760180778102,
+      "std": 1916.0792769790535,
+      "min": 13.351159680235986,
+      "max": 8359.181031377315
+    }
+  }
+}
