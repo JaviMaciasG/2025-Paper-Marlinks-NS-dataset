@@ -3,7 +3,7 @@
 BASENAME  = paper
 TEX_FILE  = $(BASENAME).tex
 PDF_FILE  = $(BASENAME).pdf
-METADATA_FILES = title.txt authors.txt abstract.txt
+METADATA_FILES = title.txt authors.txt abstract.txt data-availability.txt
 COMMENTS_FILE = comments.txt
 SUBMISSION_BASENAME = $(BASENAME)-submission
 SUBMISSION_TEX_FILE = $(SUBMISSION_BASENAME).tex
@@ -73,6 +73,30 @@ $(METADATA_FILES) &: $(TEX_FILE)
 	        -e 's/\\,/ /g' \
 	        -e 's/[$$]//g' \
 	        -e 's/[[:space:]]*$$//' > abstract.txt
+	@awk ' \
+	  /^[[:space:]]*\\section\{Data Availability\}[[:space:]]*$$/ { in_section = 1; next } \
+	  in_section && /^[[:space:]]*\\section\{/ { \
+	    if (paragraph != "") print paragraph; \
+	    exit; \
+	  } \
+	  in_section && /^[[:space:]]*\\label\{/ { next } \
+	  in_section { \
+	    line = $$0; \
+	    sub(/^[[:space:]]+/, "", line); \
+	    sub(/[[:space:]]+$$/, "", line); \
+	    if (line == "") { \
+	      if (paragraph != "") { print paragraph; print ""; paragraph = ""; } \
+	    } else { \
+	      paragraph = paragraph (paragraph == "" ? "" : " ") line; \
+	    } \
+	  } \
+	' $< \
+	  | sed -e 's/~\\cite{[^}]*}//g' \
+	        -e 's/\\texttt{\([^}]*\)}/\1/g' \
+	        -e 's/\\url{\([^}]*\)}/\1/g' \
+	        -e 's/\\_/_/g' \
+	        -e 's/~/ /g' \
+	        -e 's/[[:space:]]*$$//' > data-availability.txt
 
 submission: $(SUBMISSION_PDF_FILE)
 
